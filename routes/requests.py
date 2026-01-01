@@ -21,6 +21,7 @@ from flask import Blueprint, request, jsonify, current_app
 from models import db, AppRequest, RequestVote, RequestStatus
 from routes.auth import (
     get_current_user,
+    login_required,
     trusted_required,
     promoted_required,
     admin_required,
@@ -87,9 +88,9 @@ def get_request(request_id):
 
 
 @requests_bp.route("", methods=["POST"])
-@trusted_required
+@login_required
 def create_request():
-    """Create a new app request (trusted users only)."""
+    """Create a new app request (any logged-in user)."""
     user = get_current_user()
     data = request.get_json()
 

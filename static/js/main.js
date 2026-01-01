@@ -412,7 +412,7 @@ async function handleRequest(e) {
   const form = e.target;
   const data = {
     title: form.querySelector('[name="title"]').value,
-    description: form.querySelector('[name="description"]').value,
+    prompt: form.querySelector('[name="description"]').value,
     category: form.querySelector('[name="category"]').value,
   };
   const submitBtn = form.querySelector('[type="submit"]');
@@ -430,7 +430,12 @@ async function handleRequest(e) {
       loadRequests();
     }
   } catch (error) {
-    showToast(error.message || 'Failed to submit request', 'error');
+    if (error.message && error.message.includes('Authentication required')) {
+      showToast('Please sign in to submit a request', 'error');
+      setTimeout(() => window.location.href = '/login', 1500);
+    } else {
+      showToast(error.message || 'Failed to submit request', 'error');
+    }
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit Request';
