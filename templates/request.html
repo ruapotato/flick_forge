@@ -55,8 +55,22 @@
           </p>
         </div>
 
-        <!-- Request Form -->
-        <div class="request-form-card">
+        <!-- Login prompt for guests -->
+        <div class="request-form-card" data-guest>
+          <div class="text-center" style="padding:var(--space-2xl);">
+            <h2 style="margin-bottom:var(--space-md);">Sign in to Submit a Request</h2>
+            <p class="text-secondary" style="margin-bottom:var(--space-lg);">
+              You need to be logged in to submit app requests.
+            </p>
+            <a href="/login?redirect=/request" class="btn btn-primary btn-lg">Sign In</a>
+            <p class="text-secondary" style="margin-top:var(--space-md);font-size:var(--text-sm);">
+              Don't have an account? <a href="/login" style="color:var(--accent);">Create one</a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Request Form (authenticated users only) -->
+        <div class="request-form-card" data-auth style="display:none;">
           <form id="request-form">
             <div class="form-group">
               <label class="form-label" for="request-title">App Title</label>
