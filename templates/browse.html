@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Browse and search apps on Flick Store - Linux App Store">
+  <meta name="description" content="Browse and search Qt/QML apps for Flick mobile shell">
   <meta name="theme-color" content="#0a0a0f">
   <title>Browse Apps - Flick Store</title>
   <link rel="stylesheet" href="/static/css/style.css">
@@ -171,222 +171,9 @@
 
           <!-- Apps Grid -->
           <div class="grid grid-apps" id="apps-grid">
-            <!-- Apps will be loaded dynamically, showing static examples for demo -->
-            <a href="/app?slug=vscode" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">VS</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">Visual Studio Code</h3>
-                <p class="app-card-desc">A powerful, lightweight code editor with built-in support for JavaScript, TypeScript, and Node.js.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.8</span>
-                  </div>
-                  <span class="app-card-downloads">2.5M downloads</span>
-                  <span class="app-card-category">Development</span>
-                </div>
-              </div>
-            </a>
-
-            <a href="/app?slug=firefox" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">&#128293;</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">Firefox</h3>
-                <p class="app-card-desc">Fast, private, and free web browser from Mozilla.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.7</span>
-                  </div>
-                  <span class="app-card-downloads">2.5M downloads</span>
-                  <span class="app-card-category">Internet</span>
-                </div>
-              </div>
-            </a>
-
-            <a href="/app?slug=gimp" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">GI</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">GIMP</h3>
-                <p class="app-card-desc">GNU Image Manipulation Program for photo retouching and editing.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.5</span>
-                  </div>
-                  <span class="app-card-downloads">1.2M downloads</span>
-                  <span class="app-card-category">Graphics</span>
-                </div>
-              </div>
-            </a>
-
-            <a href="/app?slug=blender" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">BL</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">Blender</h3>
-                <p class="app-card-desc">Free and open source 3D creation suite for modeling, animation, and more.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.9</span>
-                  </div>
-                  <span class="app-card-downloads">890K downloads</span>
-                  <span class="app-card-category">Graphics</span>
-                </div>
-              </div>
-            </a>
-
-            <a href="/app?slug=steam" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">&#127918;</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">Steam</h3>
-                <p class="app-card-desc">Ultimate destination for playing, discussing, and creating games.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.6</span>
-                  </div>
-                  <span class="app-card-downloads">3.2M downloads</span>
-                  <span class="app-card-category">Games</span>
-                </div>
-              </div>
-            </a>
-
-            <a href="/app?slug=vlc" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">&#9654;</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">VLC Media Player</h3>
-                <p class="app-card-desc">Free and open source cross-platform multimedia player.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.8</span>
-                  </div>
-                  <span class="app-card-downloads">1.8M downloads</span>
-                  <span class="app-card-category">Multimedia</span>
-                </div>
-              </div>
-            </a>
-
-            <a href="/app?slug=obs" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">&#128249;</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">OBS Studio</h3>
-                <p class="app-card-desc">Free software for video recording and live streaming.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.9</span>
-                  </div>
-                  <span class="app-card-downloads">980K downloads</span>
-                  <span class="app-card-category">Multimedia</span>
-                </div>
-              </div>
-            </a>
-
-            <a href="/app?slug=inkscape" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">&#9997;</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">Inkscape</h3>
-                <p class="app-card-desc">Professional vector graphics editor for illustrations and design.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.6</span>
-                  </div>
-                  <span class="app-card-downloads">650K downloads</span>
-                  <span class="app-card-category">Graphics</span>
-                </div>
-              </div>
-            </a>
-
-            <a href="/app?slug=libreoffice" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">LO</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">LibreOffice</h3>
-                <p class="app-card-desc">Free and powerful office suite with Writer, Calc, Impress and more.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.5</span>
-                  </div>
-                  <span class="app-card-downloads">2.1M downloads</span>
-                  <span class="app-card-category">Productivity</span>
-                </div>
-              </div>
-            </a>
-
-            <a href="/app?slug=thunderbird" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">&#128231;</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">Thunderbird</h3>
-                <p class="app-card-desc">Free email application that is easy to set up and customize.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.4</span>
-                  </div>
-                  <span class="app-card-downloads">1.4M downloads</span>
-                  <span class="app-card-category">Internet</span>
-                </div>
-              </div>
-            </a>
-
-            <a href="/app?slug=kdenlive" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">&#127909;</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">Kdenlive</h3>
-                <p class="app-card-desc">Free and open source video editing software.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.5</span>
-                  </div>
-                  <span class="app-card-downloads">520K downloads</span>
-                  <span class="app-card-category">Multimedia</span>
-                </div>
-              </div>
-            </a>
-
-            <a href="/app?slug=krita" class="card app-card">
-              <div class="app-card-image">
-                <div class="app-card-icon">&#127912;</div>
-              </div>
-              <div class="app-card-content">
-                <h3 class="app-card-title">Krita</h3>
-                <p class="app-card-desc">Professional free and open source painting program.</p>
-                <div class="app-card-meta">
-                  <div class="app-card-rating">
-                    <span>&#9733;</span>
-                    <span>4.7</span>
-                  </div>
-                  <span class="app-card-downloads">780K downloads</span>
-                  <span class="app-card-category">Graphics</span>
-                </div>
-              </div>
-            </a>
+            <div class="loading" id="apps-loading">
+              <div class="loading-spinner"></div>
+            </div>
           </div>
 
           <!-- Loading State -->
@@ -424,14 +211,14 @@
             </div>
             <span>Flick Store</span>
           </a>
-          <p>A fast, modern, community-driven app store for Linux.</p>
+          <p>A fast, modern app store for Flick mobile shell.</p>
         </div>
 
         <div>
           <h4 class="footer-title">Explore</h4>
           <nav class="footer-links">
             <a href="/browse" class="footer-link">Browse Apps</a>
-            <a href="/browse.html?category=games" class="footer-link">Games</a>
+            <a href="/browse?category=games" class="footer-link">Games</a>
             <a href="/wildwest" class="footer-link">Wild West</a>
           </nav>
         </div>
@@ -440,23 +227,20 @@
           <h4 class="footer-title">Community</h4>
           <nav class="footer-links">
             <a href="/request" class="footer-link">Request an App</a>
-            <a href="https://github.com/flick-store" class="footer-link">GitHub</a>
-            <a href="https://discord.gg/flick" class="footer-link">Discord</a>
+            <a href="https://github.com/ruapotato/Flick" class="footer-link">GitHub</a>
           </nav>
         </div>
 
         <div>
           <h4 class="footer-title">Resources</h4>
           <nav class="footer-links">
-            <a href="/docs" class="footer-link">Documentation</a>
             <a href="/api" class="footer-link">API</a>
-            <a href="/privacy" class="footer-link">Privacy</a>
           </nav>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p class="footer-copyright">&copy; 2025 Flick Store. Open source and community-driven.</p>
+        <p class="footer-copyright">&copy; 2025 Flick Project. AGPL-3.0 Licensed.</p>
       </div>
     </div>
   </footer>
@@ -464,16 +248,100 @@
   <script src="/static/js/api.js"></script>
   <script src="/static/js/main.js"></script>
   <script>
+    // App icon mapping
+    const appIcons = {
+      'music': '&#127925;',
+      'ebooks': '&#128214;',
+      'audiobooks': '&#127911;',
+      'sandbox': '&#127958;',
+      'calculator': '&#129518;',
+      'calendar': '&#128197;',
+      'clock': '&#9200;',
+      'contacts': '&#128101;',
+      'files': '&#128193;',
+      'notes': '&#128221;',
+      'weather': '&#127780;',
+      'photos': '&#128247;',
+      'video': '&#127916;',
+      'web': '&#127760;',
+      'maps': '&#128506;',
+      'podcast': '&#127897;',
+      'recorder': '&#127908;',
+      'terminal': '&#128187;',
+      'settings': '&#9881;',
+      'messages': '&#128172;',
+      'phone': '&#128222;',
+      'email': '&#128231;',
+      'passwordsafe': '&#128274;',
+      'distract': '&#127918;',
+      'welcome': '&#128075;',
+      'store': '&#127919;',
+    };
+
+    const categoryIcons = {
+      'multimedia': '&#127925;',
+      'productivity': '&#128221;',
+      'games': '&#127918;',
+      'utilities': '&#128295;',
+      'internet': '&#127760;',
+      'communication': '&#128172;',
+      'development': '&#128187;',
+      'security': '&#128274;',
+      'system': '&#9881;',
+    };
+
+    function getAppIcon(slug, category) {
+      return appIcons[slug] || categoryIcons[category] || '&#128230;';
+    }
+
+    function formatDownloads(count) {
+      if (count >= 1000000) return (count / 1000000).toFixed(1) + 'M';
+      if (count >= 1000) return (count / 1000).toFixed(1) + 'K';
+      return count.toString();
+    }
+
+    function formatCategoryName(name) {
+      if (!name) return '';
+      return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ');
+    }
+
+    function createAppCard(app) {
+      const link = document.createElement('a');
+      link.href = `/app/${app.slug}`;
+      link.className = 'card app-card';
+      link.innerHTML = `
+        <div class="app-card-image">
+          <div class="app-card-icon">${getAppIcon(app.slug, app.category)}</div>
+        </div>
+        <div class="app-card-content">
+          <h3 class="app-card-title">${escapeHtml(app.name)}</h3>
+          <p class="app-card-desc">${escapeHtml(app.description.substring(0, 100))}${app.description.length > 100 ? '...' : ''}</p>
+          <div class="app-card-meta">
+            ${app.average_rating ? `<div class="app-card-rating"><span>&#9733;</span><span>${app.average_rating.toFixed(1)}</span></div>` : ''}
+            <span class="app-card-downloads">${formatDownloads(app.download_count)} downloads</span>
+            <span class="app-card-category">${escapeHtml(formatCategoryName(app.category))}</span>
+          </div>
+        </div>
+      `;
+      return link;
+    }
+
     // Browse page specific functionality
     document.addEventListener('DOMContentLoaded', async () => {
       const categoryFiltersContainer = document.getElementById('category-filters');
       const sortSelect = document.getElementById('sort-select');
       const viewBtns = document.querySelectorAll('[data-view]');
       const appsGrid = document.getElementById('apps-grid');
+      const appsLoading = document.getElementById('apps-loading');
       const browseTitle = document.getElementById('browse-title');
       const searchInfo = document.getElementById('search-info');
       const searchQuery = document.getElementById('search-query');
       const clearSearch = document.getElementById('clear-search');
+      const loadMoreBtn = document.getElementById('load-more');
+      const emptyState = document.getElementById('empty-state');
+
+      let currentPage = 1;
+      let hasMore = true;
 
       // Load categories from API
       await loadCategories();
@@ -499,10 +367,14 @@
         sortSelect.value = urlSort;
       }
 
+      // Load initial apps
+      await loadApps();
+
       // Sort change
       sortSelect.addEventListener('change', () => {
         setUrlParam('sort', sortSelect.value);
-        loadApps();
+        currentPage = 1;
+        loadApps(true);
       });
 
       // View toggle
@@ -520,7 +392,14 @@
         searchInfo.style.display = 'none';
         browseTitle.textContent = 'All Apps';
         document.getElementById('header-search').value = '';
-        loadApps();
+        currentPage = 1;
+        loadApps(true);
+      });
+
+      // Load more
+      loadMoreBtn?.addEventListener('click', async () => {
+        currentPage++;
+        await loadApps(false);
       });
 
       async function loadCategories() {
@@ -528,7 +407,6 @@
           const data = await API.categories.getAll();
           const categories = data.categories || data;
 
-          // Render category filter items
           if (Array.isArray(categories)) {
             categories.forEach(category => {
               const name = typeof category === 'string' ? category : category.name;
@@ -540,6 +418,7 @@
               label.dataset.category = slug;
               label.innerHTML = `
                 <input type="radio" name="category" value="${escapeHtml(slug)}" class="sr-only">
+                ${categoryIcons[slug] ? `<span>${categoryIcons[slug]}</span>` : ''}
                 ${escapeHtml(formatCategoryName(name))}
                 ${count !== null ? `<span class="filter-count">${count}</span>` : ''}
               `;
@@ -560,7 +439,6 @@
       }
 
       function handleCategoryClick(item) {
-        // Update active state
         categoryFiltersContainer.querySelectorAll('[data-category]').forEach(i => i.classList.remove('active'));
         item.classList.add('active');
 
@@ -573,7 +451,8 @@
           setUrlParam('category', category);
         }
 
-        loadApps();
+        currentPage = 1;
+        loadApps(true);
       }
 
       function updateActiveCategory(categorySlug) {
@@ -582,15 +461,71 @@
         });
       }
 
-      function formatCategoryName(name) {
-        if (!name) return '';
-        return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ');
-      }
+      async function loadApps(reset = false) {
+        if (reset) {
+          appsGrid.innerHTML = '<div class="loading" id="apps-loading"><div class="loading-spinner"></div></div>';
+        }
 
-      async function loadApps() {
-        // In real app, this would make API calls
-        // For now, just showing the static content
-        console.log('Loading apps...');
+        try {
+          const params = {
+            page: currentPage,
+            per_page: 12,
+          };
+
+          // Get current filters
+          const category = getUrlParam('category');
+          const query = getUrlParam('q');
+          const sort = sortSelect.value;
+
+          if (category) params.category = category;
+
+          // Map sort values
+          if (sort === 'popular') {
+            params.sort = 'downloads';
+            params.order = 'desc';
+          } else if (sort === 'new') {
+            params.sort = 'created_at';
+            params.order = 'desc';
+          } else if (sort === 'name') {
+            params.sort = 'name';
+            params.order = 'asc';
+          }
+
+          let data;
+          if (query) {
+            data = await API.get('/apps/search', { q: query, ...params });
+          } else {
+            data = await API.get('/apps', params);
+          }
+
+          const loading = document.getElementById('apps-loading');
+          if (loading) loading.remove();
+
+          if (data.apps && data.apps.length > 0) {
+            if (reset) {
+              appsGrid.innerHTML = '';
+            }
+            data.apps.forEach(app => {
+              appsGrid.appendChild(createAppCard(app));
+            });
+            hasMore = data.has_next;
+            if (loadMoreBtn) {
+              loadMoreBtn.style.display = hasMore ? 'inline-block' : 'none';
+            }
+            if (emptyState) emptyState.style.display = 'none';
+          } else if (reset) {
+            appsGrid.innerHTML = '';
+            if (emptyState) emptyState.style.display = 'block';
+            if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+          }
+        } catch (error) {
+          console.error('Failed to load apps:', error);
+          const loading = document.getElementById('apps-loading');
+          if (loading) loading.remove();
+          if (reset) {
+            appsGrid.innerHTML = '<p class="text-muted">Failed to load apps</p>';
+          }
+        }
       }
     });
   </script>
