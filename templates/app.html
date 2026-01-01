@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="App details on Flick Store - Linux App Store">
+  <meta name="description" content="App details on Flick Store - Qt/QML apps for Flick">
   <meta name="theme-color" content="#0a0a0f">
   <title>App Details - Flick Store</title>
   <link rel="stylesheet" href="/static/css/style.css">
@@ -54,31 +54,36 @@
 
   <main class="app-detail">
     <div class="container">
+      <!-- Loading State -->
+      <div class="loading" id="app-loading">
+        <div class="loading-spinner"></div>
+      </div>
+
       <!-- App Header -->
-      <div class="app-detail-header" id="app-header">
-        <div class="app-detail-icon" id="app-icon">&#128187;</div>
+      <div class="app-detail-header" id="app-header" style="display:none;">
+        <div class="app-detail-icon" id="app-icon">&#128230;</div>
 
         <div class="app-detail-info">
-          <h1 id="app-name">Visual Studio Code</h1>
+          <h1 id="app-name">Loading...</h1>
           <p class="app-detail-developer">
-            <a href="#" id="app-developer">Microsoft Corporation</a>
+            by <a href="#" id="app-developer">Flick</a>
           </p>
 
           <div class="app-detail-stats">
             <div class="app-stat">
-              <div class="app-stat-value" id="app-rating">4.8</div>
+              <div class="app-stat-value" id="app-rating">-</div>
               <div class="app-stat-label">Rating</div>
             </div>
             <div class="app-stat">
-              <div class="app-stat-value" id="app-downloads">2.5M</div>
+              <div class="app-stat-value" id="app-downloads">0</div>
               <div class="app-stat-label">Downloads</div>
             </div>
             <div class="app-stat">
-              <div class="app-stat-value" id="app-size">85 MB</div>
-              <div class="app-stat-label">Size</div>
+              <div class="app-stat-value" id="app-category">-</div>
+              <div class="app-stat-label">Category</div>
             </div>
             <div class="app-stat">
-              <div class="app-stat-value" id="app-version">1.85.0</div>
+              <div class="app-stat-value" id="app-version">1.0.0</div>
               <div class="app-stat-label">Version</div>
             </div>
           </div>
@@ -103,56 +108,21 @@
         </div>
       </div>
 
-      <!-- Screenshots Gallery -->
-      <section class="section">
-        <h2 class="section-title mb-lg">Screenshots</h2>
-        <div class="screenshots-gallery" id="screenshots">
-          <div class="screenshot-item">
-            <div style="display:flex;align-items:center;justify-content:center;height:100%;background:var(--bg-tertiary);color:var(--text-muted);">
-              Screenshot 1
-            </div>
-          </div>
-          <div class="screenshot-item">
-            <div style="display:flex;align-items:center;justify-content:center;height:100%;background:var(--bg-tertiary);color:var(--text-muted);">
-              Screenshot 2
-            </div>
-          </div>
-          <div class="screenshot-item">
-            <div style="display:flex;align-items:center;justify-content:center;height:100%;background:var(--bg-tertiary);color:var(--text-muted);">
-              Screenshot 3
-            </div>
-          </div>
-          <div class="screenshot-item">
-            <div style="display:flex;align-items:center;justify-content:center;height:100%;background:var(--bg-tertiary);color:var(--text-muted);">
-              Screenshot 4
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- Description -->
-      <div class="app-description" id="app-description">
+      <div class="app-description" id="app-description" style="display:none;">
         <h2>About this app</h2>
-        <p>
-          Visual Studio Code is a lightweight but powerful source code editor which runs on your desktop and is available for Windows, macOS and Linux. It comes with built-in support for JavaScript, TypeScript and Node.js and has a rich ecosystem of extensions for other languages and runtimes (such as C++, C#, Java, Python, PHP, Go, .NET).
-        </p>
-        <p class="mt-md">
-          Key features include:
-        </p>
-        <ul style="margin-top:var(--space-md);padding-left:var(--space-lg);color:var(--text-secondary);">
-          <li>IntelliSense - Go beyond syntax highlighting and autocomplete</li>
-          <li>Debugging - Debug code right from the editor</li>
-          <li>Built-in Git - Review diffs, stage files, and make commits</li>
-          <li>Extensions - Install extensions to add new languages, themes, debuggers</li>
-        </ul>
+        <p id="app-desc-text"></p>
+        <div id="app-ai-notice" class="mt-md" style="display:none;padding:var(--space-md);background:var(--bg-tertiary);border-radius:var(--radius-md);border-left:3px solid var(--warning);">
+          <strong>AI Generated:</strong> This app was created by AI based on a community request. Please test and provide feedback!
+        </div>
       </div>
 
       <!-- Install Instructions -->
-      <div class="install-box">
+      <div class="install-box" id="install-box" style="display:none;">
         <h3>Installation</h3>
-        <p class="text-secondary mb-md">Install using the Flick command line tool:</p>
+        <p class="text-secondary mb-md">Install using the Flick Store app or command line:</p>
         <div class="install-command">
-          <code id="install-cmd">flick install vscode</code>
+          <code id="install-cmd">flick install app-slug</code>
           <button class="btn-copy" data-copy="#install-cmd" aria-label="Copy to clipboard">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
@@ -160,13 +130,10 @@
             </svg>
           </button>
         </div>
-        <p class="form-hint mt-md">
-          Don't have Flick installed? <a href="/docs/install">Get started here</a>
-        </p>
       </div>
 
       <!-- Reviews Section -->
-      <section class="reviews-section section">
+      <section class="reviews-section section" id="reviews-section" style="display:none;">
         <div class="reviews-header">
           <h2 class="section-title">Reviews</h2>
           <button class="btn btn-secondary" data-modal-open="review-modal" data-auth>Write a Review</button>
@@ -174,97 +141,23 @@
 
         <div class="reviews-summary mb-xl">
           <div class="reviews-average">
-            <div class="reviews-average-score" id="reviews-score">4.8</div>
-            <div class="reviews-average-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <div class="reviews-average-count" id="reviews-count">1,247 reviews</div>
+            <div class="reviews-average-score" id="reviews-score">-</div>
+            <div class="reviews-average-stars" id="reviews-stars"></div>
+            <div class="reviews-average-count" id="reviews-count">0 reviews</div>
           </div>
         </div>
 
         <div id="reviews-list">
-          <div class="review-card">
-            <div class="review-header">
-              <div class="review-avatar">L</div>
-              <div class="review-meta">
-                <span class="review-author">LinuxFan42</span>
-                <span class="review-date">Dec 15, 2024</span>
-              </div>
-              <div class="review-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            </div>
-            <p class="review-content">
-              Best code editor I've ever used on Linux. The extension ecosystem is amazing and performance is great even on older hardware. Highly recommended for any developer.
-            </p>
-          </div>
-
-          <div class="review-card">
-            <div class="review-header">
-              <div class="review-avatar">D</div>
-              <div class="review-meta">
-                <span class="review-author">DevOpsGuru</span>
-                <span class="review-date">Dec 12, 2024</span>
-              </div>
-              <div class="review-rating">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
-            </div>
-            <p class="review-content">
-              Solid editor with great Git integration. The remote development features are fantastic for working with containers and remote servers. Only minor complaint is occasional high memory usage.
-            </p>
-          </div>
-
-          <div class="review-card">
-            <div class="review-header">
-              <div class="review-avatar">P</div>
-              <div class="review-meta">
-                <span class="review-author">PythonPro</span>
-                <span class="review-date">Dec 10, 2024</span>
-              </div>
-              <div class="review-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            </div>
-            <p class="review-content">
-              The Python extension is incredible. Debugging, linting, IntelliSense - everything works flawlessly. This has become my daily driver for all Python projects.
-            </p>
-          </div>
+          <p class="text-muted" id="no-reviews">No reviews yet. Be the first to review this app!</p>
         </div>
-
-        <button class="btn btn-ghost mt-lg" id="load-more-reviews">Load More Reviews</button>
       </section>
 
-      <!-- Version History -->
-      <div class="version-history">
-        <h3 class="mb-lg">Version History</h3>
-
-        <div class="version-item">
-          <div class="version-header">
-            <span class="version-number">v1.85.0</span>
-            <span class="version-date">December 2024</span>
-          </div>
-          <ul class="version-changes">
-            <li>New floating editor windows</li>
-            <li>Improved settings editor</li>
-            <li>Better accessibility features</li>
-          </ul>
-        </div>
-
-        <div class="version-item">
-          <div class="version-header">
-            <span class="version-number">v1.84.2</span>
-            <span class="version-date">November 2024</span>
-          </div>
-          <ul class="version-changes">
-            <li>Bug fixes and performance improvements</li>
-            <li>Security patches</li>
-          </ul>
-        </div>
-
-        <div class="version-item">
-          <div class="version-header">
-            <span class="version-number">v1.84.0</span>
-            <span class="version-date">November 2024</span>
-          </div>
-          <ul class="version-changes">
-            <li>Voice control support</li>
-            <li>Enhanced multi-root workspace support</li>
-            <li>New diff editor features</li>
-          </ul>
-        </div>
+      <!-- Error State -->
+      <div class="empty-state" id="app-error" style="display:none;">
+        <div class="empty-state-icon">&#128533;</div>
+        <h3>App Not Found</h3>
+        <p>The app you're looking for doesn't exist or has been removed.</p>
+        <a href="/browse" class="btn btn-primary">Browse Apps</a>
       </div>
     </div>
   </main>
@@ -283,8 +176,8 @@
             <select class="form-select" id="report-type" name="type" required>
               <option value="">Select an issue type</option>
               <option value="bug">Bug / Crash</option>
-              <option value="security">Security Issue</option>
-              <option value="content">Inappropriate Content</option>
+              <option value="suggestion">Suggestion</option>
+              <option value="rebuild_request">Request Rebuild (AI apps)</option>
               <option value="other">Other</option>
             </select>
           </div>
@@ -307,7 +200,7 @@
         <button class="modal-close" data-modal-close aria-label="Close modal">&times;</button>
       </div>
       <div class="modal-body">
-        <form id="review-form" data-app-id="">
+        <form id="review-form" data-app-slug="">
           <div class="form-group">
             <label class="form-label">Rating</label>
             <div class="rating-input" style="display:flex;gap:var(--space-sm);font-size:var(--text-2xl);">
@@ -329,9 +222,13 @@
               </label>
               <label style="cursor:pointer;">
                 <input type="radio" name="rating" value="5" class="sr-only" checked>
-                <span class="rating-star" data-rating="5">&#9734;</span>
+                <span class="rating-star" data-rating="5">&#9733;</span>
               </label>
             </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="review-title">Title (optional)</label>
+            <input type="text" class="form-input" id="review-title" name="title" placeholder="Summary of your review">
           </div>
           <div class="form-group">
             <label class="form-label" for="review-content">Your Review</label>
@@ -359,14 +256,14 @@
             </div>
             <span>Flick Store</span>
           </a>
-          <p>A fast, modern, community-driven app store for Linux.</p>
+          <p>A fast, modern app store for Flick mobile shell.</p>
         </div>
 
         <div>
           <h4 class="footer-title">Explore</h4>
           <nav class="footer-links">
             <a href="/browse" class="footer-link">Browse Apps</a>
-            <a href="/browse.html?category=games" class="footer-link">Games</a>
+            <a href="/browse?category=games" class="footer-link">Games</a>
             <a href="/wildwest" class="footer-link">Wild West</a>
           </nav>
         </div>
@@ -375,23 +272,20 @@
           <h4 class="footer-title">Community</h4>
           <nav class="footer-links">
             <a href="/request" class="footer-link">Request an App</a>
-            <a href="https://github.com/flick-store" class="footer-link">GitHub</a>
-            <a href="https://discord.gg/flick" class="footer-link">Discord</a>
+            <a href="https://github.com/ruapotato/Flick" class="footer-link">GitHub</a>
           </nav>
         </div>
 
         <div>
           <h4 class="footer-title">Resources</h4>
           <nav class="footer-links">
-            <a href="/docs" class="footer-link">Documentation</a>
             <a href="/api" class="footer-link">API</a>
-            <a href="/privacy" class="footer-link">Privacy</a>
           </nav>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p class="footer-copyright">&copy; 2025 Flick Store. Open source and community-driven.</p>
+        <p class="footer-copyright">&copy; 2025 Flick Project. AGPL-3.0 Licensed.</p>
       </div>
     </div>
   </footer>
@@ -399,6 +293,74 @@
   <script src="/static/js/api.js"></script>
   <script src="/static/js/main.js"></script>
   <script>
+    // App icons mapping
+    const appIcons = {
+      'music': '&#127925;',
+      'ebooks': '&#128214;',
+      'audiobooks': '&#127911;',
+      'sandbox': '&#127958;',
+      'calculator': '&#129518;',
+      'calendar': '&#128197;',
+      'clock': '&#9200;',
+      'contacts': '&#128101;',
+      'files': '&#128193;',
+      'notes': '&#128221;',
+      'weather': '&#127780;',
+      'photos': '&#128247;',
+      'video': '&#127916;',
+      'web': '&#127760;',
+      'maps': '&#128506;',
+      'podcast': '&#127897;',
+      'recorder': '&#127908;',
+      'terminal': '&#128187;',
+      'settings': '&#9881;',
+      'messages': '&#128172;',
+      'phone': '&#128222;',
+      'email': '&#128231;',
+      'passwordsafe': '&#128274;',
+      'distract': '&#127918;',
+      'welcome': '&#128075;',
+      'store': '&#127919;',
+    };
+
+    const categoryIcons = {
+      'multimedia': '&#127925;',
+      'productivity': '&#128221;',
+      'games': '&#127918;',
+      'utilities': '&#128295;',
+      'internet': '&#127760;',
+      'communication': '&#128172;',
+      'development': '&#128187;',
+      'security': '&#128274;',
+      'system': '&#9881;',
+    };
+
+    function getAppIcon(slug, category) {
+      return appIcons[slug] || categoryIcons[category] || '&#128230;';
+    }
+
+    function formatDownloads(count) {
+      if (count >= 1000000) return (count / 1000000).toFixed(1) + 'M';
+      if (count >= 1000) return (count / 1000).toFixed(1) + 'K';
+      return count.toString();
+    }
+
+    function formatCategoryName(name) {
+      if (!name) return '';
+      return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ');
+    }
+
+    function renderStars(rating) {
+      const fullStars = Math.floor(rating);
+      const hasHalf = rating % 1 >= 0.5;
+      let stars = '';
+      for (let i = 0; i < 5; i++) {
+        if (i < fullStars) stars += '&#9733;';
+        else stars += '&#9734;';
+      }
+      return stars;
+    }
+
     // Rating star interaction
     document.querySelectorAll('.rating-star').forEach(star => {
       star.addEventListener('click', function() {
@@ -410,33 +372,163 @@
       });
     });
 
-    // Load app data based on URL params
+    // Get slug from URL path: /app/music -> music
+    function getSlugFromPath() {
+      const path = window.location.pathname;
+      const match = path.match(/\/app\/([^\/]+)/);
+      return match ? match[1] : null;
+    }
+
+    // Load app data
     document.addEventListener('DOMContentLoaded', async () => {
-      const appId = getUrlParam('id');
-      const appSlug = getUrlParam('slug');
+      const slug = getSlugFromPath() || '{{ slug }}';
+      const loadingEl = document.getElementById('app-loading');
+      const headerEl = document.getElementById('app-header');
+      const descEl = document.getElementById('app-description');
+      const installEl = document.getElementById('install-box');
+      const reviewsEl = document.getElementById('reviews-section');
+      const errorEl = document.getElementById('app-error');
 
-      if (appId || appSlug) {
-        try {
-          const app = appId
-            ? await API.apps.getById(appId)
-            : await API.apps.getBySlug(appSlug);
+      if (!slug) {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+        return;
+      }
 
-          if (app) {
-            document.title = `${app.name} - Flick Store`;
-            document.getElementById('app-name').textContent = app.name;
-            document.getElementById('app-developer').textContent = app.developer || 'Unknown';
-            document.getElementById('app-rating').textContent = app.rating?.toFixed(1) || 'N/A';
-            document.getElementById('app-downloads').textContent = formatNumber(app.downloads || 0);
-            document.getElementById('app-size').textContent = app.size || 'N/A';
-            document.getElementById('app-version').textContent = app.version || '1.0.0';
-            document.getElementById('install-cmd').textContent = `flick install ${app.slug || app.id}`;
+      try {
+        const data = await API.get(`/apps/${slug}`);
+        const app = data.app;
 
-            // Set app ID for review form
-            document.getElementById('review-form').dataset.appId = app.id;
-          }
-        } catch (error) {
-          console.error('Failed to load app:', error);
+        if (!app) {
+          throw new Error('App not found');
         }
+
+        // Update page title
+        document.title = `${app.name} - Flick Store`;
+
+        // Update header
+        document.getElementById('app-icon').innerHTML = getAppIcon(app.slug, app.category);
+        document.getElementById('app-name').textContent = app.name;
+        document.getElementById('app-developer').textContent = app.author || 'Flick';
+        document.getElementById('app-rating').textContent = app.average_rating ? app.average_rating.toFixed(1) : '-';
+        document.getElementById('app-downloads').textContent = formatDownloads(app.download_count);
+        document.getElementById('app-category').textContent = formatCategoryName(app.category);
+        document.getElementById('app-version').textContent = app.version || '1.0.0';
+
+        // Update description
+        document.getElementById('app-desc-text').textContent = app.description;
+        if (app.ai_generated) {
+          document.getElementById('app-ai-notice').style.display = 'block';
+        }
+
+        // Update install command
+        document.getElementById('install-cmd').textContent = `flick install ${app.slug}`;
+
+        // Update reviews section
+        document.getElementById('reviews-score').textContent = app.average_rating ? app.average_rating.toFixed(1) : '-';
+        document.getElementById('reviews-stars').innerHTML = app.average_rating ? renderStars(app.average_rating) : '';
+        document.getElementById('reviews-count').textContent = `${app.review_count || 0} reviews`;
+
+        // Set slug for review form
+        document.getElementById('review-form').dataset.appSlug = app.slug;
+
+        // Load reviews
+        await loadReviews(app.slug);
+
+        // Show content
+        loadingEl.style.display = 'none';
+        headerEl.style.display = 'flex';
+        descEl.style.display = 'block';
+        installEl.style.display = 'block';
+        reviewsEl.style.display = 'block';
+
+      } catch (error) {
+        console.error('Failed to load app:', error);
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+      }
+    });
+
+    async function loadReviews(slug) {
+      try {
+        const data = await API.get(`/reviews/app/${slug}`);
+        const reviews = data.reviews || [];
+        const reviewsList = document.getElementById('reviews-list');
+        const noReviews = document.getElementById('no-reviews');
+
+        if (reviews.length > 0) {
+          noReviews.style.display = 'none';
+          reviewsList.innerHTML = reviews.map(review => `
+            <div class="review-card">
+              <div class="review-header">
+                <div class="review-avatar">${(review.author || 'A').charAt(0).toUpperCase()}</div>
+                <div class="review-meta">
+                  <span class="review-author">${escapeHtml(review.author || 'Anonymous')}</span>
+                  <span class="review-date">${new Date(review.created_at).toLocaleDateString()}</span>
+                </div>
+                <div class="review-rating" style="color:var(--warning);">${renderStars(review.rating)}</div>
+              </div>
+              ${review.title ? `<h4 class="review-title">${escapeHtml(review.title)}</h4>` : ''}
+              <p class="review-content">${escapeHtml(review.content || '')}</p>
+            </div>
+          `).join('');
+        }
+      } catch (error) {
+        console.error('Failed to load reviews:', error);
+      }
+    }
+
+    // Handle review form submission
+    document.getElementById('review-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const slug = form.dataset.appSlug;
+      const rating = form.querySelector('input[name="rating"]:checked')?.value || 5;
+      const title = form.querySelector('#review-title').value;
+      const content = form.querySelector('#review-content').value;
+
+      try {
+        await API.post(`/reviews/app/${slug}`, { rating: parseInt(rating), title, content });
+        alert('Review submitted successfully!');
+        closeModal('review-modal');
+        location.reload();
+      } catch (error) {
+        alert('Failed to submit review: ' + (error.message || 'Please try again'));
+      }
+    });
+
+    // Handle report form submission
+    document.getElementById('report-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const slug = getSlugFromPath();
+      const type = document.getElementById('report-type').value;
+      const content = document.getElementById('report-description').value;
+
+      try {
+        await API.post(`/feedback/app/${slug}`, {
+          feedback_type: type,
+          title: `${type} report`,
+          content
+        });
+        alert('Report submitted successfully!');
+        closeModal('report-modal');
+      } catch (error) {
+        alert('Failed to submit report: ' + (error.message || 'Please try again'));
+      }
+    });
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // Copy button
+    document.querySelector('.btn-copy')?.addEventListener('click', async () => {
+      const cmd = document.getElementById('install-cmd').textContent;
+      try {
+        await navigator.clipboard.writeText(cmd);
+        alert('Copied to clipboard!');
+      } catch (err) {
+        console.error('Failed to copy:', err);
       }
     });
   </script>
