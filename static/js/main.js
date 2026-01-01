@@ -69,7 +69,7 @@ function initSearch() {
         e.preventDefault();
         const query = e.target.value.trim();
         if (query) {
-          window.location.href = `/browse.html?q=${encodeURIComponent(query)}`;
+          window.location.href = `/browse?q=${encodeURIComponent(query)}`;
         }
       }
     });
@@ -97,7 +97,7 @@ function renderSearchResults(results, container) {
   }
 
   container.innerHTML = results.apps.map(app => `
-    <a href="/app.html?id=${app.id}" class="search-result-item">
+    <a href="/app/${app.slug}" class="search-result-item">
       <div class="search-result-icon">${app.icon || app.name[0]}</div>
       <div class="search-result-info">
         <div class="search-result-name">${escapeHtml(app.name)}</div>
@@ -398,7 +398,7 @@ async function handleRegister(e) {
 
     await API.auth.register(username, email, password);
     showToast('Account created successfully!', 'success');
-    window.location.href = '/profile.html';
+    window.location.href = '/profile';
   } catch (error) {
     showToast(error.message || 'Registration failed', 'error');
   } finally {
@@ -774,7 +774,7 @@ async function loadCategories(containerId) {
 
 function renderAppCard(app) {
   return `
-    <a href="/app.html?id=${app.id}" class="card app-card">
+    <a href="/app/${app.slug}" class="card app-card">
       <div class="app-card-image">
         ${app.screenshot
           ? `<img src="${app.screenshot}" alt="${escapeHtml(app.name)} screenshot" loading="lazy">`
@@ -787,9 +787,9 @@ function renderAppCard(app) {
         <div class="app-card-meta">
           <div class="app-card-rating">
             <span>&#9733;</span>
-            <span>${app.rating?.toFixed(1) || 'N/A'}</span>
+            <span>${app.average_rating?.toFixed(1) || 'N/A'}</span>
           </div>
-          <span class="app-card-downloads">${formatNumber(app.downloads || 0)} downloads</span>
+          <span class="app-card-downloads">${formatNumber(app.download_count || 0)} downloads</span>
           <span class="app-card-category">${escapeHtml(app.category || 'App')}</span>
         </div>
       </div>
@@ -805,7 +805,7 @@ function renderFeaturedCard(app) {
           <span class="featured-badge">&#9733; Featured</span>
           <h2 class="featured-title">${escapeHtml(app.name)}</h2>
           <p class="featured-desc">${escapeHtml(app.description || '')}</p>
-          <a href="/app.html?id=${app.id}" class="btn btn-primary">View App</a>
+          <a href="/app/${app.slug}" class="btn btn-primary">View App</a>
         </div>
         <div class="featured-image">
           ${app.screenshot
