@@ -167,6 +167,7 @@ mkdir -p packages
 
 echo "[*] Setting permissions..."
 sudo chown -R flick:flick /opt/flick_forge
+chmod -R 644 /opt/flick_forge/static/css/* /opt/flick_forge/static/js/* 2>/dev/null || true
 
 echo "[*] Restarting service..."
 sudo systemctl daemon-reload
