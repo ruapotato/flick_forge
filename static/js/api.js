@@ -120,8 +120,8 @@ const API = {
   // ==================
 
   auth: {
-    async login(email, password) {
-      const data = await API.post('/auth/login', { email, password });
+    async login(username, password) {
+      const data = await API.post('/auth/login', { username, password });
       if (data.token) {
         API.setToken(data.token);
       }

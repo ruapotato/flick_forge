@@ -356,7 +356,7 @@ function initForms() {
 async function handleLogin(e) {
   e.preventDefault();
   const form = e.target;
-  const email = form.querySelector('[name="email"]').value;
+  const username = form.querySelector('[name="email"]').value; // accepts username or email
   const password = form.querySelector('[name="password"]').value;
   const submitBtn = form.querySelector('[type="submit"]');
 
@@ -364,7 +364,7 @@ async function handleLogin(e) {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Signing in...';
 
-    await API.auth.login(email, password);
+    await API.auth.login(username, password);
     showToast('Welcome back!', 'success');
 
     // Redirect to previous page or home
