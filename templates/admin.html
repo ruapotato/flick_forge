@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Admin Dashboard - Flick Store">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Admin Dashboard - Flick Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127919;</text></svg>">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span>Flick Store</span>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/browse" class="nav-link">Browse</a>
+        <a href="/wildwest" class="nav-link wild-west">Wild West</a>
+        <a href="/admin" class="nav-link active">Admin</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="/profile" class="btn btn-secondary">
+          <span data-user-avatar>A</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <nav class="admin-nav">
+        <a href="#overview" class="admin-nav-item active" data-section="overview">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="9"/>
+            <rect x="14" y="3" width="7" height="5"/>
+            <rect x="14" y="12" width="7" height="9"/>
+            <rect x="3" y="16" width="7" height="5"/>
+          </svg>
+          Overview
+        </a>
+        <a href="#requests" class="admin-nav-item" data-section="requests">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          Requests
+          <span class="admin-nav-badge">12</span>
+        </a>
+        <a href="#wildwest" class="admin-nav-item" data-section="wildwest">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          Wild West
+          <span class="admin-nav-badge">24</span>
+        </a>
+        <a href="#users" class="admin-nav-item" data-section="users">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Users
+        </a>
+        <a href="#reports" class="admin-nav-item" data-section="reports">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+            <line x1="4" y1="22" x2="4" y2="15"/>
+          </svg>
+          Reports
+          <span class="admin-nav-badge">5</span>
+        </a>
+        <a href="#apps" class="admin-nav-item" data-section="apps">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          All Apps
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Overview Section -->
+      <section id="section-overview">
+        <div class="admin-header">
+          <h1 class="admin-title">Dashboard Overview</h1>
+          <p class="admin-subtitle">Welcome back, Admin. Here's what's happening today.</p>
+        </div>
+
+        <div class="admin-stats">
+          <div class="admin-stat-card">
+            <div class="admin-stat-label">Total Apps</div>
+            <div class="admin-stat-value">972</div>
+            <div class="admin-stat-change positive">+12 this week</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-label">Active Users</div>
+            <div class="admin-stat-value">8,456</div>
+            <div class="admin-stat-change positive">+5.2% vs last week</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-label">Pending Requests</div>
+            <div class="admin-stat-value">12</div>
+            <div class="admin-stat-change negative">+4 today</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-label">Wild West Apps</div>
+            <div class="admin-stat-value">24</div>
+            <div class="admin-stat-change positive">3 ready for promotion</div>
+          </div>
+        </div>
+
+        <div class="grid grid-2 mt-xl">
+          <div class="card" style="padding:var(--space-lg);">
+            <h3 style="margin-bottom:var(--space-lg);">Recent Activity</h3>
+            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+              <div style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-sm) 0;">
+                <span style="color:var(--success);">&#10003;</span>
+                <span class="text-secondary">CodeSnippets promoted to stable</span>
+                <span class="text-muted text-sm" style="margin-left:auto;">2h ago</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-sm) 0;">
+                <span style="color:var(--info);">&#9733;</span>
+                <span class="text-secondary">New request: Local AI Chat Interface</span>
+                <span class="text-muted text-sm" style="margin-left:auto;">4h ago</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-sm) 0;">
+                <span style="color:var(--warning);">&#9888;</span>
+                <span class="text-secondary">Report filed for PassVault</span>
+                <span class="text-muted text-sm" style="margin-left:auto;">6h ago</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-sm) 0;">
+                <span style="color:var(--accent);">&#128100;</span>
+                <span class="text-secondary">@linuxfan42 promoted to Trusted</span>
+                <span class="text-muted text-sm" style="margin-left:auto;">1d ago</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:var(--space-lg);">
+            <h3 style="margin-bottom:var(--space-lg);">Quick Actions</h3>
+            <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+              <button class="btn btn-secondary" style="justify-content:flex-start;" data-section-link="requests">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                Review Pending Requests (12)
+              </button>
+              <button class="btn btn-secondary" style="justify-content:flex-start;" data-section-link="wildwest">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Review Wild West Apps (24)
+              </button>
+              <button class="btn btn-secondary" style="justify-content:flex-start;" data-section-link="reports">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                  <line x1="4" y1="22" x2="4" y2="15"/>
+                </svg>
+                Handle Reports (5)
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Requests Section -->
+      <section id="section-requests" style="display:none;">
+        <div class="admin-header">
+          <h1 class="admin-title">Pending Requests</h1>
+          <p class="admin-subtitle">Review and approve app requests from users.</p>
+        </div>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Requester</th>
+              <th>Category</th>
+              <th>Votes</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Local-first AI Chat Interface</strong>
+                <p class="text-muted text-sm">GTK4 app for chatting with local LLMs</p>
+              </td>
+              <td>@opensource_dev</td>
+              <td><span class="app-card-category">Development</span></td>
+              <td>156</td>
+              <td>2 days ago</td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-primary">Approve</button>
+                  <button class="btn btn-sm btn-ghost">Reject</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Simple Time Tracker</strong>
+                <p class="text-muted text-sm">Track time spent on different projects</p>
+              </td>
+              <td>@freelance_linux</td>
+              <td><span class="app-card-category">Productivity</span></td>
+              <td>134</td>
+              <td>3 days ago</td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-primary">Approve</button>
+                  <button class="btn btn-sm btn-ghost">Reject</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>2D Pixel Art Editor</strong>
+                <p class="text-muted text-sm">Simple pixel art editor for game sprites</p>
+              </td>
+              <td>@gamedev_guy</td>
+              <td><span class="app-card-category">Graphics</span></td>
+              <td>87</td>
+              <td>5 days ago</td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-primary">Approve</button>
+                  <button class="btn btn-sm btn-ghost">Reject</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Markdown Blog Generator</strong>
+                <p class="text-muted text-sm">CLI tool to generate static blog from markdown</p>
+              </td>
+              <td>@static_site_dev</td>
+              <td><span class="app-card-category">Development</span></td>
+              <td>65</td>
+              <td>1 week ago</td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-primary">Approve</button>
+                  <button class="btn btn-sm btn-ghost">Reject</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Wild West Section -->
+      <section id="section-wildwest" style="display:none;">
+        <div class="admin-header">
+          <h1 class="admin-title">Wild West Apps</h1>
+          <p class="admin-subtitle">Review testing results and promote apps to stable.</p>
+        </div>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>App</th>
+              <th>Upvotes</th>
+              <th>Downvotes</th>
+              <th>Feedback</th>
+              <th>Added</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:1.5rem;">&#128187;</span>
+                  <div>
+                    <strong>CodeSnippets</strong>
+                    <p class="text-muted text-sm">Code snippet manager</p>
+                  </div>
+                </div>
+              </td>
+              <td><span class="text-success">56</span></td>
+              <td><span class="text-error">4</span></td>
+              <td>12 reports</td>
+              <td>1 week ago</td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-primary">Promote</button>
+                  <button class="btn btn-sm btn-ghost">Remove</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:1.5rem;">&#127912;</span>
+                  <div>
+                    <strong>PixelMorph</strong>
+                    <p class="text-muted text-sm">Batch image processing</p>
+                  </div>
+                </div>
+              </td>
+              <td><span class="text-success">42</span></td>
+              <td><span class="text-error">5</span></td>
+              <td>8 reports</td>
+              <td>3 days ago</td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-primary">Promote</button>
+                  <button class="btn btn-sm btn-ghost">Remove</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:1.5rem;">&#128202;</span>
+                  <div>
+                    <strong>DataViz Pro</strong>
+                    <p class="text-muted text-sm">Data visualization tool</p>
+                  </div>
+                </div>
+              </td>
+              <td><span class="text-success">31</span></td>
+              <td><span class="text-error">2</span></td>
+              <td>6 reports</td>
+              <td>4 days ago</td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-primary">Promote</button>
+                  <button class="btn btn-sm btn-ghost">Remove</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:1.5rem;">&#128274;</span>
+                  <div>
+                    <strong>PassVault</strong>
+                    <p class="text-muted text-sm">Local password manager</p>
+                  </div>
+                </div>
+              </td>
+              <td><span class="text-success">12</span></td>
+              <td><span class="text-error">15</span></td>
+              <td>18 reports</td>
+              <td>1 week ago</td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-ghost text-error">Remove</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Users Section -->
+      <section id="section-users" style="display:none;">
+        <div class="admin-header">
+          <h1 class="admin-title">User Management</h1>
+          <p class="admin-subtitle">Manage user accounts and permissions.</p>
+        </div>
+
+        <div class="browse-controls mb-lg">
+          <input type="search" class="form-input" placeholder="Search users..." style="max-width:300px;">
+          <select class="sort-select">
+            <option>All Tiers</option>
+            <option>Anonymous</option>
+            <option>Trusted</option>
+            <option>Promoted</option>
+            <option>Admin</option>
+          </select>
+        </div>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Email</th>
+              <th>Tier</th>
+              <th>Reviews</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <div class="review-avatar">L</div>
+                  <strong>LinuxFan42</strong>
+                </div>
+              </td>
+              <td>linuxfan42@example.com</td>
+              <td><span class="profile-tier">Trusted</span></td>
+              <td>12</td>
+              <td>Dec 2024</td>
+              <td>
+                <div class="admin-actions">
+                  <select class="sort-select" style="padding:var(--space-xs) var(--space-sm);">
+                    <option>Trusted</option>
+                    <option>Promoted</option>
+                    <option>Admin</option>
+                    <option>Anonymous</option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <div class="review-avatar">D</div>
+                  <strong>DevOpsGuru</strong>
+                </div>
+              </td>
+              <td>devops@example.com</td>
+              <td><span class="profile-tier">Promoted</span></td>
+              <td>45</td>
+              <td>Oct 2024</td>
+              <td>
+                <div class="admin-actions">
+                  <select class="sort-select" style="padding:var(--space-xs) var(--space-sm);">
+                    <option>Promoted</option>
+                    <option>Admin</option>
+                    <option>Trusted</option>
+                    <option>Anonymous</option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <div class="review-avatar">O</div>
+                  <strong>opensource_dev</strong>
+                </div>
+              </td>
+              <td>opensrc@example.com</td>
+              <td><span class="profile-tier">Trusted</span></td>
+              <td>23</td>
+              <td>Nov 2024</td>
+              <td>
+                <div class="admin-actions">
+                  <select class="sort-select" style="padding:var(--space-xs) var(--space-sm);">
+                    <option>Trusted</option>
+                    <option>Promoted</option>
+                    <option>Admin</option>
+                    <option>Anonymous</option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <div class="review-avatar">N</div>
+                  <strong>newuser123</strong>
+                </div>
+              </td>
+              <td>new@example.com</td>
+              <td><span class="profile-tier" style="background:rgba(160, 160, 176, 0.1);color:var(--text-muted);">Anonymous</span></td>
+              <td>0</td>
+              <td>Today</td>
+              <td>
+                <div class="admin-actions">
+                  <select class="sort-select" style="padding:var(--space-xs) var(--space-sm);">
+                    <option>Anonymous</option>
+                    <option>Trusted</option>
+                    <option>Promoted</option>
+                    <option>Admin</option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Reports Section -->
+      <section id="section-reports" style="display:none;">
+        <div class="admin-header">
+          <h1 class="admin-title">Reports</h1>
+          <p class="admin-subtitle">Review and handle user-submitted reports.</p>
+        </div>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Target</th>
+              <th>Reporter</th>
+              <th>Reason</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="request-status status-testing">Security</span></td>
+              <td>
+                <strong>PassVault</strong>
+                <p class="text-muted text-sm">Wild West App</p>
+              </td>
+              <td>@security_expert</td>
+              <td>Stores passwords in plaintext</td>
+              <td>6h ago</td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-primary">Take Action</button>
+                  <button class="btn btn-sm btn-ghost">Dismiss</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="request-status status-pending">Bug</span></td>
+              <td>
+                <strong>BeatMaker Lite</strong>
+                <p class="text-muted text-sm">Wild West App</p>
+              </td>
+              <td>@audio_pro</td>
+              <td>App crashes when loading samples</td>
+              <td>1d ago</td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-primary">Take Action</button>
+                  <button class="btn btn-sm btn-ghost">Dismiss</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="request-status status-approved">Content</span></td>
+              <td>
+                <strong>Review by @troll123</strong>
+                <p class="text-muted text-sm">On: Visual Studio Code</p>
+              </td>
+              <td>@linuxfan42</td>
+              <td>Spam/inappropriate content</td>
+              <td>2d ago</td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-primary">Take Action</button>
+                  <button class="btn btn-sm btn-ghost">Dismiss</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Apps Section -->
+      <section id="section-apps" style="display:none;">
+        <div class="admin-header">
+          <h1 class="admin-title">All Apps</h1>
+          <p class="admin-subtitle">Manage all apps in the store.</p>
+        </div>
+
+        <div class="browse-controls mb-lg">
+          <input type="search" class="form-input" placeholder="Search apps..." style="max-width:300px;">
+          <select class="sort-select">
+            <option>All Categories</option>
+            <option>Development</option>
+            <option>Graphics</option>
+            <option>Games</option>
+            <option>Productivity</option>
+            <option>Multimedia</option>
+          </select>
+          <select class="sort-select">
+            <option>Most Popular</option>
+            <option>Newest</option>
+            <option>Most Downloads</option>
+          </select>
+        </div>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>App</th>
+              <th>Category</th>
+              <th>Downloads</th>
+              <th>Rating</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:1.5rem;">VS</span>
+                  <div>
+                    <strong>Visual Studio Code</strong>
+                    <p class="text-muted text-sm">Microsoft Corporation</p>
+                  </div>
+                </div>
+              </td>
+              <td><span class="app-card-category">Development</span></td>
+              <td>2.5M</td>
+              <td><span class="text-warning">&#9733; 4.8</span></td>
+              <td><span class="request-status status-released">Active</span></td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-ghost">Edit</button>
+                  <button class="btn btn-sm btn-ghost text-error">Remove</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:1.5rem;">&#128293;</span>
+                  <div>
+                    <strong>Firefox</strong>
+                    <p class="text-muted text-sm">Mozilla Foundation</p>
+                  </div>
+                </div>
+              </td>
+              <td><span class="app-card-category">Internet</span></td>
+              <td>2.5M</td>
+              <td><span class="text-warning">&#9733; 4.7</span></td>
+              <td><span class="request-status status-released">Active</span></td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-ghost">Edit</button>
+                  <button class="btn btn-sm btn-ghost text-error">Remove</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:1.5rem;">BL</span>
+                  <div>
+                    <strong>Blender</strong>
+                    <p class="text-muted text-sm">Blender Foundation</p>
+                  </div>
+                </div>
+              </td>
+              <td><span class="app-card-category">Graphics</span></td>
+              <td>890K</td>
+              <td><span class="text-warning">&#9733; 4.9</span></td>
+              <td><span class="request-status status-released">Active</span></td>
+              <td>
+                <div class="admin-actions">
+                  <button class="btn btn-sm btn-ghost">Edit</button>
+                  <button class="btn btn-sm btn-ghost text-error">Remove</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/main.js"></script>
+  <script>
+    // Admin section navigation
+    document.querySelectorAll('.admin-nav-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const section = item.dataset.section;
+
+        // Update nav
+        document.querySelectorAll('.admin-nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        // Show section
+        document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
+        document.getElementById(`section-${section}`).style.display = 'block';
+      });
+    });
+
+    // Quick action links
+    document.querySelectorAll('[data-section-link]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const section = btn.dataset.sectionLink;
+        document.querySelector(`[data-section="${section}"]`).click();
+      });
+    });
+  </script>
+</body>
+</html>

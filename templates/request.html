@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Request an App - Submit prompts for AI-generated apps on Flick Store">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Request an App - Flick Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127919;</text></svg>">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span>Flick Store</span>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/browse" class="nav-link">Browse</a>
+        <a href="/wildwest" class="nav-link wild-west">Wild West</a>
+        <a href="/request" class="nav-link active">Request</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="/login" class="btn btn-ghost" data-guest>Sign In</a>
+        <a href="/profile" class="btn btn-secondary" data-auth style="display:none">
+          <span data-user-avatar>U</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <!-- Page Header -->
+      <section class="section">
+        <div class="text-center mb-xl">
+          <h1 class="hero-title">Request an App</h1>
+          <p class="hero-subtitle" style="margin:var(--space-md) auto 0;">
+            Describe the app you want and our AI will try to build it. Popular requests get built faster!
+          </p>
+        </div>
+
+        <!-- Request Form -->
+        <div class="request-form-card">
+          <form id="request-form">
+            <div class="form-group">
+              <label class="form-label" for="request-title">App Title</label>
+              <input type="text" class="form-input" id="request-title" name="title"
+                     placeholder="e.g., Simple Budget Tracker" required>
+              <p class="form-hint">A short, descriptive name for the app you want.</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="request-category">Category</label>
+              <select class="form-select" id="request-category" name="category" required>
+                <option value="">Select a category</option>
+                <option value="development">Development</option>
+                <option value="graphics">Graphics & Design</option>
+                <option value="games">Games</option>
+                <option value="productivity">Productivity</option>
+                <option value="multimedia">Multimedia</option>
+                <option value="utilities">Utilities</option>
+                <option value="internet">Internet</option>
+                <option value="education">Education</option>
+                <option value="science">Science</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="request-description">Description</label>
+              <textarea class="form-textarea" id="request-description" name="description"
+                        placeholder="Describe the app you want in detail. What should it do? What features should it have? What problems should it solve?"
+                        data-maxlength="2000" required style="min-height:200px;"></textarea>
+              <p class="form-char-count" data-counter-for="request-description">0/2000</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="request-similar">Similar Apps (optional)</label>
+              <input type="text" class="form-input" id="request-similar" name="similar"
+                     placeholder="e.g., Like Notion but simpler, Similar to YNAB">
+              <p class="form-hint">Mention existing apps that are similar to what you want.</p>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+              Submit Request
+            </button>
+          </form>
+        </div>
+
+        <!-- Guidelines -->
+        <div class="card" style="padding:var(--space-xl);margin-bottom:var(--space-2xl);">
+          <h2 class="section-title mb-lg">Tips for Good Requests</h2>
+          <div class="grid grid-2">
+            <div>
+              <h3 style="color:var(--success);display:flex;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-sm);">
+                <span>&#10003;</span> Do
+              </h3>
+              <ul style="color:var(--text-secondary);padding-left:var(--space-lg);">
+                <li style="margin-bottom:var(--space-xs);">Be specific about features you need</li>
+                <li style="margin-bottom:var(--space-xs);">Describe the problem the app should solve</li>
+                <li style="margin-bottom:var(--space-xs);">Mention preferred UI style (GTK, Qt, terminal)</li>
+                <li style="margin-bottom:var(--space-xs);">Reference similar apps for inspiration</li>
+                <li>Keep scope reasonable for AI generation</li>
+              </ul>
+            </div>
+            <div>
+              <h3 style="color:var(--error);display:flex;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-sm);">
+                <span>&#10007;</span> Don't
+              </h3>
+              <ul style="color:var(--text-secondary);padding-left:var(--space-lg);">
+                <li style="margin-bottom:var(--space-xs);">Request clones of complex commercial apps</li>
+                <li style="margin-bottom:var(--space-xs);">Ask for apps requiring proprietary APIs</li>
+                <li style="margin-bottom:var(--space-xs);">Request malicious or harmful software</li>
+                <li style="margin-bottom:var(--space-xs);">Be too vague ("make a cool app")</li>
+                <li>Duplicate existing requests</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pending Requests -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Popular Requests</h2>
+          <div class="browse-controls">
+            <select class="sort-select" id="request-sort" aria-label="Sort by">
+              <option value="votes">Most Voted</option>
+              <option value="new">Newest</option>
+              <option value="status">By Status</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="request-list" id="request-list">
+          <!-- Request Card 1 -->
+          <div class="request-card">
+            <div class="request-votes">
+              <button class="request-vote-btn" data-vote="up" data-request-id="r1" aria-label="Upvote">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+              </button>
+              <span class="request-vote-count">156</span>
+            </div>
+            <div class="request-content">
+              <h3>Local-first AI Chat Interface</h3>
+              <p>A clean GTK4 app for chatting with local LLMs like Llama. Should support multiple models, conversation history, and markdown rendering.</p>
+              <div class="request-meta">
+                <span>by @opensource_dev</span>
+                <span>2 days ago</span>
+                <span>Category: Development</span>
+              </div>
+            </div>
+            <span class="request-status status-building">Building</span>
+          </div>
+
+          <!-- Request Card 2 -->
+          <div class="request-card">
+            <div class="request-votes">
+              <button class="request-vote-btn" data-vote="up" data-request-id="r2" aria-label="Upvote">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+              </button>
+              <span class="request-vote-count">134</span>
+            </div>
+            <div class="request-content">
+              <h3>Simple Time Tracker for Freelancers</h3>
+              <p>Track time spent on different projects with a clean interface. Should have project categories, daily/weekly reports, and CSV export.</p>
+              <div class="request-meta">
+                <span>by @freelance_linux</span>
+                <span>3 days ago</span>
+                <span>Category: Productivity</span>
+              </div>
+            </div>
+            <span class="request-status status-approved">Approved</span>
+          </div>
+
+          <!-- Request Card 3 -->
+          <div class="request-card">
+            <div class="request-votes">
+              <button class="request-vote-btn" data-vote="up" data-request-id="r3" aria-label="Upvote">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+              </button>
+              <span class="request-vote-count">98</span>
+            </div>
+            <div class="request-content">
+              <h3>Lightweight Clipboard Manager</h3>
+              <p>A simple clipboard history manager that works with Wayland. Should support images, search history, and keyboard shortcuts.</p>
+              <div class="request-meta">
+                <span>by @wayland_user</span>
+                <span>4 days ago</span>
+                <span>Category: Utilities</span>
+              </div>
+            </div>
+            <span class="request-status status-testing">Testing</span>
+          </div>
+
+          <!-- Request Card 4 -->
+          <div class="request-card">
+            <div class="request-votes">
+              <button class="request-vote-btn" data-vote="up" data-request-id="r4" aria-label="Upvote">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+              </button>
+              <span class="request-vote-count">87</span>
+            </div>
+            <div class="request-content">
+              <h3>2D Pixel Art Editor</h3>
+              <p>Simple pixel art editor optimized for game sprites. Should have layers, animation timeline, and common pixel art tools. Similar to Aseprite but free.</p>
+              <div class="request-meta">
+                <span>by @gamedev_guy</span>
+                <span>5 days ago</span>
+                <span>Category: Graphics</span>
+              </div>
+            </div>
+            <span class="request-status status-pending">Pending</span>
+          </div>
+
+          <!-- Request Card 5 -->
+          <div class="request-card">
+            <div class="request-votes">
+              <button class="request-vote-btn active" data-vote="up" data-request-id="r5" aria-label="Upvote">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+              </button>
+              <span class="request-vote-count">72</span>
+            </div>
+            <div class="request-content">
+              <h3>System Resource Monitor Widget</h3>
+              <p>A desktop widget showing CPU, RAM, disk, and network usage. Should be lightweight and work with GNOME/KDE panels.</p>
+              <div class="request-meta">
+                <span>by @monitor_fan</span>
+                <span>1 week ago</span>
+                <span>Category: Utilities</span>
+              </div>
+            </div>
+            <span class="request-status status-released">Released</span>
+          </div>
+
+          <!-- Request Card 6 -->
+          <div class="request-card">
+            <div class="request-votes">
+              <button class="request-vote-btn" data-vote="up" data-request-id="r6" aria-label="Upvote">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+              </button>
+              <span class="request-vote-count">65</span>
+            </div>
+            <div class="request-content">
+              <h3>Markdown Blog Generator</h3>
+              <p>CLI tool to generate a static blog from markdown files. Should have themes, RSS feed generation, and syntax highlighting for code blocks.</p>
+              <div class="request-meta">
+                <span>by @static_site_dev</span>
+                <span>1 week ago</span>
+                <span>Category: Development</span>
+              </div>
+            </div>
+            <span class="request-status status-pending">Pending</span>
+          </div>
+        </div>
+
+        <div class="text-center mt-xl">
+          <button class="btn btn-secondary" id="load-more-requests">Load More Requests</button>
+        </div>
+      </section>
+
+      <!-- Status Legend -->
+      <section class="section">
+        <div class="card" style="padding:var(--space-xl);">
+          <h3 class="section-title mb-lg">Request Status Guide</h3>
+          <div class="grid grid-5" style="gap:var(--space-xl);">
+            <div style="text-align:center;">
+              <span class="request-status status-pending" style="display:inline-block;margin-bottom:var(--space-sm);">Pending</span>
+              <p class="text-secondary text-sm">Awaiting review</p>
+            </div>
+            <div style="text-align:center;">
+              <span class="request-status status-approved" style="display:inline-block;margin-bottom:var(--space-sm);">Approved</span>
+              <p class="text-secondary text-sm">In the build queue</p>
+            </div>
+            <div style="text-align:center;">
+              <span class="request-status status-building" style="display:inline-block;margin-bottom:var(--space-sm);">Building</span>
+              <p class="text-secondary text-sm">AI is generating</p>
+            </div>
+            <div style="text-align:center;">
+              <span class="request-status status-testing" style="display:inline-block;margin-bottom:var(--space-sm);">Testing</span>
+              <p class="text-secondary text-sm">In Wild West</p>
+            </div>
+            <div style="text-align:center;">
+              <span class="request-status status-released" style="display:inline-block;margin-bottom:var(--space-sm);">Released</span>
+              <p class="text-secondary text-sm">Available in store</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <span>Flick Store</span>
+          </a>
+          <p>A fast, modern, community-driven app store for Linux.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Explore</h4>
+          <nav class="footer-links">
+            <a href="/browse" class="footer-link">Browse Apps</a>
+            <a href="/browse.html?category=games" class="footer-link">Games</a>
+            <a href="/wildwest" class="footer-link">Wild West</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Community</h4>
+          <nav class="footer-links">
+            <a href="/request" class="footer-link">Request an App</a>
+            <a href="https://github.com/flick-store" class="footer-link">GitHub</a>
+            <a href="https://discord.gg/flick" class="footer-link">Discord</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Resources</h4>
+          <nav class="footer-links">
+            <a href="/docs" class="footer-link">Documentation</a>
+            <a href="/api" class="footer-link">API</a>
+            <a href="/privacy" class="footer-link">Privacy</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2025 Flick Store. Open source and community-driven.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/main.js"></script>
+</body>
+</html>

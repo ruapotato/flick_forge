@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Flick Store - Discover and install amazing Linux applications. Fast, modern, and community-driven app store.">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Flick Store - Linux App Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127919;</text></svg>">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span>Flick Store</span>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-link active">Home</a>
+        <a href="/browse" class="nav-link">Browse</a>
+        <a href="/wildwest" class="nav-link wild-west">Wild West</a>
+        <a href="/request" class="nav-link">Request</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="header-search">
+          <svg class="header-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="search" placeholder="Search apps..." aria-label="Search apps" data-search>
+        </div>
+
+        <a href="/login" class="btn btn-ghost" data-guest>Sign In</a>
+        <a href="/profile" class="btn btn-secondary" data-auth style="display:none">
+          <span data-user-avatar>U</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <h1 class="hero-title">Discover Amazing Linux Apps</h1>
+        <p class="hero-subtitle">
+          Fast, modern, and community-driven. Find the perfect apps for your Linux desktop.
+        </p>
+        <div class="hero-search">
+          <svg class="hero-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="search" placeholder="Search for apps, games, tools..." aria-label="Search for apps" data-search>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Apps -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Featured Apps</h2>
+          <a href="/browse.html?featured=true" class="section-link">
+            View all
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="carousel">
+          <div class="carousel-track" id="featured-carousel">
+            <!-- Featured apps loaded dynamically -->
+            <div class="carousel-slide">
+              <div class="featured-card">
+                <div class="featured-content">
+                  <span class="featured-badge">&#9733; Featured</span>
+                  <h2 class="featured-title">Visual Studio Code</h2>
+                  <p class="featured-desc">A powerful, lightweight code editor with built-in support for JavaScript, TypeScript, and Node.js.</p>
+                  <a href="/app?slug=vscode" class="btn btn-primary">View App</a>
+                </div>
+                <div class="featured-image">
+                  <div class="app-card-icon" style="font-size:4rem;">VS</div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <div class="featured-card">
+                <div class="featured-content">
+                  <span class="featured-badge">&#9733; Featured</span>
+                  <h2 class="featured-title">GIMP</h2>
+                  <p class="featured-desc">The GNU Image Manipulation Program. A cross-platform image editor for photo retouching and editing.</p>
+                  <a href="/app?slug=gimp" class="btn btn-primary">View App</a>
+                </div>
+                <div class="featured-image">
+                  <div class="app-card-icon" style="font-size:4rem;">GI</div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <div class="featured-card">
+                <div class="featured-content">
+                  <span class="featured-badge">&#9733; Featured</span>
+                  <h2 class="featured-title">Blender</h2>
+                  <p class="featured-desc">Free and open source 3D creation suite. Supports modeling, animation, simulation, and more.</p>
+                  <a href="/app?slug=blender" class="btn btn-primary">View App</a>
+                </div>
+                <div class="featured-image">
+                  <div class="app-card-icon" style="font-size:4rem;">BL</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-nav prev">
+            <button class="carousel-btn" aria-label="Previous slide">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+            </button>
+          </div>
+          <div class="carousel-nav next">
+            <button class="carousel-btn" aria-label="Next slide">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m9 18 6-6-6-6"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="carousel-dots"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Categories</h2>
+          <a href="/browse" class="section-link">
+            Browse all
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="grid grid-categories" id="categories-grid">
+          <a href="/browse.html?category=development" class="card category-card">
+            <div class="category-icon">&#128187;</div>
+            <span class="category-name">Development</span>
+            <span class="category-count">156 apps</span>
+          </a>
+          <a href="/browse.html?category=graphics" class="card category-card">
+            <div class="category-icon">&#127912;</div>
+            <span class="category-name">Graphics</span>
+            <span class="category-count">89 apps</span>
+          </a>
+          <a href="/browse.html?category=games" class="card category-card">
+            <div class="category-icon">&#127918;</div>
+            <span class="category-name">Games</span>
+            <span class="category-count">234 apps</span>
+          </a>
+          <a href="/browse.html?category=productivity" class="card category-card">
+            <div class="category-icon">&#128200;</div>
+            <span class="category-name">Productivity</span>
+            <span class="category-count">178 apps</span>
+          </a>
+          <a href="/browse.html?category=multimedia" class="card category-card">
+            <div class="category-icon">&#127926;</div>
+            <span class="category-name">Multimedia</span>
+            <span class="category-count">112 apps</span>
+          </a>
+          <a href="/browse.html?category=utilities" class="card category-card">
+            <div class="category-icon">&#128295;</div>
+            <span class="category-name">Utilities</span>
+            <span class="category-count">203 apps</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Apps -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Popular Apps</h2>
+          <a href="/browse.html?sort=popular" class="section-link">
+            View all
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="grid grid-apps" id="popular-apps">
+          <a href="/app?slug=firefox" class="card app-card">
+            <div class="app-card-image">
+              <div class="app-card-icon">&#128293;</div>
+            </div>
+            <div class="app-card-content">
+              <h3 class="app-card-title">Firefox</h3>
+              <p class="app-card-desc">Fast, private, and free web browser from Mozilla.</p>
+              <div class="app-card-meta">
+                <div class="app-card-rating">
+                  <span>&#9733;</span>
+                  <span>4.7</span>
+                </div>
+                <span class="app-card-downloads">2.5M downloads</span>
+                <span class="app-card-category">Internet</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="/app?slug=vlc" class="card app-card">
+            <div class="app-card-image">
+              <div class="app-card-icon">&#9654;</div>
+            </div>
+            <div class="app-card-content">
+              <h3 class="app-card-title">VLC Media Player</h3>
+              <p class="app-card-desc">Free and open source cross-platform multimedia player.</p>
+              <div class="app-card-meta">
+                <div class="app-card-rating">
+                  <span>&#9733;</span>
+                  <span>4.8</span>
+                </div>
+                <span class="app-card-downloads">1.8M downloads</span>
+                <span class="app-card-category">Multimedia</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="/app?slug=steam" class="card app-card">
+            <div class="app-card-image">
+              <div class="app-card-icon">&#127918;</div>
+            </div>
+            <div class="app-card-content">
+              <h3 class="app-card-title">Steam</h3>
+              <p class="app-card-desc">Ultimate destination for playing, discussing, and creating games.</p>
+              <div class="app-card-meta">
+                <div class="app-card-rating">
+                  <span>&#9733;</span>
+                  <span>4.6</span>
+                </div>
+                <span class="app-card-downloads">3.2M downloads</span>
+                <span class="app-card-category">Games</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="/app?slug=obs" class="card app-card">
+            <div class="app-card-image">
+              <div class="app-card-icon">&#128249;</div>
+            </div>
+            <div class="app-card-content">
+              <h3 class="app-card-title">OBS Studio</h3>
+              <p class="app-card-desc">Free and open source software for video recording and live streaming.</p>
+              <div class="app-card-meta">
+                <div class="app-card-rating">
+                  <span>&#9733;</span>
+                  <span>4.9</span>
+                </div>
+                <span class="app-card-downloads">980K downloads</span>
+                <span class="app-card-category">Multimedia</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Latest Apps -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Recently Added</h2>
+          <a href="/browse.html?sort=new" class="section-link">
+            View all
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="grid grid-apps" id="latest-apps">
+          <a href="/app?slug=logseq" class="card app-card">
+            <div class="app-card-image">
+              <div class="app-card-icon">&#128221;</div>
+            </div>
+            <div class="app-card-content">
+              <h3 class="app-card-title">Logseq</h3>
+              <p class="app-card-desc">Privacy-first, open-source knowledge base that works on top of local files.</p>
+              <div class="app-card-meta">
+                <div class="app-card-rating">
+                  <span>&#9733;</span>
+                  <span>4.5</span>
+                </div>
+                <span class="app-card-downloads">45K downloads</span>
+                <span class="app-card-category">Productivity</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="/app?slug=bottles" class="card app-card">
+            <div class="app-card-image">
+              <div class="app-card-icon">&#127863;</div>
+            </div>
+            <div class="app-card-content">
+              <h3 class="app-card-title">Bottles</h3>
+              <p class="app-card-desc">Run Windows software and games on Linux with ease.</p>
+              <div class="app-card-meta">
+                <div class="app-card-rating">
+                  <span>&#9733;</span>
+                  <span>4.4</span>
+                </div>
+                <span class="app-card-downloads">120K downloads</span>
+                <span class="app-card-category">Utilities</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="/app?slug=upscayl" class="card app-card">
+            <div class="app-card-image">
+              <div class="app-card-icon">&#128247;</div>
+            </div>
+            <div class="app-card-content">
+              <h3 class="app-card-title">Upscayl</h3>
+              <p class="app-card-desc">Free and open source AI image upscaler for Linux, MacOS and Windows.</p>
+              <div class="app-card-meta">
+                <div class="app-card-rating">
+                  <span>&#9733;</span>
+                  <span>4.7</span>
+                </div>
+                <span class="app-card-downloads">89K downloads</span>
+                <span class="app-card-category">Graphics</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="/app?slug=mission-center" class="card app-card">
+            <div class="app-card-image">
+              <div class="app-card-icon">&#128202;</div>
+            </div>
+            <div class="app-card-content">
+              <h3 class="app-card-title">Mission Center</h3>
+              <p class="app-card-desc">Monitor your CPU, Memory, Disk, Network and GPU usage with style.</p>
+              <div class="app-card-meta">
+                <div class="app-card-rating">
+                  <span>&#9733;</span>
+                  <span>4.8</span>
+                </div>
+                <span class="app-card-downloads">67K downloads</span>
+                <span class="app-card-category">Utilities</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Wild West CTA -->
+    <section class="section">
+      <div class="container">
+        <div class="wild-west-banner">
+          <div class="wild-west-banner-icon">&#129312;</div>
+          <div class="wild-west-banner-content">
+            <h2>Explore the Wild West</h2>
+            <p>Discover AI-generated apps awaiting community testing. Help shape the future of the Flick Store by testing new apps and providing feedback.</p>
+            <a href="/wildwest" class="btn btn-secondary mt-md">Enter Wild West</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <span>Flick Store</span>
+          </a>
+          <p>A fast, modern, community-driven app store for Linux. Discover, install, and manage applications with ease.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Explore</h4>
+          <nav class="footer-links">
+            <a href="/browse" class="footer-link">Browse Apps</a>
+            <a href="/browse.html?category=games" class="footer-link">Games</a>
+            <a href="/browse.html?category=development" class="footer-link">Development</a>
+            <a href="/wildwest" class="footer-link">Wild West</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Community</h4>
+          <nav class="footer-links">
+            <a href="/request" class="footer-link">Request an App</a>
+            <a href="https://github.com/flick-store" class="footer-link">GitHub</a>
+            <a href="https://discord.gg/flick" class="footer-link">Discord</a>
+            <a href="https://matrix.to/#/#flick:matrix.org" class="footer-link">Matrix</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Resources</h4>
+          <nav class="footer-links">
+            <a href="/docs" class="footer-link">Documentation</a>
+            <a href="/api" class="footer-link">API</a>
+            <a href="/privacy" class="footer-link">Privacy Policy</a>
+            <a href="/terms" class="footer-link">Terms of Service</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2025 Flick Store. Open source and community-driven.</p>
+        <div class="footer-social">
+          <a href="https://github.com/flick-store" aria-label="GitHub">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+          <a href="https://mastodon.social/@flickstore" aria-label="Mastodon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792 0 11.813 0h-.03c-3.98 0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057 0 0 0 .023-.043v-1.809a.052.052 0 0 0-.02-.041.053.053 0 0 0-.046-.01 20.282 20.282 0 0 1-4.709.545c-2.73 0-3.463-1.284-3.674-1.818a5.593 5.593 0 0 1-.319-1.433.053.053 0 0 1 .066-.054c1.517.363 3.072.546 4.632.546.376 0 .75 0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561v-6.277c0-1.322-.564-1.995-1.692-1.995-1.248 0-1.875.798-1.875 2.375v3.432h-2.548V8.611c0-1.577-.627-2.375-1.875-2.375-1.128 0-1.692.673-1.692 1.995v6.277H4.76V8.447c0-1.322.338-2.375 1.018-3.163.7-.788 1.617-1.192 2.757-1.192 1.32 0 2.318.507 2.972 1.52l.64 1.075.641-1.075c.654-1.013 1.652-1.52 2.972-1.52 1.14 0 2.057.404 2.757 1.192.68.788 1.017 1.841 1.017 3.163v7.061z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/main.js"></script>
+</body>
+</html>

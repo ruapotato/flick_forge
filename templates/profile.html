@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your Profile - Flick Store">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>My Profile - Flick Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127919;</text></svg>">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span>Flick Store</span>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/browse" class="nav-link">Browse</a>
+        <a href="/wildwest" class="nav-link wild-west">Wild West</a>
+        <a href="/request" class="nav-link">Request</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn-ghost" id="logout-btn">Sign Out</button>
+      </div>
+
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="profile-avatar" data-user-avatar>L</div>
+        <div class="profile-info">
+          <h1 data-user-name>LinuxFan42</h1>
+          <span class="profile-tier" data-user-tier>Trusted</span>
+          <p class="text-secondary">Member since December 2024</p>
+          <div class="profile-stats">
+            <div class="profile-stat">
+              <div class="profile-stat-value">12</div>
+              <div class="profile-stat-label">Reviews</div>
+            </div>
+            <div class="profile-stat">
+              <div class="profile-stat-value">5</div>
+              <div class="profile-stat-label">Requests</div>
+            </div>
+            <div class="profile-stat">
+              <div class="profile-stat-value">34</div>
+              <div class="profile-stat-label">Apps Tested</div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-secondary" data-modal-open="edit-profile-modal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Edit Profile
+        </button>
+      </div>
+
+      <!-- Profile Tabs -->
+      <div class="profile-tabs">
+        <button class="profile-tab active" data-tab="overview">Overview</button>
+        <button class="profile-tab" data-tab="requests">My Requests</button>
+        <button class="profile-tab" data-tab="reviews">My Reviews</button>
+        <button class="profile-tab" data-tab="settings">Settings</button>
+      </div>
+
+      <!-- Tab Content: Overview -->
+      <div class="profile-tab-content" id="tab-overview">
+        <section class="section">
+          <div class="grid grid-3">
+            <div class="card" style="padding:var(--space-lg);">
+              <h3 style="font-size:var(--text-base);margin-bottom:var(--space-md);">Account Tier</h3>
+              <div style="display:flex;align-items:center;gap:var(--space-md);">
+                <div style="width:48px;height:48px;background:var(--accent-subtle);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:1.5rem;">&#11088;</span>
+                </div>
+                <div>
+                  <div style="font-weight:600;color:var(--accent);">Trusted</div>
+                  <div class="text-sm text-muted">Reviews are highlighted</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="padding:var(--space-lg);">
+              <h3 style="font-size:var(--text-base);margin-bottom:var(--space-md);">Testing Score</h3>
+              <div style="display:flex;align-items:center;gap:var(--space-md);">
+                <div style="width:48px;height:48px;background:rgba(74, 222, 128, 0.1);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:1.5rem;">&#129504;</span>
+                </div>
+                <div>
+                  <div style="font-weight:600;color:var(--success);">156 points</div>
+                  <div class="text-sm text-muted">Top 15% of testers</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="padding:var(--space-lg);">
+              <h3 style="font-size:var(--text-base);margin-bottom:var(--space-md);">Contributions</h3>
+              <div style="display:flex;align-items:center;gap:var(--space-md);">
+                <div style="width:48px;height:48px;background:rgba(96, 165, 250, 0.1);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:1.5rem;">&#128640;</span>
+                </div>
+                <div>
+                  <div style="font-weight:600;color:var(--info);">3 apps promoted</div>
+                  <div class="text-sm text-muted">From your testing</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title mb-lg">Recent Activity</h2>
+          <div class="card">
+            <div style="padding:var(--space-md) var(--space-lg);border-bottom:1px solid var(--border-color);display:flex;align-items:center;gap:var(--space-md);">
+              <span style="font-size:1.2rem;">&#11088;</span>
+              <div style="flex:1;">
+                <span class="text-primary">Reviewed</span>
+                <a href="/app?slug=vscode" style="font-weight:500;">Visual Studio Code</a>
+              </div>
+              <span class="text-muted text-sm">2 days ago</span>
+            </div>
+            <div style="padding:var(--space-md) var(--space-lg);border-bottom:1px solid var(--border-color);display:flex;align-items:center;gap:var(--space-md);">
+              <span style="font-size:1.2rem;">&#128172;</span>
+              <div style="flex:1;">
+                <span class="text-primary">Submitted feedback for</span>
+                <a href="/wildwest" style="font-weight:500;">QuickNotes AI</a>
+              </div>
+              <span class="text-muted text-sm">3 days ago</span>
+            </div>
+            <div style="padding:var(--space-md) var(--space-lg);border-bottom:1px solid var(--border-color);display:flex;align-items:center;gap:var(--space-md);">
+              <span style="font-size:1.2rem;">&#128640;</span>
+              <div style="flex:1;">
+                <span class="text-primary">Request approved:</span>
+                <a href="/request" style="font-weight:500;">Simple Time Tracker</a>
+              </div>
+              <span class="text-muted text-sm">1 week ago</span>
+            </div>
+            <div style="padding:var(--space-md) var(--space-lg);display:flex;align-items:center;gap:var(--space-md);">
+              <span style="font-size:1.2rem;">&#128077;</span>
+              <div style="flex:1;">
+                <span class="text-primary">Upvoted</span>
+                <a href="/app?slug=blender" style="font-weight:500;">Blender</a>
+                <span class="text-secondary">in Wild West</span>
+              </div>
+              <span class="text-muted text-sm">1 week ago</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Tab Content: My Requests -->
+      <div class="profile-tab-content" id="tab-requests" style="display:none;">
+        <section class="section">
+          <div class="section-header">
+            <h2 class="section-title">My Requests</h2>
+            <a href="/request" class="btn btn-primary">New Request</a>
+          </div>
+
+          <div class="request-list">
+            <div class="request-card">
+              <div class="request-votes">
+                <span class="request-vote-count">134</span>
+              </div>
+              <div class="request-content">
+                <h3>Simple Time Tracker for Freelancers</h3>
+                <p>Track time spent on different projects with a clean interface.</p>
+                <div class="request-meta">
+                  <span>Submitted 3 days ago</span>
+                </div>
+              </div>
+              <span class="request-status status-approved">Approved</span>
+            </div>
+
+            <div class="request-card">
+              <div class="request-votes">
+                <span class="request-vote-count">45</span>
+              </div>
+              <div class="request-content">
+                <h3>Terminal RSS Reader</h3>
+                <p>A CLI-based RSS feed reader with keyboard navigation.</p>
+                <div class="request-meta">
+                  <span>Submitted 2 weeks ago</span>
+                </div>
+              </div>
+              <span class="request-status status-pending">Pending</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Tab Content: My Reviews -->
+      <div class="profile-tab-content" id="tab-reviews" style="display:none;">
+        <section class="section">
+          <h2 class="section-title mb-lg">My Reviews</h2>
+
+          <div class="review-card">
+            <div class="review-header">
+              <div style="display:flex;align-items:center;gap:var(--space-md);">
+                <a href="/app?slug=vscode" class="text-primary" style="font-weight:600;">Visual Studio Code</a>
+              </div>
+              <div class="review-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+            <p class="review-content">
+              Best code editor I've ever used on Linux. The extension ecosystem is amazing and performance is great even on older hardware.
+            </p>
+            <div style="display:flex;gap:var(--space-md);margin-top:var(--space-md);">
+              <button class="btn btn-sm btn-ghost">Edit</button>
+              <button class="btn btn-sm btn-ghost text-error">Delete</button>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-header">
+              <div style="display:flex;align-items:center;gap:var(--space-md);">
+                <a href="/app?slug=blender" class="text-primary" style="font-weight:600;">Blender</a>
+              </div>
+              <div class="review-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+            <p class="review-content">
+              Incredible 3D software that rivals commercial alternatives. The recent updates have made the interface much more intuitive.
+            </p>
+            <div style="display:flex;gap:var(--space-md);margin-top:var(--space-md);">
+              <button class="btn btn-sm btn-ghost">Edit</button>
+              <button class="btn btn-sm btn-ghost text-error">Delete</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Tab Content: Settings -->
+      <div class="profile-tab-content" id="tab-settings" style="display:none;">
+        <section class="section">
+          <h2 class="section-title mb-lg">Account Settings</h2>
+
+          <div class="card" style="padding:var(--space-xl);margin-bottom:var(--space-lg);">
+            <h3 style="margin-bottom:var(--space-lg);">Profile Information</h3>
+            <form id="profile-form">
+              <div class="form-group">
+                <label class="form-label" for="settings-username">Username</label>
+                <input type="text" class="form-input" id="settings-username" value="LinuxFan42">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="settings-email">Email</label>
+                <input type="email" class="form-input" id="settings-email" value="linuxfan42@example.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="settings-bio">Bio</label>
+                <textarea class="form-textarea" id="settings-bio" style="min-height:100px;">Linux enthusiast and open source contributor.</textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+          </div>
+
+          <div class="card" style="padding:var(--space-xl);margin-bottom:var(--space-lg);">
+            <h3 style="margin-bottom:var(--space-lg);">Change Password</h3>
+            <form id="password-form">
+              <div class="form-group">
+                <label class="form-label" for="current-password">Current Password</label>
+                <input type="password" class="form-input" id="current-password">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="new-password">New Password</label>
+                <input type="password" class="form-input" id="new-password">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="confirm-new-password">Confirm New Password</label>
+                <input type="password" class="form-input" id="confirm-new-password">
+              </div>
+              <button type="submit" class="btn btn-primary">Update Password</button>
+            </form>
+          </div>
+
+          <div class="card" style="padding:var(--space-xl);margin-bottom:var(--space-lg);">
+            <h3 style="margin-bottom:var(--space-lg);">Notifications</h3>
+            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+              <label style="display:flex;align-items:center;gap:var(--space-md);cursor:pointer;">
+                <input type="checkbox" checked style="accent-color:var(--accent);">
+                <span>Email me when my request status changes</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:var(--space-md);cursor:pointer;">
+                <input type="checkbox" checked style="accent-color:var(--accent);">
+                <span>Email me when someone replies to my review</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:var(--space-md);cursor:pointer;">
+                <input type="checkbox" style="accent-color:var(--accent);">
+                <span>Weekly digest of new apps</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="card" style="padding:var(--space-xl);border-color:var(--error);">
+            <h3 style="color:var(--error);margin-bottom:var(--space-md);">Danger Zone</h3>
+            <p class="text-secondary mb-lg">Once you delete your account, there is no going back. Please be certain.</p>
+            <button class="btn btn-secondary" style="border-color:var(--error);color:var(--error);">Delete Account</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal-overlay" id="edit-profile-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Profile</h3>
+        <button class="modal-close" data-modal-close aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-profile-form">
+          <div class="form-group">
+            <label class="form-label">Profile Picture</label>
+            <div style="display:flex;align-items:center;gap:var(--space-lg);">
+              <div class="profile-avatar" style="width:80px;height:80px;font-size:2rem;">L</div>
+              <button type="button" class="btn btn-secondary">Upload New</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-display-name">Display Name</label>
+            <input type="text" class="form-input" id="edit-display-name" value="LinuxFan42">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-bio">Bio</label>
+            <textarea class="form-textarea" id="edit-bio" style="min-height:80px;">Linux enthusiast and open source contributor.</textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button class="btn btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <span>Flick Store</span>
+          </a>
+          <p>A fast, modern, community-driven app store for Linux.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Explore</h4>
+          <nav class="footer-links">
+            <a href="/browse" class="footer-link">Browse Apps</a>
+            <a href="/browse.html?category=games" class="footer-link">Games</a>
+            <a href="/wildwest" class="footer-link">Wild West</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Community</h4>
+          <nav class="footer-links">
+            <a href="/request" class="footer-link">Request an App</a>
+            <a href="https://github.com/flick-store" class="footer-link">GitHub</a>
+            <a href="https://discord.gg/flick" class="footer-link">Discord</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Resources</h4>
+          <nav class="footer-links">
+            <a href="/docs" class="footer-link">Documentation</a>
+            <a href="/api" class="footer-link">API</a>
+            <a href="/privacy" class="footer-link">Privacy</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2025 Flick Store. Open source and community-driven.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/main.js"></script>
+  <script>
+    // Tab switching
+    document.querySelectorAll('.profile-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Update active tab
+        document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Show corresponding content
+        const tabName = tab.dataset.tab;
+        document.querySelectorAll('.profile-tab-content').forEach(content => {
+          content.style.display = 'none';
+        });
+        document.getElementById(`tab-${tabName}`).style.display = 'block';
+      });
+    });
+
+    // Logout handler
+    document.getElementById('logout-btn')?.addEventListener('click', async () => {
+      try {
+        await API.auth.logout();
+        window.location.href = '/';
+      } catch (error) {
+        showToast('Logout failed', 'error');
+      }
+    });
+  </script>
+</body>
+</html>

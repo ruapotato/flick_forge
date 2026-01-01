@@ -1,0 +1,38 @@
+# Flick Forge - Flick Store Backend
+# Copyright (C) 2025 Flick Project
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Core Dependencies
+
+# Flask web framework
+Flask>=3.0.0,<4.0.0
+
+# Database
+Flask-SQLAlchemy>=3.1.0,<4.0.0
+SQLAlchemy>=2.0.0,<3.0.0
+
+# Security
+Werkzeug>=3.0.0,<4.0.0
+
+# CORS support
+Flask-CORS>=4.0.0,<5.0.0
+
+# Rate limiting
+Flask-Limiter>=3.5.0,<4.0.0
+
+# Production WSGI server
+gunicorn>=21.0.0,<23.0.0
+
+# Development and testing
+pytest>=7.4.0,<9.0.0
+pytest-cov>=4.1.0,<6.0.0
+
+# Optional: For async task queue (when Claude Code integration is added)
+# celery>=5.3.0,<6.0.0
+# redis>=5.0.0,<6.0.0
+
+# Optional: For PostgreSQL in production
+# psycopg2-binary>=2.9.0,<3.0.0
+
+# Optional: For environment variable management
+python-dotenv>=1.0.0,<2.0.0

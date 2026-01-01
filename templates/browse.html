@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse and search apps on Flick Store - Linux App Store">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Browse Apps - Flick Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127919;</text></svg>">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span>Flick Store</span>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/browse" class="nav-link active">Browse</a>
+        <a href="/wildwest" class="nav-link wild-west">Wild West</a>
+        <a href="/request" class="nav-link">Request</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="header-search">
+          <svg class="header-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="search" placeholder="Search apps..." aria-label="Search apps" data-search id="header-search">
+        </div>
+
+        <a href="/login" class="btn btn-ghost" data-guest>Sign In</a>
+        <a href="/profile" class="btn btn-secondary" data-auth style="display:none">
+          <span data-user-avatar>U</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="browse-layout">
+        <!-- Sidebar Filters -->
+        <aside class="browse-sidebar">
+          <button class="btn btn-secondary mb-lg" id="filter-toggle" style="display:none;width:100%;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="4" y1="21" x2="4" y2="14"/>
+              <line x1="4" y1="10" x2="4" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12" y2="3"/>
+              <line x1="20" y1="21" x2="20" y2="16"/>
+              <line x1="20" y1="12" x2="20" y2="3"/>
+              <line x1="1" y1="14" x2="7" y2="14"/>
+              <line x1="9" y1="8" x2="15" y2="8"/>
+              <line x1="17" y1="16" x2="23" y2="16"/>
+            </svg>
+            Filters
+          </button>
+
+          <div class="filter-section">
+            <h3 class="filter-title">Categories</h3>
+            <div class="filter-list" id="category-filters">
+              <label class="filter-item active" data-category="all">
+                <input type="radio" name="category" value="all" checked class="sr-only">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"/>
+                  <rect x="14" y="3" width="7" height="7"/>
+                  <rect x="14" y="14" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                All Apps
+                <span class="filter-count" id="count-all">972</span>
+              </label>
+              <label class="filter-item" data-category="development">
+                <input type="radio" name="category" value="development" class="sr-only">
+                <span>&#128187;</span>
+                Development
+                <span class="filter-count">156</span>
+              </label>
+              <label class="filter-item" data-category="graphics">
+                <input type="radio" name="category" value="graphics" class="sr-only">
+                <span>&#127912;</span>
+                Graphics
+                <span class="filter-count">89</span>
+              </label>
+              <label class="filter-item" data-category="games">
+                <input type="radio" name="category" value="games" class="sr-only">
+                <span>&#127918;</span>
+                Games
+                <span class="filter-count">234</span>
+              </label>
+              <label class="filter-item" data-category="productivity">
+                <input type="radio" name="category" value="productivity" class="sr-only">
+                <span>&#128200;</span>
+                Productivity
+                <span class="filter-count">178</span>
+              </label>
+              <label class="filter-item" data-category="multimedia">
+                <input type="radio" name="category" value="multimedia" class="sr-only">
+                <span>&#127926;</span>
+                Multimedia
+                <span class="filter-count">112</span>
+              </label>
+              <label class="filter-item" data-category="utilities">
+                <input type="radio" name="category" value="utilities" class="sr-only">
+                <span>&#128295;</span>
+                Utilities
+                <span class="filter-count">203</span>
+              </label>
+              <label class="filter-item" data-category="internet">
+                <input type="radio" name="category" value="internet" class="sr-only">
+                <span>&#127760;</span>
+                Internet
+                <span class="filter-count">145</span>
+              </label>
+              <label class="filter-item" data-category="education">
+                <input type="radio" name="category" value="education" class="sr-only">
+                <span>&#128218;</span>
+                Education
+                <span class="filter-count">67</span>
+              </label>
+              <label class="filter-item" data-category="science">
+                <input type="radio" name="category" value="science" class="sr-only">
+                <span>&#128300;</span>
+                Science
+                <span class="filter-count">43</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="filter-section">
+            <h3 class="filter-title">Rating</h3>
+            <div class="filter-list">
+              <label class="filter-item">
+                <input type="checkbox" name="rating" value="4" class="sr-only">
+                <span style="color:var(--warning);">&#9733;&#9733;&#9733;&#9733;</span>
+                & Up
+              </label>
+              <label class="filter-item">
+                <input type="checkbox" name="rating" value="3" class="sr-only">
+                <span style="color:var(--warning);">&#9733;&#9733;&#9733;</span>
+                & Up
+              </label>
+            </div>
+          </div>
+
+          <div class="filter-section">
+            <h3 class="filter-title">License</h3>
+            <div class="filter-list">
+              <label class="filter-item">
+                <input type="checkbox" name="license" value="open-source" class="sr-only">
+                Open Source
+              </label>
+              <label class="filter-item">
+                <input type="checkbox" name="license" value="free" class="sr-only">
+                Free
+              </label>
+              <label class="filter-item">
+                <input type="checkbox" name="license" value="proprietary" class="sr-only">
+                Proprietary
+              </label>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="browse-main">
+          <div class="browse-header">
+            <h1 class="browse-title" id="browse-title">All Apps</h1>
+
+            <div class="browse-controls">
+              <select class="sort-select" id="sort-select" aria-label="Sort by">
+                <option value="popular">Most Popular</option>
+                <option value="new">Newest First</option>
+                <option value="rating">Highest Rated</option>
+                <option value="name">Name A-Z</option>
+              </select>
+
+              <div class="view-toggle">
+                <button class="view-btn active" data-view="grid" aria-label="Grid view">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                  </svg>
+                </button>
+                <button class="view-btn" data-view="list" aria-label="List view">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6"/>
+                    <line x1="8" y1="12" x2="21" y2="12"/>
+                    <line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search Results Info -->
+          <div id="search-info" class="mb-lg" style="display:none;">
+            <p class="text-secondary">
+              Showing results for "<span id="search-query"></span>"
+              <button class="btn btn-ghost btn-sm" id="clear-search">Clear</button>
+            </p>
+          </div>
+
+          <!-- Apps Grid -->
+          <div class="grid grid-apps" id="apps-grid">
+            <!-- Apps will be loaded dynamically, showing static examples for demo -->
+            <a href="/app?slug=vscode" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">VS</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">Visual Studio Code</h3>
+                <p class="app-card-desc">A powerful, lightweight code editor with built-in support for JavaScript, TypeScript, and Node.js.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.8</span>
+                  </div>
+                  <span class="app-card-downloads">2.5M downloads</span>
+                  <span class="app-card-category">Development</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/app?slug=firefox" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">&#128293;</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">Firefox</h3>
+                <p class="app-card-desc">Fast, private, and free web browser from Mozilla.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.7</span>
+                  </div>
+                  <span class="app-card-downloads">2.5M downloads</span>
+                  <span class="app-card-category">Internet</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/app?slug=gimp" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">GI</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">GIMP</h3>
+                <p class="app-card-desc">GNU Image Manipulation Program for photo retouching and editing.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.5</span>
+                  </div>
+                  <span class="app-card-downloads">1.2M downloads</span>
+                  <span class="app-card-category">Graphics</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/app?slug=blender" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">BL</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">Blender</h3>
+                <p class="app-card-desc">Free and open source 3D creation suite for modeling, animation, and more.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.9</span>
+                  </div>
+                  <span class="app-card-downloads">890K downloads</span>
+                  <span class="app-card-category">Graphics</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/app?slug=steam" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">&#127918;</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">Steam</h3>
+                <p class="app-card-desc">Ultimate destination for playing, discussing, and creating games.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.6</span>
+                  </div>
+                  <span class="app-card-downloads">3.2M downloads</span>
+                  <span class="app-card-category">Games</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/app?slug=vlc" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">&#9654;</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">VLC Media Player</h3>
+                <p class="app-card-desc">Free and open source cross-platform multimedia player.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.8</span>
+                  </div>
+                  <span class="app-card-downloads">1.8M downloads</span>
+                  <span class="app-card-category">Multimedia</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/app?slug=obs" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">&#128249;</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">OBS Studio</h3>
+                <p class="app-card-desc">Free software for video recording and live streaming.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.9</span>
+                  </div>
+                  <span class="app-card-downloads">980K downloads</span>
+                  <span class="app-card-category">Multimedia</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/app?slug=inkscape" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">&#9997;</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">Inkscape</h3>
+                <p class="app-card-desc">Professional vector graphics editor for illustrations and design.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.6</span>
+                  </div>
+                  <span class="app-card-downloads">650K downloads</span>
+                  <span class="app-card-category">Graphics</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/app?slug=libreoffice" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">LO</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">LibreOffice</h3>
+                <p class="app-card-desc">Free and powerful office suite with Writer, Calc, Impress and more.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.5</span>
+                  </div>
+                  <span class="app-card-downloads">2.1M downloads</span>
+                  <span class="app-card-category">Productivity</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/app?slug=thunderbird" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">&#128231;</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">Thunderbird</h3>
+                <p class="app-card-desc">Free email application that is easy to set up and customize.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.4</span>
+                  </div>
+                  <span class="app-card-downloads">1.4M downloads</span>
+                  <span class="app-card-category">Internet</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/app?slug=kdenlive" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">&#127909;</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">Kdenlive</h3>
+                <p class="app-card-desc">Free and open source video editing software.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.5</span>
+                  </div>
+                  <span class="app-card-downloads">520K downloads</span>
+                  <span class="app-card-category">Multimedia</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="/app?slug=krita" class="card app-card">
+              <div class="app-card-image">
+                <div class="app-card-icon">&#127912;</div>
+              </div>
+              <div class="app-card-content">
+                <h3 class="app-card-title">Krita</h3>
+                <p class="app-card-desc">Professional free and open source painting program.</p>
+                <div class="app-card-meta">
+                  <div class="app-card-rating">
+                    <span>&#9733;</span>
+                    <span>4.7</span>
+                  </div>
+                  <span class="app-card-downloads">780K downloads</span>
+                  <span class="app-card-category">Graphics</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Loading State -->
+          <div class="loading" id="loading" style="display:none;">
+            <div class="loading-spinner"></div>
+          </div>
+
+          <!-- Empty State -->
+          <div class="empty-state" id="empty-state" style="display:none;">
+            <div class="empty-state-icon">&#128269;</div>
+            <h3>No apps found</h3>
+            <p>Try adjusting your search or filters</p>
+            <button class="btn btn-primary" id="reset-filters">Reset Filters</button>
+          </div>
+
+          <!-- Load More -->
+          <div class="text-center mt-xl">
+            <button class="btn btn-secondary" id="load-more">Load More Apps</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <span>Flick Store</span>
+          </a>
+          <p>A fast, modern, community-driven app store for Linux.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Explore</h4>
+          <nav class="footer-links">
+            <a href="/browse" class="footer-link">Browse Apps</a>
+            <a href="/browse.html?category=games" class="footer-link">Games</a>
+            <a href="/wildwest" class="footer-link">Wild West</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Community</h4>
+          <nav class="footer-links">
+            <a href="/request" class="footer-link">Request an App</a>
+            <a href="https://github.com/flick-store" class="footer-link">GitHub</a>
+            <a href="https://discord.gg/flick" class="footer-link">Discord</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Resources</h4>
+          <nav class="footer-links">
+            <a href="/docs" class="footer-link">Documentation</a>
+            <a href="/api" class="footer-link">API</a>
+            <a href="/privacy" class="footer-link">Privacy</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2025 Flick Store. Open source and community-driven.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/main.js"></script>
+  <script>
+    // Browse page specific functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const categoryFilters = document.querySelectorAll('[data-category]');
+      const sortSelect = document.getElementById('sort-select');
+      const viewBtns = document.querySelectorAll('[data-view]');
+      const appsGrid = document.getElementById('apps-grid');
+      const browseTitle = document.getElementById('browse-title');
+      const searchInfo = document.getElementById('search-info');
+      const searchQuery = document.getElementById('search-query');
+      const clearSearch = document.getElementById('clear-search');
+
+      // Check URL params
+      const urlCategory = getUrlParam('category');
+      const urlQuery = getUrlParam('q');
+      const urlSort = getUrlParam('sort');
+
+      if (urlCategory) {
+        categoryFilters.forEach(item => {
+          item.classList.toggle('active', item.dataset.category === urlCategory);
+        });
+        browseTitle.textContent = urlCategory.charAt(0).toUpperCase() + urlCategory.slice(1);
+      }
+
+      if (urlQuery) {
+        searchInfo.style.display = 'block';
+        searchQuery.textContent = urlQuery;
+        browseTitle.textContent = 'Search Results';
+        document.getElementById('header-search').value = urlQuery;
+      }
+
+      if (urlSort) {
+        sortSelect.value = urlSort;
+      }
+
+      // Category filter click
+      categoryFilters.forEach(item => {
+        item.addEventListener('click', () => {
+          categoryFilters.forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+
+          const category = item.dataset.category;
+          if (category === 'all') {
+            browseTitle.textContent = 'All Apps';
+            setUrlParam('category', null);
+          } else {
+            browseTitle.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+            setUrlParam('category', category);
+          }
+
+          // In real app, this would trigger API call
+          loadApps();
+        });
+      });
+
+      // Sort change
+      sortSelect.addEventListener('change', () => {
+        setUrlParam('sort', sortSelect.value);
+        loadApps();
+      });
+
+      // View toggle
+      viewBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          viewBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          appsGrid.classList.toggle('list-view', btn.dataset.view === 'list');
+        });
+      });
+
+      // Clear search
+      clearSearch?.addEventListener('click', () => {
+        setUrlParam('q', null);
+        searchInfo.style.display = 'none';
+        browseTitle.textContent = 'All Apps';
+        document.getElementById('header-search').value = '';
+        loadApps();
+      });
+
+      async function loadApps() {
+        // In real app, this would make API calls
+        // For now, just showing the static content
+        console.log('Loading apps...');
+      }
+    });
+  </script>
+</body>
+</html>

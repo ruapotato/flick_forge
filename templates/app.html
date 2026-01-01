@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="App details on Flick Store - Linux App Store">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>App Details - Flick Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127919;</text></svg>">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span>Flick Store</span>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/browse" class="nav-link">Browse</a>
+        <a href="/wildwest" class="nav-link wild-west">Wild West</a>
+        <a href="/request" class="nav-link">Request</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="header-search">
+          <svg class="header-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="search" placeholder="Search apps..." aria-label="Search apps" data-search>
+        </div>
+
+        <a href="/login" class="btn btn-ghost" data-guest>Sign In</a>
+        <a href="/profile" class="btn btn-secondary" data-auth style="display:none">
+          <span data-user-avatar>U</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="app-detail">
+    <div class="container">
+      <!-- App Header -->
+      <div class="app-detail-header" id="app-header">
+        <div class="app-detail-icon" id="app-icon">&#128187;</div>
+
+        <div class="app-detail-info">
+          <h1 id="app-name">Visual Studio Code</h1>
+          <p class="app-detail-developer">
+            <a href="#" id="app-developer">Microsoft Corporation</a>
+          </p>
+
+          <div class="app-detail-stats">
+            <div class="app-stat">
+              <div class="app-stat-value" id="app-rating">4.8</div>
+              <div class="app-stat-label">Rating</div>
+            </div>
+            <div class="app-stat">
+              <div class="app-stat-value" id="app-downloads">2.5M</div>
+              <div class="app-stat-label">Downloads</div>
+            </div>
+            <div class="app-stat">
+              <div class="app-stat-value" id="app-size">85 MB</div>
+              <div class="app-stat-label">Size</div>
+            </div>
+            <div class="app-stat">
+              <div class="app-stat-value" id="app-version">1.85.0</div>
+              <div class="app-stat-label">Version</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-detail-actions">
+          <button class="btn btn-primary btn-lg" id="install-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Install
+          </button>
+          <button class="btn btn-secondary" data-modal-open="report-modal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+              <line x1="4" y1="22" x2="4" y2="15"/>
+            </svg>
+            Report Issue
+          </button>
+        </div>
+      </div>
+
+      <!-- Screenshots Gallery -->
+      <section class="section">
+        <h2 class="section-title mb-lg">Screenshots</h2>
+        <div class="screenshots-gallery" id="screenshots">
+          <div class="screenshot-item">
+            <div style="display:flex;align-items:center;justify-content:center;height:100%;background:var(--bg-tertiary);color:var(--text-muted);">
+              Screenshot 1
+            </div>
+          </div>
+          <div class="screenshot-item">
+            <div style="display:flex;align-items:center;justify-content:center;height:100%;background:var(--bg-tertiary);color:var(--text-muted);">
+              Screenshot 2
+            </div>
+          </div>
+          <div class="screenshot-item">
+            <div style="display:flex;align-items:center;justify-content:center;height:100%;background:var(--bg-tertiary);color:var(--text-muted);">
+              Screenshot 3
+            </div>
+          </div>
+          <div class="screenshot-item">
+            <div style="display:flex;align-items:center;justify-content:center;height:100%;background:var(--bg-tertiary);color:var(--text-muted);">
+              Screenshot 4
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Description -->
+      <div class="app-description" id="app-description">
+        <h2>About this app</h2>
+        <p>
+          Visual Studio Code is a lightweight but powerful source code editor which runs on your desktop and is available for Windows, macOS and Linux. It comes with built-in support for JavaScript, TypeScript and Node.js and has a rich ecosystem of extensions for other languages and runtimes (such as C++, C#, Java, Python, PHP, Go, .NET).
+        </p>
+        <p class="mt-md">
+          Key features include:
+        </p>
+        <ul style="margin-top:var(--space-md);padding-left:var(--space-lg);color:var(--text-secondary);">
+          <li>IntelliSense - Go beyond syntax highlighting and autocomplete</li>
+          <li>Debugging - Debug code right from the editor</li>
+          <li>Built-in Git - Review diffs, stage files, and make commits</li>
+          <li>Extensions - Install extensions to add new languages, themes, debuggers</li>
+        </ul>
+      </div>
+
+      <!-- Install Instructions -->
+      <div class="install-box">
+        <h3>Installation</h3>
+        <p class="text-secondary mb-md">Install using the Flick command line tool:</p>
+        <div class="install-command">
+          <code id="install-cmd">flick install vscode</code>
+          <button class="btn-copy" data-copy="#install-cmd" aria-label="Copy to clipboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
+        </div>
+        <p class="form-hint mt-md">
+          Don't have Flick installed? <a href="/docs/install">Get started here</a>
+        </p>
+      </div>
+
+      <!-- Reviews Section -->
+      <section class="reviews-section section">
+        <div class="reviews-header">
+          <h2 class="section-title">Reviews</h2>
+          <button class="btn btn-secondary" data-modal-open="review-modal" data-auth>Write a Review</button>
+        </div>
+
+        <div class="reviews-summary mb-xl">
+          <div class="reviews-average">
+            <div class="reviews-average-score" id="reviews-score">4.8</div>
+            <div class="reviews-average-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <div class="reviews-average-count" id="reviews-count">1,247 reviews</div>
+          </div>
+        </div>
+
+        <div id="reviews-list">
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-avatar">L</div>
+              <div class="review-meta">
+                <span class="review-author">LinuxFan42</span>
+                <span class="review-date">Dec 15, 2024</span>
+              </div>
+              <div class="review-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+            <p class="review-content">
+              Best code editor I've ever used on Linux. The extension ecosystem is amazing and performance is great even on older hardware. Highly recommended for any developer.
+            </p>
+          </div>
+
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-avatar">D</div>
+              <div class="review-meta">
+                <span class="review-author">DevOpsGuru</span>
+                <span class="review-date">Dec 12, 2024</span>
+              </div>
+              <div class="review-rating">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+            </div>
+            <p class="review-content">
+              Solid editor with great Git integration. The remote development features are fantastic for working with containers and remote servers. Only minor complaint is occasional high memory usage.
+            </p>
+          </div>
+
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-avatar">P</div>
+              <div class="review-meta">
+                <span class="review-author">PythonPro</span>
+                <span class="review-date">Dec 10, 2024</span>
+              </div>
+              <div class="review-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+            <p class="review-content">
+              The Python extension is incredible. Debugging, linting, IntelliSense - everything works flawlessly. This has become my daily driver for all Python projects.
+            </p>
+          </div>
+        </div>
+
+        <button class="btn btn-ghost mt-lg" id="load-more-reviews">Load More Reviews</button>
+      </section>
+
+      <!-- Version History -->
+      <div class="version-history">
+        <h3 class="mb-lg">Version History</h3>
+
+        <div class="version-item">
+          <div class="version-header">
+            <span class="version-number">v1.85.0</span>
+            <span class="version-date">December 2024</span>
+          </div>
+          <ul class="version-changes">
+            <li>New floating editor windows</li>
+            <li>Improved settings editor</li>
+            <li>Better accessibility features</li>
+          </ul>
+        </div>
+
+        <div class="version-item">
+          <div class="version-header">
+            <span class="version-number">v1.84.2</span>
+            <span class="version-date">November 2024</span>
+          </div>
+          <ul class="version-changes">
+            <li>Bug fixes and performance improvements</li>
+            <li>Security patches</li>
+          </ul>
+        </div>
+
+        <div class="version-item">
+          <div class="version-header">
+            <span class="version-number">v1.84.0</span>
+            <span class="version-date">November 2024</span>
+          </div>
+          <ul class="version-changes">
+            <li>Voice control support</li>
+            <li>Enhanced multi-root workspace support</li>
+            <li>New diff editor features</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Report Issue Modal -->
+  <div class="modal-overlay" id="report-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Report an Issue</h3>
+        <button class="modal-close" data-modal-close aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="report-form">
+          <div class="form-group">
+            <label class="form-label" for="report-type">Issue Type</label>
+            <select class="form-select" id="report-type" name="type" required>
+              <option value="">Select an issue type</option>
+              <option value="bug">Bug / Crash</option>
+              <option value="security">Security Issue</option>
+              <option value="content">Inappropriate Content</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="report-description">Description</label>
+            <textarea class="form-textarea" id="report-description" name="description"
+                      placeholder="Please describe the issue in detail..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">Submit Report</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Write Review Modal -->
+  <div class="modal-overlay" id="review-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Write a Review</h3>
+        <button class="modal-close" data-modal-close aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="review-form" data-app-id="">
+          <div class="form-group">
+            <label class="form-label">Rating</label>
+            <div class="rating-input" style="display:flex;gap:var(--space-sm);font-size:var(--text-2xl);">
+              <label style="cursor:pointer;">
+                <input type="radio" name="rating" value="1" class="sr-only">
+                <span class="rating-star" data-rating="1">&#9734;</span>
+              </label>
+              <label style="cursor:pointer;">
+                <input type="radio" name="rating" value="2" class="sr-only">
+                <span class="rating-star" data-rating="2">&#9734;</span>
+              </label>
+              <label style="cursor:pointer;">
+                <input type="radio" name="rating" value="3" class="sr-only">
+                <span class="rating-star" data-rating="3">&#9734;</span>
+              </label>
+              <label style="cursor:pointer;">
+                <input type="radio" name="rating" value="4" class="sr-only">
+                <span class="rating-star" data-rating="4">&#9734;</span>
+              </label>
+              <label style="cursor:pointer;">
+                <input type="radio" name="rating" value="5" class="sr-only" checked>
+                <span class="rating-star" data-rating="5">&#9734;</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="review-content">Your Review</label>
+            <textarea class="form-textarea" id="review-content" name="content"
+                      placeholder="Share your experience with this app..."
+                      data-maxlength="1000" required></textarea>
+            <p class="form-char-count" data-counter-for="review-content">0/1000</p>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">Submit Review</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <span>Flick Store</span>
+          </a>
+          <p>A fast, modern, community-driven app store for Linux.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Explore</h4>
+          <nav class="footer-links">
+            <a href="/browse" class="footer-link">Browse Apps</a>
+            <a href="/browse.html?category=games" class="footer-link">Games</a>
+            <a href="/wildwest" class="footer-link">Wild West</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Community</h4>
+          <nav class="footer-links">
+            <a href="/request" class="footer-link">Request an App</a>
+            <a href="https://github.com/flick-store" class="footer-link">GitHub</a>
+            <a href="https://discord.gg/flick" class="footer-link">Discord</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Resources</h4>
+          <nav class="footer-links">
+            <a href="/docs" class="footer-link">Documentation</a>
+            <a href="/api" class="footer-link">API</a>
+            <a href="/privacy" class="footer-link">Privacy</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2025 Flick Store. Open source and community-driven.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/main.js"></script>
+  <script>
+    // Rating star interaction
+    document.querySelectorAll('.rating-star').forEach(star => {
+      star.addEventListener('click', function() {
+        const rating = parseInt(this.dataset.rating);
+        document.querySelectorAll('.rating-star').forEach((s, i) => {
+          s.innerHTML = i < rating ? '&#9733;' : '&#9734;';
+          s.style.color = i < rating ? 'var(--warning)' : 'var(--text-muted)';
+        });
+      });
+    });
+
+    // Load app data based on URL params
+    document.addEventListener('DOMContentLoaded', async () => {
+      const appId = getUrlParam('id');
+      const appSlug = getUrlParam('slug');
+
+      if (appId || appSlug) {
+        try {
+          const app = appId
+            ? await API.apps.getById(appId)
+            : await API.apps.getBySlug(appSlug);
+
+          if (app) {
+            document.title = `${app.name} - Flick Store`;
+            document.getElementById('app-name').textContent = app.name;
+            document.getElementById('app-developer').textContent = app.developer || 'Unknown';
+            document.getElementById('app-rating').textContent = app.rating?.toFixed(1) || 'N/A';
+            document.getElementById('app-downloads').textContent = formatNumber(app.downloads || 0);
+            document.getElementById('app-size').textContent = app.size || 'N/A';
+            document.getElementById('app-version').textContent = app.version || '1.0.0';
+            document.getElementById('install-cmd').textContent = `flick install ${app.slug || app.id}`;
+
+            // Set app ID for review form
+            document.getElementById('review-form').dataset.appId = app.id;
+          }
+        } catch (error) {
+          console.error('Failed to load app:', error);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
