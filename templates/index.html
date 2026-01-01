@@ -161,36 +161,10 @@
         </div>
 
         <div class="grid grid-categories" id="categories-grid">
-          <a href="/browse.html?category=development" class="card category-card">
-            <div class="category-icon">&#128187;</div>
-            <span class="category-name">Development</span>
-            <span class="category-count">156 apps</span>
-          </a>
-          <a href="/browse.html?category=graphics" class="card category-card">
-            <div class="category-icon">&#127912;</div>
-            <span class="category-name">Graphics</span>
-            <span class="category-count">89 apps</span>
-          </a>
-          <a href="/browse.html?category=games" class="card category-card">
-            <div class="category-icon">&#127918;</div>
-            <span class="category-name">Games</span>
-            <span class="category-count">234 apps</span>
-          </a>
-          <a href="/browse.html?category=productivity" class="card category-card">
-            <div class="category-icon">&#128200;</div>
-            <span class="category-name">Productivity</span>
-            <span class="category-count">178 apps</span>
-          </a>
-          <a href="/browse.html?category=multimedia" class="card category-card">
-            <div class="category-icon">&#127926;</div>
-            <span class="category-name">Multimedia</span>
-            <span class="category-count">112 apps</span>
-          </a>
-          <a href="/browse.html?category=utilities" class="card category-card">
-            <div class="category-icon">&#128295;</div>
-            <span class="category-name">Utilities</span>
-            <span class="category-count">203 apps</span>
-          </a>
+          <!-- Categories loaded dynamically from API -->
+          <div class="loading" id="categories-loading">
+            <div class="loading-spinner"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -455,5 +429,53 @@
 
   <script src="/static/js/api.js"></script>
   <script src="/static/js/main.js"></script>
+  <script>
+    // Load categories dynamically on the home page
+    document.addEventListener('DOMContentLoaded', async () => {
+      const categoriesGrid = document.getElementById('categories-grid');
+      const loadingEl = document.getElementById('categories-loading');
+
+      try {
+        const data = await API.categories.getAll();
+        const categories = data.categories || data;
+
+        if (loadingEl) {
+          loadingEl.remove();
+        }
+
+        if (Array.isArray(categories) && categories.length > 0) {
+          categories.forEach(category => {
+            const name = typeof category === 'string' ? category : category.name;
+            const count = typeof category === 'object' ? category.count : null;
+            const slug = typeof category === 'string' ? category.toLowerCase() : (category.slug || category.name.toLowerCase());
+
+            const link = document.createElement('a');
+            link.href = `/browse?category=${encodeURIComponent(slug)}`;
+            link.className = 'card category-card';
+            link.innerHTML = `
+              <div class="category-icon">${escapeHtml(name.charAt(0).toUpperCase())}</div>
+              <span class="category-name">${escapeHtml(formatCategoryName(name))}</span>
+              ${count !== null ? `<span class="category-count">${count} apps</span>` : ''}
+            `;
+
+            categoriesGrid.appendChild(link);
+          });
+        } else {
+          categoriesGrid.innerHTML = '<p class="text-muted">No categories available</p>';
+        }
+      } catch (error) {
+        console.error('Failed to load categories:', error);
+        if (loadingEl) {
+          loadingEl.remove();
+        }
+        categoriesGrid.innerHTML = '<p class="text-muted">Failed to load categories</p>';
+      }
+
+      function formatCategoryName(name) {
+        if (!name) return '';
+        return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ');
+      }
+    });
+  </script>
 </body>
 </html>

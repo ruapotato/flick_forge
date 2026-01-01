@@ -214,11 +214,7 @@ const API = {
 
   categories: {
     async getAll() {
-      return API.get('/categories');
-    },
-
-    async getById(id) {
-      return API.get(`/categories/${id}`);
+      return API.get('/apps/categories');
     },
   },
 

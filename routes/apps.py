@@ -164,22 +164,23 @@ def search_apps():
 
 @apps_bp.route("/categories", methods=["GET"])
 def list_categories():
-    """List all app categories with counts."""
-    categories = current_app.config.get("CATEGORIES", [])
+    """List all app categories with counts (dynamic from database)."""
+    # Get distinct categories from apps that are visible (stable or wild_west)
+    from sqlalchemy import func
 
-    # Get counts for each category
-    category_counts = {}
-    for cat in categories:
-        count = App.query.filter(
-            App.category == cat,
-            App.status.in_([AppStatus.STABLE.value, AppStatus.WILD_WEST.value]),
-        ).count()
-        category_counts[cat] = count
+    results = db.session.query(
+        App.category,
+        func.count(App.id).label('count')
+    ).filter(
+        App.status.in_([AppStatus.STABLE.value, AppStatus.WILD_WEST.value]),
+        App.category.isnot(None),
+        App.category != ''
+    ).group_by(App.category).order_by(func.count(App.id).desc()).all()
 
     return jsonify(
         {
             "categories": [
-                {"name": cat, "count": category_counts.get(cat, 0)} for cat in categories
+                {"name": cat, "count": count} for cat, count in results
             ]
         }
     )
@@ -188,10 +189,7 @@ def list_categories():
 @apps_bp.route("/category/<category>", methods=["GET"])
 def get_apps_by_category(category):
     """Get apps in a specific category."""
-    categories = current_app.config.get("CATEGORIES", [])
-    if category not in categories:
-        return jsonify({"error": "Invalid category"}), 400
-
+    # Category is now free-form, just filter by whatever category string is provided
     page = request.args.get("page", 1, type=int)
     per_page = min(request.args.get("per_page", 20, type=int), 100)
     status = request.args.get("status", "stable")
@@ -306,9 +304,7 @@ def create_app():
     if not name or not description:
         return jsonify({"error": "Name and description are required"}), 400
 
-    categories = current_app.config.get("CATEGORIES", [])
-    if category not in categories:
-        return jsonify({"error": "Invalid category"}), 400
+    # Category is now free-form text (no validation needed)
 
     # Generate slug
     slug = slugify(name)

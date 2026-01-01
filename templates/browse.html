@@ -84,62 +84,9 @@
                   <rect x="3" y="14" width="7" height="7"/>
                 </svg>
                 All Apps
-                <span class="filter-count" id="count-all">972</span>
+                <span class="filter-count" id="count-all"></span>
               </label>
-              <label class="filter-item" data-category="development">
-                <input type="radio" name="category" value="development" class="sr-only">
-                <span>&#128187;</span>
-                Development
-                <span class="filter-count">156</span>
-              </label>
-              <label class="filter-item" data-category="graphics">
-                <input type="radio" name="category" value="graphics" class="sr-only">
-                <span>&#127912;</span>
-                Graphics
-                <span class="filter-count">89</span>
-              </label>
-              <label class="filter-item" data-category="games">
-                <input type="radio" name="category" value="games" class="sr-only">
-                <span>&#127918;</span>
-                Games
-                <span class="filter-count">234</span>
-              </label>
-              <label class="filter-item" data-category="productivity">
-                <input type="radio" name="category" value="productivity" class="sr-only">
-                <span>&#128200;</span>
-                Productivity
-                <span class="filter-count">178</span>
-              </label>
-              <label class="filter-item" data-category="multimedia">
-                <input type="radio" name="category" value="multimedia" class="sr-only">
-                <span>&#127926;</span>
-                Multimedia
-                <span class="filter-count">112</span>
-              </label>
-              <label class="filter-item" data-category="utilities">
-                <input type="radio" name="category" value="utilities" class="sr-only">
-                <span>&#128295;</span>
-                Utilities
-                <span class="filter-count">203</span>
-              </label>
-              <label class="filter-item" data-category="internet">
-                <input type="radio" name="category" value="internet" class="sr-only">
-                <span>&#127760;</span>
-                Internet
-                <span class="filter-count">145</span>
-              </label>
-              <label class="filter-item" data-category="education">
-                <input type="radio" name="category" value="education" class="sr-only">
-                <span>&#128218;</span>
-                Education
-                <span class="filter-count">67</span>
-              </label>
-              <label class="filter-item" data-category="science">
-                <input type="radio" name="category" value="science" class="sr-only">
-                <span>&#128300;</span>
-                Science
-                <span class="filter-count">43</span>
-              </label>
+              <!-- Categories loaded dynamically from API -->
             </div>
           </div>
 
@@ -518,8 +465,8 @@
   <script src="/static/js/main.js"></script>
   <script>
     // Browse page specific functionality
-    document.addEventListener('DOMContentLoaded', () => {
-      const categoryFilters = document.querySelectorAll('[data-category]');
+    document.addEventListener('DOMContentLoaded', async () => {
+      const categoryFiltersContainer = document.getElementById('category-filters');
       const sortSelect = document.getElementById('sort-select');
       const viewBtns = document.querySelectorAll('[data-view]');
       const appsGrid = document.getElementById('apps-grid');
@@ -528,16 +475,17 @@
       const searchQuery = document.getElementById('search-query');
       const clearSearch = document.getElementById('clear-search');
 
+      // Load categories from API
+      await loadCategories();
+
       // Check URL params
       const urlCategory = getUrlParam('category');
       const urlQuery = getUrlParam('q');
       const urlSort = getUrlParam('sort');
 
       if (urlCategory) {
-        categoryFilters.forEach(item => {
-          item.classList.toggle('active', item.dataset.category === urlCategory);
-        });
-        browseTitle.textContent = urlCategory.charAt(0).toUpperCase() + urlCategory.slice(1);
+        updateActiveCategory(urlCategory);
+        browseTitle.textContent = formatCategoryName(urlCategory);
       }
 
       if (urlQuery) {
@@ -550,26 +498,6 @@
       if (urlSort) {
         sortSelect.value = urlSort;
       }
-
-      // Category filter click
-      categoryFilters.forEach(item => {
-        item.addEventListener('click', () => {
-          categoryFilters.forEach(i => i.classList.remove('active'));
-          item.classList.add('active');
-
-          const category = item.dataset.category;
-          if (category === 'all') {
-            browseTitle.textContent = 'All Apps';
-            setUrlParam('category', null);
-          } else {
-            browseTitle.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-            setUrlParam('category', category);
-          }
-
-          // In real app, this would trigger API call
-          loadApps();
-        });
-      });
 
       // Sort change
       sortSelect.addEventListener('change', () => {
@@ -594,6 +522,70 @@
         document.getElementById('header-search').value = '';
         loadApps();
       });
+
+      async function loadCategories() {
+        try {
+          const data = await API.categories.getAll();
+          const categories = data.categories || data;
+
+          // Render category filter items
+          if (Array.isArray(categories)) {
+            categories.forEach(category => {
+              const name = typeof category === 'string' ? category : category.name;
+              const count = typeof category === 'object' ? category.count : null;
+              const slug = typeof category === 'string' ? category.toLowerCase() : (category.slug || category.name.toLowerCase());
+
+              const label = document.createElement('label');
+              label.className = 'filter-item';
+              label.dataset.category = slug;
+              label.innerHTML = `
+                <input type="radio" name="category" value="${escapeHtml(slug)}" class="sr-only">
+                ${escapeHtml(formatCategoryName(name))}
+                ${count !== null ? `<span class="filter-count">${count}</span>` : ''}
+              `;
+
+              label.addEventListener('click', () => handleCategoryClick(label));
+              categoryFiltersContainer.appendChild(label);
+            });
+          }
+
+          // Add click handler to "All Apps" filter
+          const allFilter = categoryFiltersContainer.querySelector('[data-category="all"]');
+          if (allFilter) {
+            allFilter.addEventListener('click', () => handleCategoryClick(allFilter));
+          }
+        } catch (error) {
+          console.error('Failed to load categories:', error);
+        }
+      }
+
+      function handleCategoryClick(item) {
+        // Update active state
+        categoryFiltersContainer.querySelectorAll('[data-category]').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        const category = item.dataset.category;
+        if (category === 'all') {
+          browseTitle.textContent = 'All Apps';
+          setUrlParam('category', null);
+        } else {
+          browseTitle.textContent = formatCategoryName(category);
+          setUrlParam('category', category);
+        }
+
+        loadApps();
+      }
+
+      function updateActiveCategory(categorySlug) {
+        categoryFiltersContainer.querySelectorAll('[data-category]').forEach(item => {
+          item.classList.toggle('active', item.dataset.category === categorySlug);
+        });
+      }
+
+      function formatCategoryName(name) {
+        if (!name) return '';
+        return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ');
+      }
 
       async function loadApps() {
         // In real app, this would make API calls

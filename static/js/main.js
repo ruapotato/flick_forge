@@ -750,7 +750,19 @@ async function loadCategories(containerId) {
 
   try {
     const data = await API.categories.getAll();
-    container.innerHTML = data.categories.map(cat => renderCategoryCard(cat)).join('');
+    const categories = data.categories || data;
+
+    if (Array.isArray(categories) && categories.length > 0) {
+      container.innerHTML = categories.map(cat => {
+        // Handle both string categories and object categories
+        if (typeof cat === 'string') {
+          return renderCategoryCard({ name: cat, slug: cat.toLowerCase(), count: null });
+        }
+        return renderCategoryCard(cat);
+      }).join('');
+    } else {
+      container.innerHTML = '<p class="text-muted">No categories available</p>';
+    }
   } catch (error) {
     container.innerHTML = '<p class="text-muted">Failed to load categories</p>';
   }
@@ -807,11 +819,16 @@ function renderFeaturedCard(app) {
 }
 
 function renderCategoryCard(category) {
+  const name = category.name || category;
+  const slug = category.slug || (typeof name === 'string' ? name.toLowerCase() : '');
+  const displayName = typeof name === 'string' ? name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ') : name;
+  const count = category.count;
+
   return `
-    <a href="/browse.html?category=${encodeURIComponent(category.slug)}" class="card category-card">
-      <div class="category-icon">${category.icon || category.name[0]}</div>
-      <span class="category-name">${escapeHtml(category.name)}</span>
-      <span class="category-count">${category.count || 0} apps</span>
+    <a href="/browse?category=${encodeURIComponent(slug)}" class="card category-card">
+      <div class="category-icon">${displayName.charAt(0).toUpperCase()}</div>
+      <span class="category-name">${escapeHtml(displayName)}</span>
+      ${count !== null && count !== undefined ? `<span class="category-count">${count} apps</span>` : ''}
     </a>
   `;
 }
