@@ -30,7 +30,8 @@
       </nav>
 
       <div class="header-actions">
-        <button class="btn btn-ghost" id="logout-btn">Sign Out</button>
+        <button class="btn btn-ghost" id="logout-btn" data-auth style="display:none;">Sign Out</button>
+        <a href="/login" class="btn btn-ghost" data-guest>Sign In</a>
       </div>
 
       <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
@@ -43,312 +44,147 @@
 
   <main>
     <div class="container">
-      <!-- Profile Header -->
-      <div class="profile-header">
-        <div class="profile-avatar" data-user-avatar>L</div>
-        <div class="profile-info">
-          <h1 data-user-name>LinuxFan42</h1>
-          <span class="profile-tier" data-user-tier>Trusted</span>
-          <p class="text-secondary">Member since December 2024</p>
-          <div class="profile-stats">
-            <div class="profile-stat">
-              <div class="profile-stat-value">12</div>
-              <div class="profile-stat-label">Reviews</div>
-            </div>
-            <div class="profile-stat">
-              <div class="profile-stat-value">5</div>
-              <div class="profile-stat-label">Requests</div>
-            </div>
-            <div class="profile-stat">
-              <div class="profile-stat-value">34</div>
-              <div class="profile-stat-label">Apps Tested</div>
-            </div>
-          </div>
+      <!-- Loading State -->
+      <div id="profile-loading" class="text-center" style="padding:var(--space-3xl);">
+        <div class="loading-spinner"></div>
+        <p class="text-muted" style="margin-top:var(--space-md);">Loading profile...</p>
+      </div>
+
+      <!-- Not Logged In -->
+      <div id="profile-guest" style="display:none;">
+        <div class="text-center" style="padding:var(--space-3xl);">
+          <h1 style="margin-bottom:var(--space-md);">Sign In Required</h1>
+          <p class="text-secondary" style="margin-bottom:var(--space-lg);">
+            Please sign in to view your profile.
+          </p>
+          <a href="/login?redirect=/profile" class="btn btn-primary btn-lg">Sign In</a>
         </div>
-        <button class="btn btn-secondary" data-modal-open="edit-profile-modal">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-          </svg>
-          Edit Profile
-        </button>
       </div>
 
-      <!-- Profile Tabs -->
-      <div class="profile-tabs">
-        <button class="profile-tab active" data-tab="overview">Overview</button>
-        <button class="profile-tab" data-tab="requests">My Requests</button>
-        <button class="profile-tab" data-tab="reviews">My Reviews</button>
-        <button class="profile-tab" data-tab="settings">Settings</button>
-      </div>
+      <!-- Profile Content -->
+      <div id="profile-content" style="display:none;">
+        <!-- Profile Header -->
+        <div class="profile-header">
+          <div class="profile-avatar" id="user-avatar">?</div>
+          <div class="profile-info">
+            <h1 id="user-name">Loading...</h1>
+            <span class="profile-tier" id="user-tier">Member</span>
+            <p class="text-secondary" id="user-joined">Member since ...</p>
+          </div>
+          <button class="btn btn-ghost text-error" id="header-logout-btn">
+            Sign Out
+          </button>
+        </div>
 
-      <!-- Tab Content: Overview -->
-      <div class="profile-tab-content" id="tab-overview">
-        <section class="section">
-          <div class="grid grid-3">
-            <div class="card" style="padding:var(--space-lg);">
-              <h3 style="font-size:var(--text-base);margin-bottom:var(--space-md);">Account Tier</h3>
-              <div style="display:flex;align-items:center;gap:var(--space-md);">
-                <div style="width:48px;height:48px;background:var(--accent-subtle);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;">
-                  <span style="font-size:1.5rem;">&#11088;</span>
-                </div>
-                <div>
-                  <div style="font-weight:600;color:var(--accent);">Trusted</div>
-                  <div class="text-sm text-muted">Reviews are highlighted</div>
-                </div>
-              </div>
-            </div>
+        <!-- Profile Tabs -->
+        <div class="profile-tabs">
+          <button class="profile-tab active" data-tab="overview">Overview</button>
+          <button class="profile-tab" data-tab="requests">My Requests</button>
+          <button class="profile-tab" data-tab="settings">Settings</button>
+        </div>
 
-            <div class="card" style="padding:var(--space-lg);">
-              <h3 style="font-size:var(--text-base);margin-bottom:var(--space-md);">Testing Score</h3>
-              <div style="display:flex;align-items:center;gap:var(--space-md);">
-                <div style="width:48px;height:48px;background:rgba(74, 222, 128, 0.1);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;">
-                  <span style="font-size:1.5rem;">&#129504;</span>
-                </div>
-                <div>
-                  <div style="font-weight:600;color:var(--success);">156 points</div>
-                  <div class="text-sm text-muted">Top 15% of testers</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card" style="padding:var(--space-lg);">
-              <h3 style="font-size:var(--text-base);margin-bottom:var(--space-md);">Contributions</h3>
-              <div style="display:flex;align-items:center;gap:var(--space-md);">
-                <div style="width:48px;height:48px;background:rgba(96, 165, 250, 0.1);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;">
-                  <span style="font-size:1.5rem;">&#128640;</span>
-                </div>
-                <div>
-                  <div style="font-weight:600;color:var(--info);">3 apps promoted</div>
-                  <div class="text-sm text-muted">From your testing</div>
+        <!-- Tab Content: Overview -->
+        <div class="profile-tab-content" id="tab-overview">
+          <section class="section">
+            <div class="grid grid-2">
+              <div class="card" style="padding:var(--space-lg);">
+                <h3 style="font-size:var(--text-base);margin-bottom:var(--space-md);">Account Tier</h3>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <div style="width:48px;height:48px;background:var(--accent-subtle);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;">
+                    <span style="font-size:1.5rem;" id="tier-icon">&#128100;</span>
+                  </div>
+                  <div>
+                    <div style="font-weight:600;color:var(--accent);" id="tier-name">Member</div>
+                    <div class="text-sm text-muted" id="tier-desc">Standard account</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
 
-        <section class="section">
-          <h2 class="section-title mb-lg">Recent Activity</h2>
-          <div class="card">
-            <div style="padding:var(--space-md) var(--space-lg);border-bottom:1px solid var(--border-color);display:flex;align-items:center;gap:var(--space-md);">
-              <span style="font-size:1.2rem;">&#11088;</span>
-              <div style="flex:1;">
-                <span class="text-primary">Reviewed</span>
-                <a href="/app?slug=vscode" style="font-weight:500;">Visual Studio Code</a>
-              </div>
-              <span class="text-muted text-sm">2 days ago</span>
-            </div>
-            <div style="padding:var(--space-md) var(--space-lg);border-bottom:1px solid var(--border-color);display:flex;align-items:center;gap:var(--space-md);">
-              <span style="font-size:1.2rem;">&#128172;</span>
-              <div style="flex:1;">
-                <span class="text-primary">Submitted feedback for</span>
-                <a href="/wildwest" style="font-weight:500;">QuickNotes AI</a>
-              </div>
-              <span class="text-muted text-sm">3 days ago</span>
-            </div>
-            <div style="padding:var(--space-md) var(--space-lg);border-bottom:1px solid var(--border-color);display:flex;align-items:center;gap:var(--space-md);">
-              <span style="font-size:1.2rem;">&#128640;</span>
-              <div style="flex:1;">
-                <span class="text-primary">Request approved:</span>
-                <a href="/request" style="font-weight:500;">Simple Time Tracker</a>
-              </div>
-              <span class="text-muted text-sm">1 week ago</span>
-            </div>
-            <div style="padding:var(--space-md) var(--space-lg);display:flex;align-items:center;gap:var(--space-md);">
-              <span style="font-size:1.2rem;">&#128077;</span>
-              <div style="flex:1;">
-                <span class="text-primary">Upvoted</span>
-                <a href="/app?slug=blender" style="font-weight:500;">Blender</a>
-                <span class="text-secondary">in Wild West</span>
-              </div>
-              <span class="text-muted text-sm">1 week ago</span>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <!-- Tab Content: My Requests -->
-      <div class="profile-tab-content" id="tab-requests" style="display:none;">
-        <section class="section">
-          <div class="section-header">
-            <h2 class="section-title">My Requests</h2>
-            <a href="/request" class="btn btn-primary">New Request</a>
-          </div>
-
-          <div class="request-list">
-            <div class="request-card">
-              <div class="request-votes">
-                <span class="request-vote-count">134</span>
-              </div>
-              <div class="request-content">
-                <h3>Simple Time Tracker for Freelancers</h3>
-                <p>Track time spent on different projects with a clean interface.</p>
-                <div class="request-meta">
-                  <span>Submitted 3 days ago</span>
+              <div class="card" style="padding:var(--space-lg);">
+                <h3 style="font-size:var(--text-base);margin-bottom:var(--space-md);">Account Info</h3>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <div style="width:48px;height:48px;background:rgba(74, 222, 128, 0.1);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;">
+                    <span style="font-size:1.5rem;">&#128231;</span>
+                  </div>
+                  <div>
+                    <div style="font-weight:600;color:var(--success);" id="user-email">...</div>
+                    <div class="text-sm text-muted">Email address</div>
+                  </div>
                 </div>
               </div>
-              <span class="request-status status-approved">Approved</span>
+            </div>
+          </section>
+
+          <section class="section">
+            <h2 class="section-title mb-lg">Getting Started</h2>
+            <div class="card" style="padding:var(--space-xl);">
+              <p class="text-secondary" style="margin-bottom:var(--space-md);">
+                Welcome to Flick Store! Here's what you can do:
+              </p>
+              <ul style="color:var(--text-secondary);padding-left:var(--space-lg);">
+                <li style="margin-bottom:var(--space-sm);"><a href="/browse" style="color:var(--accent);">Browse</a> Qt/QML apps for your Flick device</li>
+                <li style="margin-bottom:var(--space-sm);"><a href="/request" style="color:var(--accent);">Request</a> new apps to be built by AI</li>
+                <li style="margin-bottom:var(--space-sm);"><a href="/wildwest" style="color:var(--accent);">Test</a> experimental apps in Wild West</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+
+        <!-- Tab Content: My Requests -->
+        <div class="profile-tab-content" id="tab-requests" style="display:none;">
+          <section class="section">
+            <div class="section-header">
+              <h2 class="section-title">My Requests</h2>
+              <a href="/request" class="btn btn-primary">New Request</a>
             </div>
 
-            <div class="request-card">
-              <div class="request-votes">
-                <span class="request-vote-count">45</span>
+            <div id="my-requests-list">
+              <div class="loading" id="requests-loading">
+                <div class="loading-spinner"></div>
               </div>
-              <div class="request-content">
-                <h3>Terminal RSS Reader</h3>
-                <p>A CLI-based RSS feed reader with keyboard navigation.</p>
-                <div class="request-meta">
-                  <span>Submitted 2 weeks ago</span>
+              <p class="text-muted text-center" id="no-requests" style="display:none;">
+                You haven't submitted any requests yet. <a href="/request" style="color:var(--accent);">Submit your first request!</a>
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <!-- Tab Content: Settings -->
+        <div class="profile-tab-content" id="tab-settings" style="display:none;">
+          <section class="section">
+            <h2 class="section-title mb-lg">Account Settings</h2>
+
+            <div class="card" style="padding:var(--space-xl);margin-bottom:var(--space-lg);">
+              <h3 style="margin-bottom:var(--space-lg);">Change Password</h3>
+              <form id="password-form">
+                <div class="form-group">
+                  <label class="form-label" for="current-password">Current Password</label>
+                  <input type="password" class="form-input" id="current-password" required>
                 </div>
-              </div>
-              <span class="request-status status-pending">Pending</span>
+                <div class="form-group">
+                  <label class="form-label" for="new-password">New Password</label>
+                  <input type="password" class="form-input" id="new-password" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="confirm-new-password">Confirm New Password</label>
+                  <input type="password" class="form-input" id="confirm-new-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Password</button>
+              </form>
             </div>
-          </div>
-        </section>
-      </div>
 
-      <!-- Tab Content: My Reviews -->
-      <div class="profile-tab-content" id="tab-reviews" style="display:none;">
-        <section class="section">
-          <h2 class="section-title mb-lg">My Reviews</h2>
-
-          <div class="review-card">
-            <div class="review-header">
-              <div style="display:flex;align-items:center;gap:var(--space-md);">
-                <a href="/app?slug=vscode" class="text-primary" style="font-weight:600;">Visual Studio Code</a>
-              </div>
-              <div class="review-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <div class="card" style="padding:var(--space-xl);border:1px solid var(--error);">
+              <h3 style="color:var(--error);margin-bottom:var(--space-md);">Danger Zone</h3>
+              <p class="text-secondary" style="margin-bottom:var(--space-md);">
+                Once you sign out, you'll need to log in again to access your account.
+              </p>
+              <button class="btn btn-ghost text-error" id="settings-logout-btn">Sign Out</button>
             </div>
-            <p class="review-content">
-              Best code editor I've ever used on Linux. The extension ecosystem is amazing and performance is great even on older hardware.
-            </p>
-            <div style="display:flex;gap:var(--space-md);margin-top:var(--space-md);">
-              <button class="btn btn-sm btn-ghost">Edit</button>
-              <button class="btn btn-sm btn-ghost text-error">Delete</button>
-            </div>
-          </div>
-
-          <div class="review-card">
-            <div class="review-header">
-              <div style="display:flex;align-items:center;gap:var(--space-md);">
-                <a href="/app?slug=blender" class="text-primary" style="font-weight:600;">Blender</a>
-              </div>
-              <div class="review-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            </div>
-            <p class="review-content">
-              Incredible 3D software that rivals commercial alternatives. The recent updates have made the interface much more intuitive.
-            </p>
-            <div style="display:flex;gap:var(--space-md);margin-top:var(--space-md);">
-              <button class="btn btn-sm btn-ghost">Edit</button>
-              <button class="btn btn-sm btn-ghost text-error">Delete</button>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <!-- Tab Content: Settings -->
-      <div class="profile-tab-content" id="tab-settings" style="display:none;">
-        <section class="section">
-          <h2 class="section-title mb-lg">Account Settings</h2>
-
-          <div class="card" style="padding:var(--space-xl);margin-bottom:var(--space-lg);">
-            <h3 style="margin-bottom:var(--space-lg);">Profile Information</h3>
-            <form id="profile-form">
-              <div class="form-group">
-                <label class="form-label" for="settings-username">Username</label>
-                <input type="text" class="form-input" id="settings-username" value="LinuxFan42">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="settings-email">Email</label>
-                <input type="email" class="form-input" id="settings-email" value="linuxfan42@example.com">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="settings-bio">Bio</label>
-                <textarea class="form-textarea" id="settings-bio" style="min-height:100px;">Linux enthusiast and open source contributor.</textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Save Changes</button>
-            </form>
-          </div>
-
-          <div class="card" style="padding:var(--space-xl);margin-bottom:var(--space-lg);">
-            <h3 style="margin-bottom:var(--space-lg);">Change Password</h3>
-            <form id="password-form">
-              <div class="form-group">
-                <label class="form-label" for="current-password">Current Password</label>
-                <input type="password" class="form-input" id="current-password">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="new-password">New Password</label>
-                <input type="password" class="form-input" id="new-password">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="confirm-new-password">Confirm New Password</label>
-                <input type="password" class="form-input" id="confirm-new-password">
-              </div>
-              <button type="submit" class="btn btn-primary">Update Password</button>
-            </form>
-          </div>
-
-          <div class="card" style="padding:var(--space-xl);margin-bottom:var(--space-lg);">
-            <h3 style="margin-bottom:var(--space-lg);">Notifications</h3>
-            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
-              <label style="display:flex;align-items:center;gap:var(--space-md);cursor:pointer;">
-                <input type="checkbox" checked style="accent-color:var(--accent);">
-                <span>Email me when my request status changes</span>
-              </label>
-              <label style="display:flex;align-items:center;gap:var(--space-md);cursor:pointer;">
-                <input type="checkbox" checked style="accent-color:var(--accent);">
-                <span>Email me when someone replies to my review</span>
-              </label>
-              <label style="display:flex;align-items:center;gap:var(--space-md);cursor:pointer;">
-                <input type="checkbox" style="accent-color:var(--accent);">
-                <span>Weekly digest of new apps</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="card" style="padding:var(--space-xl);border-color:var(--error);">
-            <h3 style="color:var(--error);margin-bottom:var(--space-md);">Danger Zone</h3>
-            <p class="text-secondary mb-lg">Once you delete your account, there is no going back. Please be certain.</p>
-            <button class="btn btn-secondary" style="border-color:var(--error);color:var(--error);">Delete Account</button>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
     </div>
   </main>
-
-  <!-- Edit Profile Modal -->
-  <div class="modal-overlay" id="edit-profile-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Edit Profile</h3>
-        <button class="modal-close" data-modal-close aria-label="Close modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="edit-profile-form">
-          <div class="form-group">
-            <label class="form-label">Profile Picture</label>
-            <div style="display:flex;align-items:center;gap:var(--space-lg);">
-              <div class="profile-avatar" style="width:80px;height:80px;font-size:2rem;">L</div>
-              <button type="button" class="btn btn-secondary">Upload New</button>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="edit-display-name">Display Name</label>
-            <input type="text" class="form-input" id="edit-display-name" value="LinuxFan42">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="edit-bio">Bio</label>
-            <textarea class="form-textarea" id="edit-bio" style="min-height:80px;">Linux enthusiast and open source contributor.</textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-ghost" data-modal-close>Cancel</button>
-        <button class="btn btn-primary">Save Changes</button>
-      </div>
-    </div>
-  </div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -403,31 +239,158 @@
   <script src="/static/js/api.js"></script>
   <script src="/static/js/main.js"></script>
   <script>
-    // Tab switching
-    document.querySelectorAll('.profile-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        // Update active tab
-        document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
+    // Profile page logic
+    document.addEventListener('DOMContentLoaded', async () => {
+      const loadingEl = document.getElementById('profile-loading');
+      const guestEl = document.getElementById('profile-guest');
+      const contentEl = document.getElementById('profile-content');
 
-        // Show corresponding content
-        const tabName = tab.dataset.tab;
-        document.querySelectorAll('.profile-tab-content').forEach(content => {
-          content.style.display = 'none';
-        });
-        document.getElementById(`tab-${tabName}`).style.display = 'block';
-      });
-    });
-
-    // Logout handler
-    document.getElementById('logout-btn')?.addEventListener('click', async () => {
       try {
-        await API.auth.logout();
-        window.location.href = '/';
+        const data = await API.auth.getCurrentUser();
+
+        if (data && data.authenticated && data.user) {
+          const user = data.user;
+
+          // Update UI with user data
+          document.getElementById('user-avatar').textContent = user.username[0].toUpperCase();
+          document.getElementById('user-name').textContent = user.username;
+          document.getElementById('user-tier').textContent = user.tier;
+          document.getElementById('user-email').textContent = user.email || 'Not set';
+
+          // Format join date
+          if (user.created_at) {
+            const date = new Date(user.created_at);
+            document.getElementById('user-joined').textContent =
+              'Member since ' + date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+          }
+
+          // Set tier info
+          const tierInfo = {
+            'anonymous': { icon: '&#128100;', name: 'Anonymous', desc: 'Limited access' },
+            'trusted': { icon: '&#11088;', name: 'Trusted', desc: 'Full member access' },
+            'promoted': { icon: '&#128142;', name: 'Promoted', desc: 'Can approve requests' },
+            'admin': { icon: '&#128081;', name: 'Admin', desc: 'Full admin access' }
+          };
+
+          const tier = tierInfo[user.tier.toLowerCase()] || tierInfo['trusted'];
+          document.getElementById('tier-icon').innerHTML = tier.icon;
+          document.getElementById('tier-name').textContent = tier.name;
+          document.getElementById('tier-desc').textContent = tier.desc;
+
+          // Show content
+          loadingEl.style.display = 'none';
+          contentEl.style.display = 'block';
+
+          // Load user's requests
+          loadMyRequests();
+        } else {
+          // Not logged in
+          loadingEl.style.display = 'none';
+          guestEl.style.display = 'block';
+        }
       } catch (error) {
-        showToast('Logout failed', 'error');
+        // Not logged in or error
+        loadingEl.style.display = 'none';
+        guestEl.style.display = 'block';
+      }
+
+      // Tab switching
+      document.querySelectorAll('.profile-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.profile-tab-content').forEach(c => c.style.display = 'none');
+
+          tab.classList.add('active');
+          document.getElementById('tab-' + tab.dataset.tab).style.display = 'block';
+        });
+      });
+
+      // Logout buttons
+      ['logout-btn', 'header-logout-btn', 'settings-logout-btn'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.addEventListener('click', async () => {
+            try {
+              await API.auth.logout();
+              window.location.href = '/';
+            } catch (error) {
+              window.location.href = '/';
+            }
+          });
+        }
+      });
+
+      // Password form
+      const passwordForm = document.getElementById('password-form');
+      if (passwordForm) {
+        passwordForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const currentPassword = document.getElementById('current-password').value;
+          const newPassword = document.getElementById('new-password').value;
+          const confirmPassword = document.getElementById('confirm-new-password').value;
+
+          if (newPassword !== confirmPassword) {
+            showToast('Passwords do not match', 'error');
+            return;
+          }
+
+          try {
+            await API.put('/auth/password', {
+              current_password: currentPassword,
+              new_password: newPassword
+            });
+            showToast('Password updated successfully', 'success');
+            passwordForm.reset();
+          } catch (error) {
+            showToast(error.message || 'Failed to update password', 'error');
+          }
+        });
       }
     });
+
+    async function loadMyRequests() {
+      const listEl = document.getElementById('my-requests-list');
+      const loadingEl = document.getElementById('requests-loading');
+      const noRequestsEl = document.getElementById('no-requests');
+
+      try {
+        const data = await API.get('/requests/my-requests');
+        loadingEl.style.display = 'none';
+
+        if (!data.requests || data.requests.length === 0) {
+          noRequestsEl.style.display = 'block';
+          return;
+        }
+
+        const html = data.requests.map(req => `
+          <div class="request-card">
+            <div class="request-votes">
+              <span class="request-vote-count">${req.upvotes || 0}</span>
+            </div>
+            <div class="request-content">
+              <h3>${escapeHtml(req.title)}</h3>
+              <p>${escapeHtml(req.prompt ? req.prompt.substring(0, 150) + '...' : '')}</p>
+              <div class="request-meta">
+                <span>Category: ${req.category || 'other'}</span>
+              </div>
+            </div>
+            <span class="request-status status-${req.status}">${req.status}</span>
+          </div>
+        `).join('');
+
+        listEl.innerHTML = html;
+      } catch (error) {
+        loadingEl.style.display = 'none';
+        noRequestsEl.style.display = 'block';
+      }
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
   </script>
 </body>
 </html>
