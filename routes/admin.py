@@ -108,7 +108,7 @@ def promote_user(user_id):
 
     # Validate tier
     tier_map = {
-        "trusted": UserTier.TRUSTED.value,
+        "limited": UserTier.LIMITED.value,
         "promoted": UserTier.PROMOTED.value,
         "admin": UserTier.ADMIN.value,
     }
@@ -154,7 +154,7 @@ def demote_user(user_id):
         return jsonify({"error": "Demotion requires confirmation. Set 'confirm': true"}), 400
 
     tier_map = {
-        "trusted": UserTier.TRUSTED.value,
+        "limited": UserTier.LIMITED.value,
         "promoted": UserTier.PROMOTED.value,
     }
 
@@ -396,7 +396,7 @@ def get_admin_stats():
     stats = {
         "users": {
             "total": User.query.count(),
-            "trusted": User.query.filter(User.tier == UserTier.TRUSTED.value).count(),
+            "limited": User.query.filter(User.tier == UserTier.LIMITED.value).count(),
             "promoted": User.query.filter(User.tier == UserTier.PROMOTED.value).count(),
             "admin": User.query.filter(User.tier == UserTier.ADMIN.value).count(),
             "active": User.query.filter(User.is_active == True).count(),

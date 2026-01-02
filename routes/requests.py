@@ -22,7 +22,7 @@ from models import db, AppRequest, RequestVote, RequestStatus
 from routes.auth import (
     get_current_user,
     login_required,
-    trusted_required,
+    limited_required,
     promoted_required,
     admin_required,
 )
@@ -135,7 +135,7 @@ def create_request():
 
 
 @requests_bp.route("/<int:request_id>", methods=["PATCH"])
-@trusted_required
+@limited_required
 def update_request(request_id):
     """Update a request (requester only, before approval)."""
     user = get_current_user()
@@ -181,7 +181,7 @@ def update_request(request_id):
 
 
 @requests_bp.route("/<int:request_id>", methods=["DELETE"])
-@trusted_required
+@limited_required
 def delete_request(request_id):
     """Delete a request (requester or admin only)."""
     user = get_current_user()
@@ -205,9 +205,9 @@ def delete_request(request_id):
 
 
 @requests_bp.route("/<int:request_id>/upvote", methods=["POST"])
-@trusted_required
+@limited_required
 def upvote_request(request_id):
-    """Upvote a request (trusted users only)."""
+    """Upvote a request (limited users and above)."""
     user = get_current_user()
     app_request = AppRequest.query.get(request_id)
 
@@ -232,7 +232,7 @@ def upvote_request(request_id):
 
 
 @requests_bp.route("/<int:request_id>/upvote", methods=["DELETE"])
-@trusted_required
+@limited_required
 def remove_upvote(request_id):
     """Remove upvote from a request."""
     user = get_current_user()
@@ -372,7 +372,7 @@ def list_pending_approval():
 
 
 @requests_bp.route("/my-requests", methods=["GET"])
-@trusted_required
+@limited_required
 def get_my_requests():
     """Get requests by the current user."""
     user = get_current_user()

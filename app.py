@@ -18,7 +18,7 @@
 Flick Forge - The Flick Store Backend
 
 A Flask-based backend for the Flick app store, supporting:
-- Multi-tier user system (anonymous, trusted, promoted, admin)
+- Multi-tier user system (anonymous, limited, promoted, admin)
 - App repository with package management
 - AI-generated app requests and prompts
 - Community reviews and ratings
@@ -231,8 +231,8 @@ def create_app(config_name=None):
                     "description": "Session-based authentication. Use /api/auth/login to authenticate.",
                 },
                 "user_tiers": {
-                    "anonymous": "No login required. Can browse, download, review, upvote.",
-                    "trusted": "Registered users. Can submit app requests/prompts.",
+                    "anonymous": "Registered but can only browse and install apps.",
+                    "limited": "Can submit app requests/prompts.",
                     "promoted": "Can approve requests, manage feedback, promote apps.",
                     "admin": "Full access. Can manage users and system.",
                 },
@@ -266,7 +266,7 @@ def create_app(config_name=None):
                     },
                     "requests": {
                         "GET /api/requests": "List app requests",
-                        "POST /api/requests": "Create request (trusted+)",
+                        "POST /api/requests": "Create request (limited+)",
                         "GET /api/requests/<id>": "Get request details",
                         "POST /api/requests/<id>/upvote": "Upvote request",
                         "POST /api/requests/<id>/approve": "Approve request (promoted+)",

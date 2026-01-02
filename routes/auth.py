@@ -57,8 +57,8 @@ def login_required(f):
     return decorated_function
 
 
-def trusted_required(f):
-    """Decorator to require trusted user tier or higher."""
+def limited_required(f):
+    """Decorator to require limited user tier or higher (can submit requests)."""
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -68,8 +68,8 @@ def trusted_required(f):
         if not user or not user.is_active:
             session.pop("user_id", None)
             return jsonify({"error": "Invalid session"}), 401
-        if not user.is_trusted():
-            return jsonify({"error": "Trusted user status required"}), 403
+        if not user.is_limited():
+            return jsonify({"error": "Limited account required to submit requests"}), 403
         return f(*args, **kwargs)
 
     return decorated_function
@@ -169,7 +169,7 @@ def register():
     if User.query.filter_by(email=email).first():
         return jsonify({"error": "Email already registered"}), 409
 
-    # Create user as anonymous - admin must promote to trusted
+    # Create user as anonymous - admin must promote to limited
     user = User(username=username, email=email, tier=UserTier.ANONYMOUS.value)
     user.set_password(password)
 

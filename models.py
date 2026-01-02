@@ -27,10 +27,10 @@ db = SQLAlchemy()
 class UserTier(Enum):
     """User permission tiers."""
 
-    ANONYMOUS = 0
-    TRUSTED = 1
-    PROMOTED = 2
-    ADMIN = 3
+    ANONYMOUS = 0  # Can browse and install, no request submission
+    LIMITED = 1    # Can submit requests (was "trusted")
+    PROMOTED = 2   # Can approve requests
+    ADMIN = 3      # Full access
 
 
 class AppStatus(Enum):
@@ -90,9 +90,9 @@ class User(db.Model):
         """Check if user is promoted or higher."""
         return self.tier >= UserTier.PROMOTED.value
 
-    def is_trusted(self):
-        """Check if user is trusted or higher."""
-        return self.tier >= UserTier.TRUSTED.value
+    def is_limited(self):
+        """Check if user is limited tier or higher (can submit requests)."""
+        return self.tier >= UserTier.LIMITED.value
 
     def to_dict(self, include_email=False):
         """Serialize user to dictionary."""

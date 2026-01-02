@@ -265,14 +265,14 @@
 
           // Set tier info
           const tierInfo = {
-            'anonymous': { icon: '&#128100;', name: 'Anonymous', desc: 'Limited access' },
-            'trusted': { icon: '&#11088;', name: 'Trusted', desc: 'Full member access' },
+            'anonymous': { icon: '&#128100;', name: 'Anonymous', desc: 'Can browse and install apps' },
+            'limited': { icon: '&#11088;', name: 'Limited', desc: 'Can submit app requests' },
             'promoted': { icon: '&#128142;', name: 'Promoted', desc: 'Can approve requests' },
             'admin': { icon: '&#128081;', name: 'Admin', desc: 'Full admin access' }
           };
 
-          const tierKey = (user.tier || 'trusted').toString().toLowerCase();
-          const tier = tierInfo[tierKey] || tierInfo['trusted'];
+          const tierKey = (user.tier_name || 'anonymous').toString().toLowerCase();
+          const tier = tierInfo[tierKey] || tierInfo['anonymous'];
           document.getElementById('tier-icon').innerHTML = tier.icon;
           document.getElementById('tier-name').textContent = tier.name;
           document.getElementById('tier-desc').textContent = tier.desc;

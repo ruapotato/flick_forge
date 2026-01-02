@@ -78,7 +78,7 @@ class Config:
     # User Tiers
     USER_TIERS = {
         "anonymous": 0,
-        "trusted": 1,
+        "limited": 1,
         "promoted": 2,
         "admin": 3,
     }

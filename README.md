@@ -7,7 +7,7 @@ The official app store backend for [Flick](https://github.com/ruapotato/Flick), 
 Flick Forge powers the Flick Store at [255.one](https://255.one), providing:
 
 - **App Repository** - Browse and download Qt/QML apps built for Flick
-- **User System** - Multi-tier accounts (anonymous, trusted, promoted, admin)
+- **User System** - Multi-tier accounts (anonymous, limited, promoted, admin)
 - **App Requests** - Community-driven app creation with AI assistance
 - **Wild West** - Testing area for AI-generated and experimental apps
 - **Reviews & Ratings** - Community feedback system
@@ -29,8 +29,8 @@ Flick Forge powers the Flick Store at [255.one](https://255.one), providing:
 ### Multi-Tier User System
 | Tier | Capabilities |
 |------|-------------|
-| Anonymous | Browse, download, review, upvote |
-| Trusted | Submit app requests/prompts |
+| Anonymous | Browse and install apps |
+| Limited | Submit app requests/prompts |
 | Promoted | Approve requests, manage feedback |
 | Admin | Full system access |
 
@@ -102,7 +102,7 @@ gunicorn -w 4 -b 0.0.0.0:5000 app:app
 | `GET /api/apps/<slug>` | Get app details |
 | `GET /api/apps/<slug>/download` | Download app package |
 | `GET /api/apps/wild-west` | List experimental apps |
-| `POST /api/requests` | Submit app request (trusted+) |
+| `POST /api/requests` | Submit app request (limited+) |
 | `GET /api` | API info |
 | `GET /api/docs` | Full API documentation |
 
