@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Build Status - Watch AI apps being built in real-time">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Build Status - Flick Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127919;</text></svg>">
+  <style>
+    .build-log {
+      background: #1a1a2e;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      max-height: 600px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .build-log .timestamp {
+      color: var(--text-muted);
+    }
+    .build-log .error {
+      color: var(--error);
+    }
+    .build-log .success {
+      color: var(--success);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-full);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .status-pending { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .status-approved { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+    .status-building { background: rgba(34, 211, 238, 0.2); color: #22d3ee; animation: pulse 2s infinite; }
+    .status-completed { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+    .status-failed { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+    .status-rejected { background: rgba(156, 163, 175, 0.2); color: #9ca3af; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .build-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-md);
+      background: var(--surface);
+    }
+    .build-card:hover {
+      border-color: var(--accent);
+    }
+    .build-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: var(--space-md);
+    }
+    .build-times {
+      display: flex;
+      gap: var(--space-lg);
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span>Flick Store</span>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/browse" class="nav-link">Browse</a>
+        <a href="/wildwest" class="nav-link wild-west">Wild West</a>
+        <a href="/request" class="nav-link">Request</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="/login" class="btn btn-ghost" data-guest>Sign In</a>
+        <a href="/profile" class="btn btn-secondary" data-auth style="display:none">
+          <span data-user-avatar>U</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <!-- Page Header -->
+      <section class="section">
+        <div class="section-header">
+          <h1 class="section-title">Build Status</h1>
+          <p class="text-secondary">Watch AI-generated apps being built in real-time</p>
+        </div>
+      </section>
+
+      <!-- Build Details (shown when viewing a specific build) -->
+      <div id="build-detail" style="display:none;">
+        <section class="section">
+          <a href="/builds" class="btn btn-ghost mb-lg">&larr; Back to all builds</a>
+
+          <div class="card" style="padding:var(--space-xl);">
+            <div class="build-header">
+              <div>
+                <h2 id="detail-title">Loading...</h2>
+                <p class="text-secondary" id="detail-category">Category</p>
+              </div>
+              <span class="status-badge" id="detail-status">pending</span>
+            </div>
+
+            <div class="build-times mb-lg">
+              <span id="detail-started">Started: --</span>
+              <span id="detail-completed">Completed: --</span>
+            </div>
+
+            <h3 style="margin-bottom:var(--space-md);">Build Log</h3>
+            <div class="build-log" id="detail-log">
+              Loading build log...
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Build List -->
+      <div id="build-list">
+        <section class="section">
+          <!-- Filter tabs -->
+          <div class="profile-tabs mb-lg">
+            <button class="profile-tab active" data-filter="all">All</button>
+            <button class="profile-tab" data-filter="building">Building</button>
+            <button class="profile-tab" data-filter="completed">Completed</button>
+            <button class="profile-tab" data-filter="failed">Failed</button>
+          </div>
+
+          <div id="builds-loading" class="text-center" style="padding:var(--space-2xl);">
+            <div class="loading-spinner"></div>
+            <p class="text-secondary">Loading builds...</p>
+          </div>
+
+          <div id="builds-empty" style="display:none;padding:var(--space-2xl);text-align:center;">
+            <p class="text-secondary">No builds found.</p>
+          </div>
+
+          <div id="builds-container" style="display:none;">
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <span>Flick Store</span>
+          </a>
+          <p>A fast, modern, community-driven app store for Linux.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Explore</h4>
+          <nav class="footer-links">
+            <a href="/browse" class="footer-link">Browse Apps</a>
+            <a href="/wildwest" class="footer-link">Wild West</a>
+            <a href="/builds" class="footer-link">Build Status</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Community</h4>
+          <nav class="footer-links">
+            <a href="/request" class="footer-link">Request an App</a>
+            <a href="https://github.com/ruapotato/Flick" class="footer-link">GitHub</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Resources</h4>
+          <nav class="footer-links">
+            <a href="/docs" class="footer-link">Documentation</a>
+            <a href="/api" class="footer-link">API</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2025 Flick Store. All apps AGPL-3.0 licensed. AI-generated with a human in the loop.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/main.js"></script>
+  <script>
+    let currentFilter = 'all';
+    let autoRefresh = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if viewing a specific build
+      const urlParams = new URLSearchParams(window.location.search);
+      const buildId = urlParams.get('id');
+
+      if (buildId) {
+        showBuildDetail(buildId);
+      } else {
+        loadBuilds();
+      }
+
+      // Filter tabs
+      document.querySelectorAll('[data-filter]').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('[data-filter]').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          currentFilter = tab.dataset.filter;
+          loadBuilds();
+        });
+      });
+    });
+
+    async function loadBuilds() {
+      const loadingEl = document.getElementById('builds-loading');
+      const emptyEl = document.getElementById('builds-empty');
+      const containerEl = document.getElementById('builds-container');
+
+      loadingEl.style.display = 'block';
+      emptyEl.style.display = 'none';
+      containerEl.style.display = 'none';
+
+      try {
+        // Get requests with build activity
+        const params = {};
+        if (currentFilter !== 'all') {
+          params.status = currentFilter;
+        }
+
+        const data = await API.get('/requests', params);
+        loadingEl.style.display = 'none';
+
+        // Filter to only show requests that have build activity
+        const builds = (data.requests || []).filter(r =>
+          ['approved', 'building', 'completed', 'failed'].includes(r.status)
+        );
+
+        if (builds.length === 0) {
+          emptyEl.style.display = 'block';
+          return;
+        }
+
+        containerEl.innerHTML = builds.map(build => `
+          <a href="/builds?id=${build.id}" class="build-card" style="display:block;text-decoration:none;color:inherit;">
+            <div class="build-header">
+              <div>
+                <h3 style="margin:0;">${escapeHtml(build.title)}</h3>
+                <p class="text-muted" style="margin:var(--space-xs) 0 0 0;">${build.category || 'utility'}</p>
+              </div>
+              <span class="status-badge status-${build.status}">${build.status}</span>
+            </div>
+            <div class="build-times">
+              ${build.build_started_at ? `<span>Started: ${formatDate(build.build_started_at)}</span>` : ''}
+              ${build.build_completed_at ? `<span>Completed: ${formatDate(build.build_completed_at)}</span>` : ''}
+            </div>
+          </a>
+        `).join('');
+
+        containerEl.style.display = 'block';
+
+        // Auto-refresh if there are building items
+        if (builds.some(b => b.status === 'building')) {
+          if (!autoRefresh) {
+            autoRefresh = setInterval(loadBuilds, 5000);
+          }
+        } else {
+          if (autoRefresh) {
+            clearInterval(autoRefresh);
+            autoRefresh = null;
+          }
+        }
+      } catch (error) {
+        loadingEl.style.display = 'none';
+        emptyEl.innerHTML = '<p class="text-error">Failed to load builds.</p>';
+        emptyEl.style.display = 'block';
+      }
+    }
+
+    async function showBuildDetail(buildId) {
+      document.getElementById('build-list').style.display = 'none';
+      document.getElementById('build-detail').style.display = 'block';
+
+      try {
+        const data = await API.get(`/requests/${buildId}/build-log`);
+
+        document.getElementById('detail-title').textContent = data.title;
+        document.getElementById('detail-status').textContent = data.status;
+        document.getElementById('detail-status').className = `status-badge status-${data.status}`;
+        document.getElementById('detail-started').textContent =
+          data.build_started_at ? `Started: ${formatDate(data.build_started_at)}` : 'Started: --';
+        document.getElementById('detail-completed').textContent =
+          data.build_completed_at ? `Completed: ${formatDate(data.build_completed_at)}` : 'Completed: --';
+
+        // Format build log with syntax highlighting
+        const log = data.build_log || 'No build log available yet.';
+        document.getElementById('detail-log').innerHTML = formatBuildLog(log);
+
+        // Auto-refresh if building
+        if (data.status === 'building') {
+          if (!autoRefresh) {
+            autoRefresh = setInterval(() => showBuildDetail(buildId), 3000);
+          }
+        } else {
+          if (autoRefresh) {
+            clearInterval(autoRefresh);
+            autoRefresh = null;
+          }
+        }
+      } catch (error) {
+        document.getElementById('detail-log').innerHTML =
+          '<span class="error">Failed to load build log.</span>';
+      }
+    }
+
+    function formatBuildLog(log) {
+      return log
+        .replace(/\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\]/g, '<span class="timestamp">[$1]</span>')
+        .replace(/ERROR:/g, '<span class="error">ERROR:</span>')
+        .replace(/SUCCESS!/g, '<span class="success">SUCCESS!</span>')
+        .replace(/\n/g, '<br>');
+    }
+
+    function formatDate(isoString) {
+      const date = new Date(isoString);
+      return date.toLocaleString();
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>

@@ -170,6 +170,10 @@ def create_app(config_name=None):
     def wildwest():
         return render_template("wildwest.html")
 
+    @app.route("/builds")
+    def builds():
+        return render_template("builds.html")
+
     @app.route("/request")
     def request_page():
         return render_template("request.html")

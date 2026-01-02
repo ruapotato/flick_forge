@@ -1,0 +1,41 @@
+{
+  "format_version": 1,
+  "id": "com.flick.audiobook-player",
+  "name": "Audiobook Player",
+  "version": "1.0.0",
+  "description": "A simple audiobook player for listening to your audiobook collection",
+  "long_description": "Audiobook Player lets you enjoy your audiobook library with features like chapter navigation, bookmarks, playback speed control, and sleep timer. Perfect for commutes, workouts, or relaxing at home.",
+  "author": {
+    "name": "AI Generated",
+    "email": "ai@255.one"
+  },
+  "license": "AGPL-3.0",
+  "categories": ["Media", "Audio"],
+  "keywords": ["audiobook", "audio", "player", "books", "reading"],
+  "app": {
+    "type": "qml",
+    "entry": "main.qml",
+    "min_flick_version": "1.0.0"
+  },
+  "dependencies": {
+    "apt": [
+      "qml-module-qtmultimedia"
+    ]
+  },
+  "permissions": [
+    "audio",
+    "files:read:~/Audiobooks",
+    "files:read:~/Music"
+  ],
+  "ai_generated": {
+    "is_ai_generated": true,
+    "generator_version": "claude-code",
+    "original_prompt": "Create an audiobook player app",
+    "generation_date": "2026-01-01T00:00:00Z"
+  },
+  "store": {
+    "maturity_rating": "everyone",
+    "price": "free",
+    "testing_status": "wild_west"
+  }
+}

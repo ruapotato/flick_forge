@@ -50,6 +50,7 @@ class RequestStatus(Enum):
     BUILDING = "building"  # Being built by Claude Code
     COMPLETED = "completed"  # Built and in wild west
     REJECTED = "rejected"  # Rejected by reviewers
+    FAILED = "failed"  # Build failed
 
 
 class User(db.Model):

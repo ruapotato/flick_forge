@@ -346,6 +346,31 @@ def get_request_status(request_id):
     return jsonify({"status": status_info})
 
 
+@requests_bp.route("/<int:request_id>/build-log", methods=["GET"])
+def get_build_log(request_id):
+    """Get the build log for a request (public)."""
+    app_request = AppRequest.query.get(request_id)
+    if not app_request:
+        return jsonify({"error": "Request not found"}), 404
+
+    return jsonify({
+        "id": app_request.id,
+        "title": app_request.title,
+        "status": app_request.status,
+        "build_log": app_request.build_log or "No build log available yet.",
+        "build_started_at": (
+            app_request.build_started_at.isoformat()
+            if app_request.build_started_at
+            else None
+        ),
+        "build_completed_at": (
+            app_request.build_completed_at.isoformat()
+            if app_request.build_completed_at
+            else None
+        ),
+    })
+
+
 @requests_bp.route("/pending-approval", methods=["GET"])
 @promoted_required
 def list_pending_approval():
