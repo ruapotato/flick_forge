@@ -506,7 +506,7 @@
 
       try {
         await API.post(`/feedback/app/${slug}`, {
-          feedback_type: type,
+          type: type,
           title: `${type} report`,
           content
         });
