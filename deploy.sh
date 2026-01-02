@@ -138,6 +138,8 @@ SETUP_EOF
             --exclude '.git' \
             --exclude '.env' \
             --exclude 'instance' \
+            --exclude 'static/packages/*.flick' \
+            --exclude 'flick_store.db' \
             ./ $SERVER:/opt/flick_forge/
 
         ssh $SERVER << 'DEPLOY_EOF'
