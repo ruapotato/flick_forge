@@ -254,7 +254,7 @@
           // Update UI with user data
           document.getElementById('user-avatar').textContent = user.username[0].toUpperCase();
           document.getElementById('user-name').textContent = user.username;
-          document.getElementById('user-tier').textContent = user.tier;
+          document.getElementById('user-tier').textContent = user.tier || 'Member';
           document.getElementById('user-email').textContent = user.email || 'Not set';
 
           // Format join date
@@ -272,7 +272,8 @@
             'admin': { icon: '&#128081;', name: 'Admin', desc: 'Full admin access' }
           };
 
-          const tier = tierInfo[user.tier.toLowerCase()] || tierInfo['trusted'];
+          const tierKey = (user.tier || 'trusted').toString().toLowerCase();
+          const tier = tierInfo[tierKey] || tierInfo['trusted'];
           document.getElementById('tier-icon').innerHTML = tier.icon;
           document.getElementById('tier-name').textContent = tier.name;
           document.getElementById('tier-desc').textContent = tier.desc;
