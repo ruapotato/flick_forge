@@ -248,7 +248,7 @@ def get_app(slug):
         if not user or not user.is_admin():
             return jsonify({"error": "App not found"}), 404
 
-    return jsonify({"app": app.to_dict()})
+    return jsonify({"app": app.to_dict(include_package_path=True)})
 
 
 @apps_bp.route("/<slug>/download", methods=["GET"])
@@ -264,7 +264,17 @@ def download_app(slug):
         if not user or not user.is_admin():
             return jsonify({"error": "App not available for download"}), 403
 
-    if not app.package_path or not os.path.exists(app.package_path):
+    if not app.package_path:
+        return jsonify({"error": "Package file not found"}), 404
+
+    # Resolve the file path - package_path is like /static/packages/app.flick
+    # We need to convert it to an absolute file path
+    if app.package_path.startswith('/static/'):
+        file_path = os.path.join(current_app.root_path, app.package_path.lstrip('/'))
+    else:
+        file_path = app.package_path
+
+    if not os.path.exists(file_path):
         return jsonify({"error": "Package file not found"}), 404
 
     # Record download
@@ -283,7 +293,7 @@ def download_app(slug):
     db.session.commit()
 
     return send_file(
-        app.package_path,
+        file_path,
         as_attachment=True,
         download_name=f"{app.slug}-{app.version}.flick",
     )
