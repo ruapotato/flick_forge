@@ -549,13 +549,13 @@
     async function checkSubscriptionStatus(slug) {
       currentAppSlug = slug;
       try {
-        const user = await API.getCurrentUser();
-        if (!user) return; // Not logged in
+        const userData = await API.auth.getCurrentUser();
+        if (!userData || !userData.user) return; // Not logged in
 
         document.getElementById('subscribe-btn').style.display = 'inline-flex';
 
-        const data = await API.get(`/subscriptions/app/${slug}/status`);
-        isSubscribed = data.subscribed;
+        const subData = await API.get(`/subscriptions/app/${slug}/status`);
+        isSubscribed = subData.subscribed;
         updateSubscribeButton();
       } catch (error) {
         // User not logged in or error - hide button

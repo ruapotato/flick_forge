@@ -277,10 +277,10 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
       // Check if user is promoted+
-      const user = await API.getCurrentUser();
+      const data = await API.auth.getCurrentUser();
       document.getElementById('loading').style.display = 'none';
 
-      if (!user || user.tier < 2) {
+      if (!data || !data.user || data.user.tier < 2) {
         document.getElementById('access-denied').style.display = 'block';
         return;
       }
