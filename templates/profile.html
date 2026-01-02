@@ -79,7 +79,9 @@
         <!-- Profile Tabs -->
         <div class="profile-tabs">
           <button class="profile-tab active" data-tab="overview">Overview</button>
+          <button class="profile-tab" data-tab="subscriptions">Subscriptions</button>
           <button class="profile-tab" data-tab="review" id="tab-btn-review" style="display:none;">Review Requests</button>
+          <button class="profile-tab" data-tab="feedback" id="tab-btn-feedback" style="display:none;">Review Feedback</button>
           <button class="profile-tab" data-tab="users" id="tab-btn-users" style="display:none;">Manage Users</button>
           <button class="profile-tab" data-tab="requests" id="tab-btn-requests">My Requests</button>
           <button class="profile-tab" data-tab="settings">Settings</button>
@@ -140,6 +142,59 @@
                 <li style="margin-bottom:var(--space-sm);"><a href="/wildwest" style="color:var(--accent);">Test</a> experimental apps in Wild West</li>
               </ul>
             </div>
+          </section>
+        </div>
+
+        <!-- Tab Content: Subscriptions -->
+        <div class="profile-tab-content" id="tab-subscriptions" style="display:none;">
+          <section class="section">
+            <div class="section-header">
+              <h2 class="section-title">Notifications</h2>
+              <button class="btn btn-secondary btn-sm" id="mark-all-read-btn">Mark All Read</button>
+            </div>
+
+            <div id="notifications-loading" class="text-center" style="padding:var(--space-lg);">
+              <div class="loading-spinner"></div>
+            </div>
+
+            <div id="notifications-empty" style="display:none;padding:var(--space-lg);text-align:center;">
+              <p class="text-muted">No notifications yet.</p>
+            </div>
+
+            <div id="notifications-list" style="display:none;">
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-header">
+              <h2 class="section-title">My Subscriptions</h2>
+            </div>
+
+            <div id="subscriptions-loading" class="text-center" style="padding:var(--space-lg);">
+              <div class="loading-spinner"></div>
+            </div>
+
+            <div id="subscriptions-empty" style="display:none;padding:var(--space-lg);text-align:center;">
+              <p class="text-muted">You're not subscribed to any apps yet.</p>
+              <p class="text-secondary text-sm">Subscribe to apps to get notified when they're updated.</p>
+              <a href="/browse" class="btn btn-primary mt-md">Browse Apps</a>
+            </div>
+
+            <div id="subscriptions-list" class="grid grid-3" style="display:none;">
+            </div>
+          </section>
+        </div>
+
+        <!-- Tab Content: Review Feedback (promoted+ users) -->
+        <div class="profile-tab-content" id="tab-feedback" style="display:none;">
+          <section class="section">
+            <div class="section-header">
+              <h2 class="section-title">Feedback Review</h2>
+              <a href="/admin/feedback" class="btn btn-primary">Open Full Review Page</a>
+            </div>
+            <p class="text-secondary">
+              Review user feedback and bug reports. Promote important issues to trigger AI rebuilds.
+            </p>
           </section>
         </div>
 
@@ -347,8 +402,9 @@
 
           // Show/hide tabs based on user tier
           if (user.tier >= 2) {
-            // Promoted+ can review requests
+            // Promoted+ can review requests and feedback
             document.getElementById('tab-btn-review').style.display = '';
+            document.getElementById('tab-btn-feedback').style.display = '';
             document.getElementById('admin-panel-card').style.display = 'block';
           }
           if (user.tier >= 3) {
@@ -367,6 +423,9 @@
           if (user.tier >= 1) {
             loadMyRequests();
           }
+
+          // Setup subscriptions tab handlers
+          document.getElementById('mark-all-read-btn').addEventListener('click', markAllNotificationsRead);
         } else if (data && data.authenticated === false) {
           // Explicitly not logged in
           loadingEl.style.display = 'none';
@@ -399,7 +458,10 @@
           document.getElementById('tab-' + tabName).style.display = 'block';
 
           // Load data for specific tabs
-          if (tabName === 'review' && window.currentUserTier >= 2) {
+          if (tabName === 'subscriptions') {
+            loadNotifications();
+            loadSubscriptions();
+          } else if (tabName === 'review' && window.currentUserTier >= 2) {
             loadPendingReview();
           } else if (tabName === 'users' && window.currentUserTier >= 3) {
             loadUsersAdmin();
@@ -665,6 +727,133 @@
         showToast(error.message || 'Failed to update user tier', 'error');
         loadUsersAdmin(); // Reload to reset select
       }
+    }
+
+    // ========== Subscriptions & Notifications ==========
+
+    async function loadNotifications() {
+      const loadingEl = document.getElementById('notifications-loading');
+      const emptyEl = document.getElementById('notifications-empty');
+      const listEl = document.getElementById('notifications-list');
+
+      loadingEl.style.display = 'block';
+      emptyEl.style.display = 'none';
+      listEl.style.display = 'none';
+
+      try {
+        const data = await API.get('/subscriptions/notifications');
+        loadingEl.style.display = 'none';
+
+        if (!data.notifications || data.notifications.length === 0) {
+          emptyEl.style.display = 'block';
+          return;
+        }
+
+        listEl.innerHTML = data.notifications.map(n => `
+          <div class="card" style="padding:var(--space-md);margin-bottom:var(--space-sm);${n.read ? 'opacity:0.7;' : ''}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <strong style="color:var(--text-primary);">${escapeHtml(n.title)}</strong>
+                ${n.app_slug ? `<a href="/app/${n.app_slug}" class="text-sm" style="margin-left:var(--space-sm);color:var(--accent);">View App</a>` : ''}
+                <p class="text-secondary text-sm" style="margin-top:var(--space-xs);">${escapeHtml(n.message || '')}</p>
+                <span class="text-muted text-sm">${formatDate(n.created_at)}</span>
+              </div>
+              <div style="display:flex;gap:var(--space-xs);">
+                ${!n.read ? `<button class="btn btn-ghost btn-sm" onclick="markNotificationRead(${n.id})">Mark Read</button>` : ''}
+                <button class="btn btn-ghost btn-sm text-error" onclick="deleteNotification(${n.id})">Delete</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        listEl.style.display = 'block';
+      } catch (error) {
+        loadingEl.style.display = 'none';
+        listEl.innerHTML = '<p class="text-error">Failed to load notifications.</p>';
+        listEl.style.display = 'block';
+      }
+    }
+
+    async function loadSubscriptions() {
+      const loadingEl = document.getElementById('subscriptions-loading');
+      const emptyEl = document.getElementById('subscriptions-empty');
+      const listEl = document.getElementById('subscriptions-list');
+
+      loadingEl.style.display = 'block';
+      emptyEl.style.display = 'none';
+      listEl.style.display = 'none';
+
+      try {
+        const data = await API.get('/subscriptions/my');
+        loadingEl.style.display = 'none';
+
+        if (!data.subscriptions || data.subscriptions.length === 0) {
+          emptyEl.style.display = 'block';
+          return;
+        }
+
+        listEl.innerHTML = data.subscriptions.map(s => `
+          <div class="card" style="padding:var(--space-md);">
+            <h4 style="margin:0 0 var(--space-xs) 0;">
+              <a href="/app/${s.app_slug}" style="color:var(--text-primary);text-decoration:none;">${escapeHtml(s.app_name)}</a>
+            </h4>
+            <p class="text-muted text-sm">Subscribed ${formatDate(s.created_at)}</p>
+            <button class="btn btn-ghost btn-sm text-error" style="margin-top:var(--space-sm);" onclick="unsubscribeFromApp('${s.app_slug}')">
+              Unsubscribe
+            </button>
+          </div>
+        `).join('');
+
+        listEl.style.display = 'grid';
+      } catch (error) {
+        loadingEl.style.display = 'none';
+        listEl.innerHTML = '<p class="text-error">Failed to load subscriptions.</p>';
+        listEl.style.display = 'block';
+      }
+    }
+
+    async function markNotificationRead(notificationId) {
+      try {
+        await API.post(`/subscriptions/notifications/${notificationId}/read`);
+        loadNotifications();
+      } catch (error) {
+        showToast('Failed to mark notification as read', 'error');
+      }
+    }
+
+    async function markAllNotificationsRead() {
+      try {
+        await API.post('/subscriptions/notifications/read-all');
+        loadNotifications();
+        showToast('All notifications marked as read', 'success');
+      } catch (error) {
+        showToast('Failed to mark notifications as read', 'error');
+      }
+    }
+
+    async function deleteNotification(notificationId) {
+      try {
+        await API.delete(`/subscriptions/notifications/${notificationId}`);
+        loadNotifications();
+      } catch (error) {
+        showToast('Failed to delete notification', 'error');
+      }
+    }
+
+    async function unsubscribeFromApp(slug) {
+      if (!confirm('Unsubscribe from this app?')) return;
+      try {
+        await API.delete(`/subscriptions/app/${slug}`);
+        loadSubscriptions();
+        showToast('Unsubscribed successfully', 'success');
+      } catch (error) {
+        showToast('Failed to unsubscribe', 'error');
+      }
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
   </script>
 </body>

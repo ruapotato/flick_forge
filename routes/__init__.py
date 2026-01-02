@@ -22,6 +22,7 @@ from .reviews import reviews_bp
 from .requests import requests_bp
 from .feedback import feedback_bp
 from .admin import admin_bp
+from .subscriptions import subscriptions_bp
 
 __all__ = [
     "auth_bp",
@@ -30,4 +31,5 @@ __all__ = [
     "requests_bp",
     "feedback_bp",
     "admin_bp",
+    "subscriptions_bp",
 ]

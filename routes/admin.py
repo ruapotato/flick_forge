@@ -305,8 +305,16 @@ def approve_to_stable(slug):
     if app.status != AppStatus.WILD_WEST.value:
         return jsonify({"error": "App must be in Wild West before promotion to stable"}), 400
 
+    old_status = app.status
     app.status = AppStatus.STABLE.value
     db.session.commit()
+
+    # Notify subscribers of promotion
+    try:
+        from routes.subscriptions import notify_subscribers_of_promotion
+        notify_subscribers_of_promotion(app, old_status, AppStatus.STABLE.value)
+    except Exception as e:
+        pass  # Don't fail the promotion if notification fails
 
     return jsonify({"message": "App promoted to stable", "app": app.to_dict()})
 
@@ -635,3 +643,160 @@ def health_check():
             "timestamp": datetime.utcnow().isoformat(),
         }
     )
+
+
+# ============================================================================
+# Feedback Management
+# ============================================================================
+
+
+@admin_bp.route("/feedback", methods=["GET"])
+@promoted_required
+def list_all_feedback():
+    """List all feedback across all apps for review."""
+    page = request.args.get("page", 1, type=int)
+    per_page = min(request.args.get("per_page", 50, type=int), 100)
+    feedback_type = request.args.get("type")
+    app_slug = request.args.get("app")
+    priority = request.args.get("priority")
+    sort_by = request.args.get("sort", "created_at")
+
+    query = Feedback.query
+
+    # Filter by type
+    if feedback_type and feedback_type in ["bug", "suggestion", "rebuild_request"]:
+        query = query.filter(Feedback.feedback_type == feedback_type)
+
+    # Filter by app
+    if app_slug:
+        app = App.query.filter_by(slug=app_slug).first()
+        if app:
+            query = query.filter(Feedback.app_id == app.id)
+
+    # Filter by priority
+    priority_map = {"low": 0, "medium": 1, "high": 2}
+    if priority and priority in priority_map:
+        query = query.filter(Feedback.priority == priority_map[priority])
+
+    # Sorting
+    if sort_by == "priority":
+        query = query.order_by(Feedback.priority.desc(), Feedback.created_at.desc())
+    else:
+        query = query.order_by(Feedback.created_at.desc())
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    # Include app info in response
+    feedback_list = []
+    for fb in pagination.items:
+        fb_dict = fb.to_dict()
+        fb_dict["app_slug"] = fb.app.slug if fb.app else None
+        fb_dict["app_name"] = fb.app.name if fb.app else None
+        feedback_list.append(fb_dict)
+
+    return jsonify(
+        {
+            "feedback": feedback_list,
+            "total": pagination.total,
+            "pages": pagination.pages,
+            "current_page": page,
+        }
+    )
+
+
+@admin_bp.route("/feedback/<int:feedback_id>/promote-to-rebuild", methods=["POST"])
+@promoted_required
+def promote_feedback_to_rebuild(feedback_id):
+    """Promote a bug/suggestion to trigger an AI rebuild of the app."""
+    user = get_current_user()
+    feedback = Feedback.query.get(feedback_id)
+
+    if not feedback:
+        return jsonify({"error": "Feedback not found"}), 404
+
+    app = App.query.get(feedback.app_id)
+    if not app:
+        return jsonify({"error": "App not found"}), 404
+
+    # Get original request for this app
+    original_request = app.source_request
+    if not original_request:
+        return jsonify({"error": "No original request found for this app"}), 400
+
+    data = request.get_json() or {}
+    additional_context = data.get("context", "").strip()
+
+    # Create a new request that incorporates the feedback
+    new_prompt = f"""Original Request:
+{original_request.prompt}
+
+---
+User Feedback ({feedback.feedback_type}):
+Title: {feedback.title}
+{feedback.content}
+"""
+    if additional_context:
+        new_prompt += f"\n---\nAdditional Context from Reviewer:\n{additional_context}"
+
+    # Create new rebuild request
+    rebuild_request = AppRequest(
+        title=f"{app.name} v{_get_next_version(app.version)} (rebuild)",
+        prompt=new_prompt,
+        requester_id=original_request.requester_id,
+        category=app.category,
+        status=RequestStatus.APPROVED.value,  # Auto-approve for rebuild
+        safety_checked=True,
+        safety_passed=True,
+        approved_by_id=user.id,
+        approved_at=datetime.utcnow(),
+    )
+    db.session.add(rebuild_request)
+
+    # Mark feedback as triggering rebuild
+    feedback.triggers_rebuild = True
+    feedback.rebuild_approved = True
+    feedback.rebuild_approved_by_id = user.id
+    feedback.rebuild_requested_at = datetime.utcnow()
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Rebuild request created from feedback",
+        "request_id": rebuild_request.id,
+        "feedback": feedback.to_dict(),
+    })
+
+
+@admin_bp.route("/feedback/<int:feedback_id>/dismiss", methods=["POST"])
+@promoted_required
+def dismiss_feedback(feedback_id):
+    """Dismiss feedback (mark as reviewed but not actionable)."""
+    feedback = Feedback.query.get(feedback_id)
+
+    if not feedback:
+        return jsonify({"error": "Feedback not found"}), 404
+
+    data = request.get_json() or {}
+    reason = data.get("reason", "").strip()
+
+    # Mark rebuild as rejected if it was a rebuild request
+    if feedback.feedback_type == "rebuild_request":
+        feedback.rebuild_approved = False
+
+    # Add dismissal note
+    if reason:
+        feedback.content += f"\n\n[Dismissed: {reason}]"
+
+    db.session.commit()
+
+    return jsonify({"message": "Feedback dismissed", "feedback": feedback.to_dict()})
+
+
+def _get_next_version(current_version):
+    """Increment version number."""
+    try:
+        parts = current_version.split(".")
+        parts[-1] = str(int(parts[-1]) + 1)
+        return ".".join(parts)
+    except:
+        return "1.0.1"

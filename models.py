@@ -373,6 +373,9 @@ class Feedback(db.Model):
         db.Integer, db.ForeignKey("users.id"), nullable=True
     )
 
+    # Log file attachment
+    log_file_path = db.Column(db.String(500), nullable=True)
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
@@ -394,6 +397,7 @@ class Feedback(db.Model):
             "priority": self.priority,
             "triggers_rebuild": self.triggers_rebuild,
             "rebuild_approved": self.rebuild_approved,
+            "log_file_path": self.log_file_path,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }
@@ -411,6 +415,68 @@ class AppDownload(db.Model):
     ip_address = db.Column(db.String(45), nullable=True)  # IPv6 max length
     user_agent = db.Column(db.String(500), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+
+class AppSubscription(db.Model):
+    """User subscription to app updates/new builds."""
+
+    __tablename__ = "app_subscriptions"
+
+    id = db.Column(db.Integer, primary_key=True)
+    app_id = db.Column(db.Integer, db.ForeignKey("apps.id"), nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    # Relationships
+    app = db.relationship("App", backref="subscriptions")
+    user = db.relationship("User", backref="subscriptions")
+
+    __table_args__ = (
+        db.UniqueConstraint("app_id", "user_id", name="unique_app_subscription"),
+    )
+
+    def to_dict(self):
+        """Serialize subscription to dictionary."""
+        return {
+            "id": self.id,
+            "app_id": self.app_id,
+            "app_slug": self.app.slug if self.app else None,
+            "app_name": self.app.name if self.app else None,
+            "user_id": self.user_id,
+            "created_at": self.created_at.isoformat(),
+        }
+
+
+class Notification(db.Model):
+    """User notification for app updates, builds, etc."""
+
+    __tablename__ = "notifications"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    notification_type = db.Column(db.String(50), nullable=False)  # new_build, app_promoted, etc.
+    title = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=True)
+    app_id = db.Column(db.Integer, db.ForeignKey("apps.id"), nullable=True)
+    read = db.Column(db.Boolean, default=False, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    # Relationships
+    user = db.relationship("User", backref="notifications")
+    app = db.relationship("App")
+
+    def to_dict(self):
+        """Serialize notification to dictionary."""
+        return {
+            "id": self.id,
+            "type": self.notification_type,
+            "title": self.title,
+            "message": self.message,
+            "app_id": self.app_id,
+            "app_slug": self.app.slug if self.app else None,
+            "read": self.read,
+            "created_at": self.created_at.isoformat(),
+        }
 
 
 def init_db(app):

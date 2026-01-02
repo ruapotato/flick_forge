@@ -161,6 +161,109 @@ def get_feedback(feedback_id):
     return jsonify({"feedback": feedback.to_dict()})
 
 
+@feedback_bp.route("/<int:feedback_id>/logs", methods=["POST"])
+def upload_logs(feedback_id):
+    """Upload log files to attach to feedback."""
+    import os
+    from flask import current_app
+    from werkzeug.utils import secure_filename
+
+    feedback = Feedback.query.get(feedback_id)
+    if not feedback:
+        return jsonify({"error": "Feedback not found"}), 404
+
+    # Check permissions - must be author or authenticated user
+    user = get_current_user()
+    anonymous_id = get_anonymous_id() if not user else None
+
+    if user:
+        if feedback.author_id != user.id and not user.is_promoted():
+            return jsonify({"error": "Permission denied"}), 403
+    else:
+        if feedback.anonymous_id != anonymous_id:
+            return jsonify({"error": "Permission denied"}), 403
+
+    # Check if log file in request
+    if "log" not in request.files:
+        # Try to get log content from JSON body
+        data = request.get_json()
+        if data and "log_content" in data:
+            log_content = data["log_content"]
+            if len(log_content) > 1024 * 1024:  # 1MB limit
+                return jsonify({"error": "Log content too large (max 1MB)"}), 400
+
+            # Save log content to file
+            logs_dir = os.path.join(current_app.root_path, "static", "logs")
+            os.makedirs(logs_dir, exist_ok=True)
+
+            filename = f"feedback_{feedback_id}_{int(datetime.utcnow().timestamp())}.log"
+            filepath = os.path.join(logs_dir, filename)
+
+            with open(filepath, "w") as f:
+                f.write(log_content)
+
+            feedback.log_file_path = f"/static/logs/{filename}"
+            db.session.commit()
+
+            return jsonify({
+                "message": "Logs attached",
+                "log_path": feedback.log_file_path
+            })
+
+        return jsonify({"error": "No log file or content provided"}), 400
+
+    log_file = request.files["log"]
+    if log_file.filename == "":
+        return jsonify({"error": "No file selected"}), 400
+
+    # Validate file size (max 5MB)
+    log_file.seek(0, 2)
+    size = log_file.tell()
+    log_file.seek(0)
+
+    if size > 5 * 1024 * 1024:
+        return jsonify({"error": "Log file too large (max 5MB)"}), 400
+
+    # Save the file
+    logs_dir = os.path.join(current_app.root_path, "static", "logs")
+    os.makedirs(logs_dir, exist_ok=True)
+
+    original_name = secure_filename(log_file.filename) or "app.log"
+    filename = f"feedback_{feedback_id}_{int(datetime.utcnow().timestamp())}_{original_name}"
+    filepath = os.path.join(logs_dir, filename)
+
+    log_file.save(filepath)
+
+    feedback.log_file_path = f"/static/logs/{filename}"
+    db.session.commit()
+
+    return jsonify({
+        "message": "Logs uploaded",
+        "log_path": feedback.log_file_path
+    })
+
+
+@feedback_bp.route("/<int:feedback_id>/logs", methods=["GET"])
+def get_logs(feedback_id):
+    """Get log file content for a feedback item."""
+    import os
+    from flask import current_app, send_file
+
+    feedback = Feedback.query.get(feedback_id)
+    if not feedback:
+        return jsonify({"error": "Feedback not found"}), 404
+
+    if not feedback.log_file_path:
+        return jsonify({"error": "No logs attached"}), 404
+
+    # Return log content
+    filepath = os.path.join(current_app.root_path, feedback.log_file_path.lstrip("/"))
+    if not os.path.exists(filepath):
+        return jsonify({"error": "Log file not found"}), 404
+
+    return send_file(filepath, mimetype="text/plain")
+
+
 @feedback_bp.route("/<int:feedback_id>", methods=["PATCH"])
 def update_feedback(feedback_id):
     """Update feedback (author only)."""

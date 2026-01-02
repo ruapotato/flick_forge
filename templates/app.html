@@ -105,6 +105,13 @@
             </svg>
             Report Issue
           </button>
+          <button class="btn btn-ghost" id="subscribe-btn" style="display:none;" onclick="toggleSubscription()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span id="subscribe-text">Subscribe</span>
+          </button>
         </div>
       </div>
 
@@ -435,6 +442,9 @@
         // Load reviews
         await loadReviews(app.slug);
 
+        // Check subscription status (if logged in)
+        checkSubscriptionStatus(app.slug);
+
         // Show content
         loadingEl.style.display = 'none';
         headerEl.style.display = 'flex';
@@ -531,6 +541,63 @@
         console.error('Failed to copy:', err);
       }
     });
+
+    // Subscription functions
+    let isSubscribed = false;
+    let currentAppSlug = null;
+
+    async function checkSubscriptionStatus(slug) {
+      currentAppSlug = slug;
+      try {
+        const user = await API.getCurrentUser();
+        if (!user) return; // Not logged in
+
+        document.getElementById('subscribe-btn').style.display = 'inline-flex';
+
+        const data = await API.get(`/subscriptions/app/${slug}/status`);
+        isSubscribed = data.subscribed;
+        updateSubscribeButton();
+      } catch (error) {
+        // User not logged in or error - hide button
+        document.getElementById('subscribe-btn').style.display = 'none';
+      }
+    }
+
+    function updateSubscribeButton() {
+      const btn = document.getElementById('subscribe-btn');
+      const text = document.getElementById('subscribe-text');
+      if (isSubscribed) {
+        btn.classList.add('btn-secondary');
+        btn.classList.remove('btn-ghost');
+        text.textContent = 'Subscribed';
+      } else {
+        btn.classList.add('btn-ghost');
+        btn.classList.remove('btn-secondary');
+        text.textContent = 'Subscribe';
+      }
+    }
+
+    async function toggleSubscription() {
+      if (!currentAppSlug) return;
+
+      const btn = document.getElementById('subscribe-btn');
+      btn.disabled = true;
+
+      try {
+        if (isSubscribed) {
+          await API.delete(`/subscriptions/app/${currentAppSlug}`);
+          isSubscribed = false;
+        } else {
+          await API.post(`/subscriptions/app/${currentAppSlug}`);
+          isSubscribed = true;
+        }
+        updateSubscribeButton();
+      } catch (error) {
+        alert(error.message || 'Failed to update subscription');
+      } finally {
+        btn.disabled = false;
+      }
+    }
   </script>
 </body>
 </html>

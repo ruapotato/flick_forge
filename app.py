@@ -94,7 +94,7 @@ def create_app(config_name=None):
         app.logger.info("Flick Forge startup")
 
     # Register blueprints
-    from routes import auth_bp, apps_bp, reviews_bp, requests_bp, feedback_bp, admin_bp
+    from routes import auth_bp, apps_bp, reviews_bp, requests_bp, feedback_bp, admin_bp, subscriptions_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(apps_bp)
@@ -102,6 +102,7 @@ def create_app(config_name=None):
     app.register_blueprint(requests_bp)
     app.register_blueprint(feedback_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(subscriptions_bp)
 
     # Apply rate limits to specific endpoints
     # Note: auth/me is called on every page load, so needs higher limit
@@ -109,6 +110,7 @@ def create_app(config_name=None):
     limiter.limit("60 per minute")(reviews_bp)
     limiter.limit("60 per minute")(requests_bp)
     limiter.limit("60 per minute")(feedback_bp)
+    limiter.limit("60 per minute")(subscriptions_bp)
 
     # Error handlers
     @app.errorhandler(400)
@@ -193,6 +195,10 @@ def create_app(config_name=None):
     @app.route("/admin")
     def admin_page():
         return render_template("admin.html")
+
+    @app.route("/admin/feedback")
+    def feedback_review_page():
+        return render_template("feedback_review.html")
 
     @app.route("/terms")
     def terms_page():

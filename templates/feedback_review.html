@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Feedback Review - Flick Store Admin">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Feedback Review - Flick Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127919;</text></svg>">
+  <style>
+    .feedback-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-md);
+    }
+    .feedback-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--space-md);
+    }
+    .feedback-meta {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-sm);
+    }
+    .feedback-type {
+      display: inline-block;
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-full);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    .feedback-type.bug { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+    .feedback-type.suggestion { background: rgba(34, 211, 238, 0.2); color: #22d3ee; }
+    .feedback-type.rebuild_request { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .priority-badge {
+      display: inline-block;
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-full);
+      font-size: var(--text-sm);
+    }
+    .priority-badge.high { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+    .priority-badge.medium { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .priority-badge.low { background: rgba(156, 163, 175, 0.2); color: #9ca3af; }
+    .feedback-content {
+      color: var(--text-secondary);
+      margin-bottom: var(--space-md);
+      white-space: pre-wrap;
+    }
+    .feedback-actions {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+    .filter-bar {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-lg);
+      padding: var(--space-md);
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+    }
+    .filter-bar select {
+      padding: var(--space-sm) var(--space-md);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+    }
+    .log-attachment {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-sm);
+      margin-top: var(--space-sm);
+      font-family: monospace;
+      font-size: var(--text-sm);
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .stats-bar {
+      display: flex;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-value {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+    }
+    .stat-label {
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span>Flick Store</span>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/browse" class="nav-link">Browse</a>
+        <a href="/wildwest" class="nav-link wild-west">Wild West</a>
+        <a href="/request" class="nav-link">Request</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="/profile" class="btn btn-secondary" data-auth style="display:none;">Profile</a>
+        <a href="/login" class="btn btn-ghost" data-guest>Sign In</a>
+      </div>
+
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <!-- Access Denied -->
+      <div id="access-denied" style="display:none;">
+        <div class="text-center" style="padding:var(--space-3xl);">
+          <h1 style="margin-bottom:var(--space-md);">Access Denied</h1>
+          <p class="text-secondary" style="margin-bottom:var(--space-lg);">
+            You need promoted or admin privileges to access this page.
+          </p>
+          <a href="/profile" class="btn btn-primary">Go to Profile</a>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="loading" class="text-center" style="padding:var(--space-3xl);">
+        <div class="loading-spinner"></div>
+        <p class="text-muted" style="margin-top:var(--space-md);">Loading...</p>
+      </div>
+
+      <!-- Main Content -->
+      <div id="main-content" style="display:none;">
+        <div class="section-header" style="margin-bottom:var(--space-lg);">
+          <h1 class="section-title">Feedback Review</h1>
+          <a href="/profile" class="btn btn-secondary">Back to Profile</a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar" id="stats-bar">
+          <div class="stat-item">
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-label">Total</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" style="color:#f87171;" id="stat-bugs">0</div>
+            <div class="stat-label">Bugs</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" style="color:#22d3ee;" id="stat-suggestions">0</div>
+            <div class="stat-label">Suggestions</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" style="color:#fbbf24;" id="stat-rebuilds">0</div>
+            <div class="stat-label">Rebuild Requests</div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+          <select id="filter-type">
+            <option value="">All Types</option>
+            <option value="bug">Bugs</option>
+            <option value="suggestion">Suggestions</option>
+            <option value="rebuild_request">Rebuild Requests</option>
+          </select>
+          <select id="filter-priority">
+            <option value="">All Priorities</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+          <select id="filter-sort">
+            <option value="created_at">Newest First</option>
+            <option value="priority">Priority</option>
+          </select>
+          <button class="btn btn-secondary" id="refresh-btn">Refresh</button>
+        </div>
+
+        <!-- Feedback List -->
+        <div id="feedback-list"></div>
+
+        <!-- Pagination -->
+        <div id="pagination" class="text-center" style="margin-top:var(--space-lg);"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Promote to Rebuild Modal -->
+  <div class="modal-overlay" id="rebuild-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Promote to AI Rebuild</h2>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-secondary" style="margin-bottom:var(--space-md);">
+          This will create a new build request that incorporates this feedback.
+          The AI will rebuild the app with the bug fix or suggestion included.
+        </p>
+        <div class="form-group">
+          <label class="form-label">Additional Context (optional)</label>
+          <textarea class="form-textarea" id="rebuild-context" rows="3"
+            placeholder="Add any additional instructions for the AI..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button class="btn btn-primary" id="confirm-rebuild-btn">Create Rebuild Request</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dismiss Modal -->
+  <div class="modal-overlay" id="dismiss-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Dismiss Feedback</h2>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Reason (optional)</label>
+          <textarea class="form-textarea" id="dismiss-reason" rows="2"
+            placeholder="Why is this feedback not actionable?"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button class="btn btn-secondary" id="confirm-dismiss-btn">Dismiss</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2025 Flick Store. All apps AGPL-3.0 licensed.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/main.js"></script>
+  <script>
+    let currentPage = 1;
+    let currentFeedbackId = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check if user is promoted+
+      const user = await API.getCurrentUser();
+      document.getElementById('loading').style.display = 'none';
+
+      if (!user || user.tier < 2) {
+        document.getElementById('access-denied').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('main-content').style.display = 'block';
+      loadStats();
+      loadFeedback();
+
+      // Event listeners
+      document.getElementById('filter-type').addEventListener('change', () => { currentPage = 1; loadFeedback(); });
+      document.getElementById('filter-priority').addEventListener('change', () => { currentPage = 1; loadFeedback(); });
+      document.getElementById('filter-sort').addEventListener('change', () => { currentPage = 1; loadFeedback(); });
+      document.getElementById('refresh-btn').addEventListener('click', () => { loadStats(); loadFeedback(); });
+
+      // Modal handlers
+      document.getElementById('confirm-rebuild-btn').addEventListener('click', confirmRebuild);
+      document.getElementById('confirm-dismiss-btn').addEventListener('click', confirmDismiss);
+
+      // Close modals
+      document.querySelectorAll('[data-modal-close]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+        });
+      });
+    });
+
+    async function loadStats() {
+      try {
+        const data = await API.get('/admin/stats');
+        if (data.stats && data.stats.feedback) {
+          document.getElementById('stat-total').textContent = data.stats.feedback.total || 0;
+          document.getElementById('stat-bugs').textContent = data.stats.feedback.bugs || 0;
+          document.getElementById('stat-suggestions').textContent = data.stats.feedback.suggestions || 0;
+          document.getElementById('stat-rebuilds').textContent = data.stats.feedback.rebuild_requests || 0;
+        }
+      } catch (error) {
+        console.error('Failed to load stats:', error);
+      }
+    }
+
+    async function loadFeedback() {
+      const listEl = document.getElementById('feedback-list');
+      listEl.innerHTML = '<div class="text-center"><div class="loading-spinner"></div></div>';
+
+      const type = document.getElementById('filter-type').value;
+      const priority = document.getElementById('filter-priority').value;
+      const sort = document.getElementById('filter-sort').value;
+
+      try {
+        const params = { page: currentPage, per_page: 20, sort };
+        if (type) params.type = type;
+        if (priority) params.priority = priority;
+
+        const data = await API.get('/admin/feedback', params);
+
+        if (!data.feedback || data.feedback.length === 0) {
+          listEl.innerHTML = '<p class="text-muted text-center">No feedback found.</p>';
+          document.getElementById('pagination').innerHTML = '';
+          return;
+        }
+
+        listEl.innerHTML = data.feedback.map(fb => renderFeedbackCard(fb)).join('');
+        renderPagination(data.pages, data.current_page);
+      } catch (error) {
+        listEl.innerHTML = '<p class="text-error text-center">Failed to load feedback.</p>';
+        console.error(error);
+      }
+    }
+
+    function renderFeedbackCard(fb) {
+      const priorityLabels = {0: 'low', 1: 'medium', 2: 'high'};
+      const priority = priorityLabels[fb.priority] || 'low';
+      const date = new Date(fb.created_at).toLocaleDateString();
+
+      const hasLogs = fb.log_file_path ? `
+        <div class="log-attachment">
+          <strong>Attached Logs:</strong> <a href="${fb.log_file_path}" target="_blank">View Logs</a>
+        </div>
+      ` : '';
+
+      const rebuildStatus = fb.triggers_rebuild ?
+        '<span class="text-success" style="margin-left:var(--space-sm);">(Rebuild triggered)</span>' : '';
+
+      return `
+        <div class="feedback-card" data-id="${fb.id}">
+          <div class="feedback-header">
+            <div>
+              <div class="feedback-meta">
+                <span class="feedback-type ${fb.feedback_type}">${fb.feedback_type.replace('_', ' ')}</span>
+                <span class="priority-badge ${priority}">${priority} priority</span>
+                <span class="text-muted">${date}</span>
+              </div>
+              <h3 style="margin:0;">${escapeHtml(fb.title)}${rebuildStatus}</h3>
+              <p class="text-sm text-muted" style="margin-top:var(--space-xs);">
+                App: <a href="/app/${fb.app_slug}">${escapeHtml(fb.app_name || fb.app_slug)}</a>
+                | By: ${escapeHtml(fb.author)}
+              </p>
+            </div>
+          </div>
+          <div class="feedback-content">${escapeHtml(fb.content)}</div>
+          ${hasLogs}
+          <div class="feedback-actions">
+            <button class="btn btn-primary btn-sm" onclick="openRebuildModal(${fb.id})">
+              Promote to Rebuild
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="openDismissModal(${fb.id})">
+              Dismiss
+            </button>
+            <a href="/app/${fb.app_slug}" class="btn btn-secondary btn-sm">View App</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPagination(totalPages, current) {
+      if (totalPages <= 1) {
+        document.getElementById('pagination').innerHTML = '';
+        return;
+      }
+
+      let html = '<div style="display:flex;gap:var(--space-sm);justify-content:center;">';
+
+      if (current > 1) {
+        html += `<button class="btn btn-ghost btn-sm" onclick="goToPage(${current - 1})">Prev</button>`;
+      }
+
+      html += `<span class="text-muted" style="padding:var(--space-sm);">Page ${current} of ${totalPages}</span>`;
+
+      if (current < totalPages) {
+        html += `<button class="btn btn-ghost btn-sm" onclick="goToPage(${current + 1})">Next</button>`;
+      }
+
+      html += '</div>';
+      document.getElementById('pagination').innerHTML = html;
+    }
+
+    function goToPage(page) {
+      currentPage = page;
+      loadFeedback();
+      window.scrollTo(0, 0);
+    }
+
+    function openRebuildModal(feedbackId) {
+      currentFeedbackId = feedbackId;
+      document.getElementById('rebuild-context').value = '';
+      document.getElementById('rebuild-modal').classList.add('active');
+    }
+
+    function openDismissModal(feedbackId) {
+      currentFeedbackId = feedbackId;
+      document.getElementById('dismiss-reason').value = '';
+      document.getElementById('dismiss-modal').classList.add('active');
+    }
+
+    async function confirmRebuild() {
+      if (!currentFeedbackId) return;
+
+      const context = document.getElementById('rebuild-context').value;
+      const btn = document.getElementById('confirm-rebuild-btn');
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+
+      try {
+        const result = await API.post(`/admin/feedback/${currentFeedbackId}/promote-to-rebuild`, {
+          context
+        });
+        alert(`Rebuild request created! Request ID: ${result.request_id}\n\nRun: python build_app.py ${result.request_id}`);
+        document.getElementById('rebuild-modal').classList.remove('active');
+        loadFeedback();
+      } catch (error) {
+        alert('Failed to create rebuild request: ' + (error.message || 'Unknown error'));
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Create Rebuild Request';
+      }
+    }
+
+    async function confirmDismiss() {
+      if (!currentFeedbackId) return;
+
+      const reason = document.getElementById('dismiss-reason').value;
+      const btn = document.getElementById('confirm-dismiss-btn');
+      btn.disabled = true;
+      btn.textContent = 'Dismissing...';
+
+      try {
+        await API.post(`/admin/feedback/${currentFeedbackId}/dismiss`, { reason });
+        document.getElementById('dismiss-modal').classList.remove('active');
+        loadFeedback();
+      } catch (error) {
+        alert('Failed to dismiss feedback: ' + (error.message || 'Unknown error'));
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Dismiss';
+      }
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>

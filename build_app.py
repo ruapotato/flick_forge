@@ -433,6 +433,15 @@ def build_request(request_id):
             log(f"SUCCESS! App '{new_app.name}' created with slug '{slug}'", build_log)
             log(f"App is now in Wild West for testing", build_log)
 
+            # Notify subscribers if this is a rebuild (app already existed)
+            try:
+                from routes.subscriptions import notify_subscribers_of_new_build
+                notified = notify_subscribers_of_new_build(new_app, new_app.version)
+                if notified > 0:
+                    log(f"Notified {notified} subscribers of new build", build_log)
+            except Exception as e:
+                log(f"Warning: Failed to notify subscribers: {e}", build_log)
+
             return True, "\n".join(build_log)
 
         finally:
