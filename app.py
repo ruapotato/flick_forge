@@ -190,6 +190,14 @@ def create_app(config_name=None):
     def admin_page():
         return render_template("admin.html")
 
+    @app.route("/terms")
+    def terms_page():
+        return render_template("terms.html")
+
+    @app.route("/privacy")
+    def privacy_page():
+        return render_template("privacy.html")
+
     # API info endpoint
     @app.route("/api")
     def api_info():
