@@ -90,6 +90,47 @@ def get_user(user_id):
     return jsonify({"user": user_data})
 
 
+@admin_bp.route("/users/<int:user_id>/tier", methods=["PUT"])
+@admin_required
+def set_user_tier(user_id):
+    """Set a user's tier directly."""
+    admin = get_current_user()
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    if user.id == admin.id:
+        return jsonify({"error": "Cannot modify your own tier"}), 400
+
+    data = request.get_json() or {}
+    target_tier = data.get("tier", "").lower()
+
+    tier_map = {
+        "anonymous": UserTier.ANONYMOUS.value,
+        "limited": UserTier.LIMITED.value,
+        "promoted": UserTier.PROMOTED.value,
+        "admin": UserTier.ADMIN.value,
+    }
+
+    if target_tier not in tier_map:
+        return jsonify({"error": f"Invalid tier. Must be one of: {', '.join(tier_map.keys())}"}), 400
+
+    # Cannot demote other admins
+    if user.tier == UserTier.ADMIN.value and target_tier != "admin":
+        return jsonify({"error": "Cannot demote admin users"}), 400
+
+    user.tier = tier_map[target_tier]
+    db.session.commit()
+
+    return jsonify(
+        {
+            "message": f"User tier set to {target_tier}",
+            "user": user.to_dict(include_email=True),
+        }
+    )
+
+
 @admin_bp.route("/users/<int:user_id>/promote", methods=["POST"])
 @admin_required
 def promote_user(user_id):
@@ -319,6 +360,78 @@ def demote_app(slug):
 # ============================================================================
 # Request Management
 # ============================================================================
+
+
+@admin_bp.route("/requests/pending", methods=["GET"])
+@promoted_required
+def list_pending_requests():
+    """List pending app requests for review (promoted+ users)."""
+    page = request.args.get("page", 1, type=int)
+    per_page = min(request.args.get("per_page", 50, type=int), 100)
+
+    query = AppRequest.query.filter(AppRequest.status == RequestStatus.PENDING.value)
+    query = query.order_by(AppRequest.created_at.asc())  # Oldest first
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    return jsonify(
+        {
+            "requests": [req.to_dict() for req in pagination.items],
+            "total": pagination.total,
+            "pages": pagination.pages,
+            "current_page": page,
+        }
+    )
+
+
+@admin_bp.route("/requests/<int:request_id>/approve", methods=["POST"])
+@promoted_required
+def approve_request(request_id):
+    """Approve a pending request for building."""
+    app_request = AppRequest.query.get(request_id)
+
+    if not app_request:
+        return jsonify({"error": "Request not found"}), 404
+
+    if app_request.status != RequestStatus.PENDING.value:
+        return jsonify({"error": "Request is not pending"}), 400
+
+    app_request.status = RequestStatus.APPROVED.value
+    db.session.commit()
+
+    return jsonify(
+        {
+            "message": "Request approved for building",
+            "request": app_request.to_dict(),
+        }
+    )
+
+
+@admin_bp.route("/requests/<int:request_id>/reject", methods=["POST"])
+@promoted_required
+def reject_request(request_id):
+    """Reject a pending request."""
+    app_request = AppRequest.query.get(request_id)
+
+    if not app_request:
+        return jsonify({"error": "Request not found"}), 404
+
+    if app_request.status != RequestStatus.PENDING.value:
+        return jsonify({"error": "Request is not pending"}), 400
+
+    data = request.get_json() or {}
+    reason = data.get("reason", "").strip()
+
+    app_request.status = RequestStatus.REJECTED.value
+    if reason:
+        app_request.rejection_reason = reason
+    db.session.commit()
+
+    return jsonify(
+        {
+            "message": "Request rejected",
+            "request": app_request.to_dict(),
+        }
+    )
 
 
 @admin_bp.route("/requests/all", methods=["GET"])
