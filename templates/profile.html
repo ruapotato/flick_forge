@@ -283,15 +283,25 @@
 
           // Load user's requests
           loadMyRequests();
+        } else if (data && data.authenticated === false) {
+          // Explicitly not logged in
+          loadingEl.style.display = 'none';
+          guestEl.style.display = 'block';
         } else {
-          // Not logged in
+          // Unknown response, retry after short delay
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      } catch (error) {
+        console.error('Profile auth error:', error);
+        // Check if it's a rate limit or network error - retry
+        if (error.message && (error.message.includes('rate') || error.message.includes('Too many'))) {
+          loadingEl.innerHTML = '<p class="text-muted">Too many requests. Retrying...</p>';
+          setTimeout(() => window.location.reload(), 2000);
+        } else {
+          // Actual auth failure
           loadingEl.style.display = 'none';
           guestEl.style.display = 'block';
         }
-      } catch (error) {
-        // Not logged in or error
-        loadingEl.style.display = 'none';
-        guestEl.style.display = 'block';
       }
 
       // Tab switching
