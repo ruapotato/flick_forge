@@ -79,7 +79,9 @@
         <!-- Profile Tabs -->
         <div class="profile-tabs">
           <button class="profile-tab active" data-tab="overview">Overview</button>
-          <button class="profile-tab" data-tab="requests">My Requests</button>
+          <button class="profile-tab" data-tab="review" id="tab-btn-review" style="display:none;">Review Requests</button>
+          <button class="profile-tab" data-tab="users" id="tab-btn-users" style="display:none;">Manage Users</button>
+          <button class="profile-tab" data-tab="requests" id="tab-btn-requests">My Requests</button>
           <button class="profile-tab" data-tab="settings">Settings</button>
         </div>
 
@@ -137,6 +139,61 @@
                 <li style="margin-bottom:var(--space-sm);"><a href="/request" style="color:var(--accent);">Request</a> new apps to be built by AI</li>
                 <li style="margin-bottom:var(--space-sm);"><a href="/wildwest" style="color:var(--accent);">Test</a> experimental apps in Wild West</li>
               </ul>
+            </div>
+          </section>
+        </div>
+
+        <!-- Tab Content: Review Requests (promoted+ users) -->
+        <div class="profile-tab-content" id="tab-review" style="display:none;">
+          <section class="section">
+            <div class="section-header">
+              <h2 class="section-title">Pending Requests</h2>
+              <p class="text-secondary">Review and approve app requests for building</p>
+            </div>
+
+            <div id="review-loading" class="text-center" style="padding:var(--space-2xl);">
+              <div class="loading-spinner"></div>
+              <p class="text-secondary">Loading pending requests...</p>
+            </div>
+
+            <div id="review-empty" style="display:none;padding:var(--space-2xl);text-align:center;">
+              <p class="text-secondary">No pending requests to review.</p>
+            </div>
+
+            <div id="review-list" style="display:none;">
+            </div>
+          </section>
+        </div>
+
+        <!-- Tab Content: Manage Users (admin only) -->
+        <div class="profile-tab-content" id="tab-users" style="display:none;">
+          <section class="section">
+            <div class="section-header">
+              <h2 class="section-title">User Management</h2>
+            </div>
+
+            <div class="browse-controls mb-lg">
+              <input type="search" id="users-search-input" class="form-input" placeholder="Search users..." style="max-width:300px;">
+              <select id="users-tier-select" class="sort-select">
+                <option value="">All Tiers</option>
+                <option value="anonymous">Anonymous</option>
+                <option value="limited">Limited</option>
+                <option value="promoted">Promoted</option>
+                <option value="admin">Admin</option>
+              </select>
+              <button class="btn btn-secondary" onclick="loadUsersAdmin()">Search</button>
+            </div>
+
+            <div id="users-loading" class="text-center" style="padding:var(--space-2xl);">
+              <div class="loading-spinner"></div>
+              <p class="text-secondary">Loading users...</p>
+            </div>
+
+            <div id="users-empty" style="display:none;padding:var(--space-2xl);text-align:center;">
+              <p class="text-secondary">No users found.</p>
+            </div>
+
+            <div id="users-list" style="display:none;">
             </div>
           </section>
         </div>
@@ -288,17 +345,28 @@
           document.getElementById('tier-name').textContent = tier.name;
           document.getElementById('tier-desc').textContent = tier.desc;
 
-          // Show admin panel link for promoted/admin users (tier >= 2)
+          // Show/hide tabs based on user tier
           if (user.tier >= 2) {
+            // Promoted+ can review requests
+            document.getElementById('tab-btn-review').style.display = '';
             document.getElementById('admin-panel-card').style.display = 'block';
           }
+          if (user.tier >= 3) {
+            // Admin can manage users
+            document.getElementById('tab-btn-users').style.display = '';
+          }
+
+          // Store tier for later use
+          window.currentUserTier = user.tier;
 
           // Show content
           loadingEl.style.display = 'none';
           contentEl.style.display = 'block';
 
-          // Load user's requests
-          loadMyRequests();
+          // Load user's requests (if they can submit them)
+          if (user.tier >= 1) {
+            loadMyRequests();
+          }
         } else if (data && data.authenticated === false) {
           // Explicitly not logged in
           loadingEl.style.display = 'none';
@@ -327,7 +395,15 @@
           document.querySelectorAll('.profile-tab-content').forEach(c => c.style.display = 'none');
 
           tab.classList.add('active');
-          document.getElementById('tab-' + tab.dataset.tab).style.display = 'block';
+          const tabName = tab.dataset.tab;
+          document.getElementById('tab-' + tabName).style.display = 'block';
+
+          // Load data for specific tabs
+          if (tabName === 'review' && window.currentUserTier >= 2) {
+            loadPendingReview();
+          } else if (tabName === 'users' && window.currentUserTier >= 3) {
+            loadUsersAdmin();
+          }
         });
       });
 
@@ -413,6 +489,182 @@
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
+    }
+
+    // Load pending requests for review (promoted+ users)
+    async function loadPendingReview() {
+      const loadingEl = document.getElementById('review-loading');
+      const emptyEl = document.getElementById('review-empty');
+      const listEl = document.getElementById('review-list');
+
+      loadingEl.style.display = 'block';
+      emptyEl.style.display = 'none';
+      listEl.style.display = 'none';
+
+      try {
+        const data = await API.get('/admin/requests/pending');
+        loadingEl.style.display = 'none';
+
+        if (!data.requests || data.requests.length === 0) {
+          emptyEl.style.display = 'block';
+          return;
+        }
+
+        const html = data.requests.map(req => `
+          <div class="card" style="padding:var(--space-lg);margin-bottom:var(--space-md);" id="review-request-${req.id}">
+            <div style="display:flex;justify-content:space-between;align-items:start;gap:var(--space-md);">
+              <div style="flex:1;">
+                <h3 style="margin-bottom:var(--space-sm);">${escapeHtml(req.title)}</h3>
+                <p class="text-secondary" style="margin-bottom:var(--space-md);">${escapeHtml(req.prompt || '')}</p>
+                <div class="text-sm text-muted">
+                  <span>Category: ${req.category || 'other'}</span>
+                  <span style="margin-left:var(--space-md);">By: ${escapeHtml(req.user?.username || 'Unknown')}</span>
+                  <span style="margin-left:var(--space-md);">Votes: ${req.upvotes || 0}</span>
+                </div>
+              </div>
+              <div style="display:flex;gap:var(--space-sm);">
+                <button class="btn btn-primary" onclick="approveRequest(${req.id})">Approve</button>
+                <button class="btn btn-ghost text-error" onclick="showRejectModal(${req.id})">Reject</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        listEl.innerHTML = html;
+        listEl.style.display = 'block';
+      } catch (error) {
+        loadingEl.style.display = 'none';
+        emptyEl.innerHTML = '<p class="text-error">Failed to load pending requests.</p>';
+        emptyEl.style.display = 'block';
+      }
+    }
+
+    async function approveRequest(requestId) {
+      try {
+        await API.post(`/admin/requests/${requestId}/approve`);
+        showToast('Request approved! It will be built by AI.', 'success');
+        document.getElementById(`review-request-${requestId}`).remove();
+
+        // Check if list is now empty
+        const listEl = document.getElementById('review-list');
+        if (!listEl.children.length) {
+          listEl.style.display = 'none';
+          document.getElementById('review-empty').style.display = 'block';
+        }
+      } catch (error) {
+        showToast(error.message || 'Failed to approve request', 'error');
+      }
+    }
+
+    let rejectingRequestId = null;
+
+    function showRejectModal(requestId) {
+      rejectingRequestId = requestId;
+      const modal = document.createElement('div');
+      modal.id = 'reject-modal';
+      modal.innerHTML = `
+        <div style="position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;display:flex;align-items:center;justify-content:center;">
+          <div class="card" style="padding:var(--space-xl);max-width:400px;width:90%;">
+            <h3 style="margin-bottom:var(--space-md);">Reject Request</h3>
+            <div class="form-group">
+              <label class="form-label">Reason (optional)</label>
+              <textarea id="reject-reason" class="form-input" rows="3" placeholder="Why is this request being rejected?"></textarea>
+            </div>
+            <div style="display:flex;gap:var(--space-sm);justify-content:flex-end;">
+              <button class="btn btn-ghost" onclick="closeRejectModal()">Cancel</button>
+              <button class="btn btn-primary" style="background:var(--error);" onclick="confirmReject()">Reject</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function closeRejectModal() {
+      const modal = document.getElementById('reject-modal');
+      if (modal) modal.remove();
+      rejectingRequestId = null;
+    }
+
+    async function confirmReject() {
+      if (!rejectingRequestId) return;
+
+      const reason = document.getElementById('reject-reason')?.value || '';
+      try {
+        await API.post(`/admin/requests/${rejectingRequestId}/reject`, { reason });
+        showToast('Request rejected', 'success');
+        closeRejectModal();
+        document.getElementById(`review-request-${rejectingRequestId}`).remove();
+
+        // Check if list is now empty
+        const listEl = document.getElementById('review-list');
+        if (!listEl.children.length) {
+          listEl.style.display = 'none';
+          document.getElementById('review-empty').style.display = 'block';
+        }
+      } catch (error) {
+        showToast(error.message || 'Failed to reject request', 'error');
+      }
+    }
+
+    // Load users for admin management
+    async function loadUsersAdmin() {
+      const loadingEl = document.getElementById('users-loading');
+      const emptyEl = document.getElementById('users-empty');
+      const listEl = document.getElementById('users-list');
+
+      const searchQuery = document.getElementById('users-search-input')?.value || '';
+      const tierFilter = document.getElementById('users-tier-select')?.value || '';
+
+      loadingEl.style.display = 'block';
+      emptyEl.style.display = 'none';
+      listEl.style.display = 'none';
+
+      try {
+        const params = {};
+        if (searchQuery) params.search = searchQuery;
+        if (tierFilter) params.tier = tierFilter;
+
+        const data = await API.get('/admin/users', params);
+        loadingEl.style.display = 'none';
+
+        if (!data.users || data.users.length === 0) {
+          emptyEl.style.display = 'block';
+          return;
+        }
+
+        const tierOptions = ['anonymous', 'limited', 'promoted', 'admin'];
+        const html = data.users.map(user => `
+          <div class="card" style="padding:var(--space-md);margin-bottom:var(--space-sm);display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <strong>${escapeHtml(user.username)}</strong>
+              <span class="text-muted" style="margin-left:var(--space-sm);">${escapeHtml(user.email || '')}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--space-sm);">
+              <select class="sort-select" onchange="updateUserTier(${user.id}, this.value)" ${user.tier_name === 'admin' ? 'disabled' : ''}>
+                ${tierOptions.map(t => `<option value="${t}" ${user.tier_name === t ? 'selected' : ''}>${t.charAt(0).toUpperCase() + t.slice(1)}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+        `).join('');
+
+        listEl.innerHTML = html;
+        listEl.style.display = 'block';
+      } catch (error) {
+        loadingEl.style.display = 'none';
+        emptyEl.innerHTML = '<p class="text-error">Failed to load users.</p>';
+        emptyEl.style.display = 'block';
+      }
+    }
+
+    async function updateUserTier(userId, newTier) {
+      try {
+        await API.put(`/admin/users/${userId}/tier`, { tier: newTier });
+        showToast(`User tier updated to ${newTier}`, 'success');
+      } catch (error) {
+        showToast(error.message || 'Failed to update user tier', 'error');
+        loadUsersAdmin(); // Reload to reset select
+      }
     }
   </script>
 </body>
