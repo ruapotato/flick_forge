@@ -113,6 +113,17 @@
                 </div>
               </div>
             </div>
+
+            <!-- Admin Panel Link - shown for promoted/admin users -->
+            <div class="card" id="admin-panel-card" style="padding:var(--space-lg);display:none;">
+              <h3 style="font-size:var(--text-base);margin-bottom:var(--space-md);">Admin Tools</h3>
+              <a href="/admin" class="btn btn-primary" style="width:100%;">
+                Open Admin Panel
+              </a>
+              <p class="text-sm text-muted" style="margin-top:var(--space-sm);">
+                Manage requests, users, and apps
+              </p>
+            </div>
           </section>
 
           <section class="section">
@@ -276,6 +287,11 @@
           document.getElementById('tier-icon').innerHTML = tier.icon;
           document.getElementById('tier-name').textContent = tier.name;
           document.getElementById('tier-desc').textContent = tier.desc;
+
+          // Show admin panel link for promoted/admin users (tier >= 2)
+          if (user.tier >= 2) {
+            document.getElementById('admin-panel-card').style.display = 'block';
+          }
 
           // Show content
           loadingEl.style.display = 'none';
