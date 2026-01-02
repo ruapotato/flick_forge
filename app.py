@@ -104,10 +104,11 @@ def create_app(config_name=None):
     app.register_blueprint(admin_bp)
 
     # Apply rate limits to specific endpoints
-    limiter.limit("5 per minute")(auth_bp)  # Strict limit on auth
-    limiter.limit("30 per minute")(reviews_bp)
-    limiter.limit("20 per minute")(requests_bp)
-    limiter.limit("50 per minute")(feedback_bp)
+    # Note: auth/me is called on every page load, so needs higher limit
+    limiter.limit("120 per minute")(auth_bp)
+    limiter.limit("60 per minute")(reviews_bp)
+    limiter.limit("60 per minute")(requests_bp)
+    limiter.limit("60 per minute")(feedback_bp)
 
     # Error handlers
     @app.errorhandler(400)
