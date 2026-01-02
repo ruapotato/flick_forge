@@ -359,116 +359,36 @@
         </div>
 
         <div class="browse-controls mb-lg">
-          <input type="search" class="form-input" placeholder="Search users..." style="max-width:300px;">
-          <select class="sort-select">
-            <option>All Tiers</option>
-            <option>Anonymous</option>
-            <option>Limited</option>
-            <option>Promoted</option>
-            <option>Admin</option>
+          <input type="search" id="users-search" class="form-input" placeholder="Search users..." style="max-width:300px;">
+          <select id="users-tier-filter" class="sort-select">
+            <option value="">All Tiers</option>
+            <option value="anonymous">Anonymous</option>
+            <option value="limited">Limited</option>
+            <option value="promoted">Promoted</option>
+            <option value="admin">Admin</option>
           </select>
+          <button class="btn btn-secondary" onclick="loadUsers()">Search</button>
         </div>
 
-        <table class="admin-table">
+        <div id="users-loading" class="text-center" style="padding:var(--space-2xl);">
+          <p class="text-secondary">Loading users...</p>
+        </div>
+
+        <div id="users-empty" style="display:none;padding:var(--space-2xl);text-align:center;">
+          <p class="text-secondary">No users found.</p>
+        </div>
+
+        <table class="admin-table" id="users-table" style="display:none;">
           <thead>
             <tr>
               <th>User</th>
               <th>Email</th>
-              <th>Tier</th>
-              <th>Reviews</th>
+              <th>Current Tier</th>
               <th>Joined</th>
-              <th>Actions</th>
+              <th>Change Tier</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div style="display:flex;align-items:center;gap:var(--space-md);">
-                  <div class="review-avatar">L</div>
-                  <strong>LinuxFan42</strong>
-                </div>
-              </td>
-              <td>linuxfan42@example.com</td>
-              <td><span class="profile-tier">Limited</span></td>
-              <td>12</td>
-              <td>Dec 2024</td>
-              <td>
-                <div class="admin-actions">
-                  <select class="sort-select" style="padding:var(--space-xs) var(--space-sm);">
-                    <option>Limited</option>
-                    <option>Promoted</option>
-                    <option>Admin</option>
-                    <option>Anonymous</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div style="display:flex;align-items:center;gap:var(--space-md);">
-                  <div class="review-avatar">D</div>
-                  <strong>DevOpsGuru</strong>
-                </div>
-              </td>
-              <td>devops@example.com</td>
-              <td><span class="profile-tier">Promoted</span></td>
-              <td>45</td>
-              <td>Oct 2024</td>
-              <td>
-                <div class="admin-actions">
-                  <select class="sort-select" style="padding:var(--space-xs) var(--space-sm);">
-                    <option>Promoted</option>
-                    <option>Admin</option>
-                    <option>Limited</option>
-                    <option>Anonymous</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div style="display:flex;align-items:center;gap:var(--space-md);">
-                  <div class="review-avatar">O</div>
-                  <strong>opensource_dev</strong>
-                </div>
-              </td>
-              <td>opensrc@example.com</td>
-              <td><span class="profile-tier">Limited</span></td>
-              <td>23</td>
-              <td>Nov 2024</td>
-              <td>
-                <div class="admin-actions">
-                  <select class="sort-select" style="padding:var(--space-xs) var(--space-sm);">
-                    <option>Limited</option>
-                    <option>Promoted</option>
-                    <option>Admin</option>
-                    <option>Anonymous</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div style="display:flex;align-items:center;gap:var(--space-md);">
-                  <div class="review-avatar">N</div>
-                  <strong>newuser123</strong>
-                </div>
-              </td>
-              <td>new@example.com</td>
-              <td><span class="profile-tier" style="background:rgba(160, 160, 176, 0.1);color:var(--text-muted);">Anonymous</span></td>
-              <td>0</td>
-              <td>Today</td>
-              <td>
-                <div class="admin-actions">
-                  <select class="sort-select" style="padding:var(--space-xs) var(--space-sm);">
-                    <option>Anonymous</option>
-                    <option>Limited</option>
-                    <option>Promoted</option>
-                    <option>Admin</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
+          <tbody id="users-tbody">
           </tbody>
         </table>
       </section>
@@ -671,6 +591,7 @@
 
         // Load data for section
         if (section === 'requests') loadPendingRequests();
+        if (section === 'users') loadUsers();
       });
     });
 
@@ -828,6 +749,137 @@
       if (e.target.classList.contains('modal-overlay')) closeRejectModal();
     });
 
+    // ==================
+    // User Management
+    // ==================
+
+    let allUsers = [];
+    let currentUserId = null;
+
+    async function loadUsers() {
+      const loading = document.getElementById('users-loading');
+      const empty = document.getElementById('users-empty');
+      const table = document.getElementById('users-table');
+      const tbody = document.getElementById('users-tbody');
+
+      const search = document.getElementById('users-search').value.trim();
+      const tier = document.getElementById('users-tier-filter').value;
+
+      loading.style.display = 'block';
+      empty.style.display = 'none';
+      table.style.display = 'none';
+
+      try {
+        const params = {};
+        if (search) params.search = search;
+        if (tier) params.tier = tier;
+
+        const data = await API.get('/admin/users', params);
+        allUsers = data.users || [];
+
+        if (allUsers.length === 0) {
+          loading.style.display = 'none';
+          empty.style.display = 'block';
+          return;
+        }
+
+        const tierNames = ['Anonymous', 'Limited', 'Promoted', 'Admin'];
+        const tierStyles = [
+          'background:rgba(160, 160, 176, 0.1);color:var(--text-muted);',
+          '',
+          'background:rgba(139, 92, 246, 0.15);color:var(--accent);',
+          'background:rgba(239, 68, 68, 0.15);color:#ef4444;'
+        ];
+
+        tbody.innerHTML = allUsers.map(user => `
+          <tr id="user-row-${user.id}">
+            <td>
+              <div style="display:flex;align-items:center;gap:var(--space-md);">
+                <div class="review-avatar">${escapeHtml(user.username.charAt(0).toUpperCase())}</div>
+                <strong>${escapeHtml(user.username)}</strong>
+              </div>
+            </td>
+            <td>${escapeHtml(user.email || '')}</td>
+            <td>
+              <span class="profile-tier" id="tier-display-${user.id}" style="${tierStyles[user.tier] || ''}">
+                ${tierNames[user.tier] || 'Unknown'}
+              </span>
+            </td>
+            <td>${formatDate(user.created_at)}</td>
+            <td>
+              <div class="admin-actions">
+                <select class="sort-select" id="tier-select-${user.id}"
+                  style="padding:var(--space-xs) var(--space-sm);"
+                  onchange="changeTier(${user.id}, this.value)">
+                  <option value="0" ${user.tier === 0 ? 'selected' : ''}>Anonymous</option>
+                  <option value="1" ${user.tier === 1 ? 'selected' : ''}>Limited</option>
+                  <option value="2" ${user.tier === 2 ? 'selected' : ''}>Promoted</option>
+                  <option value="3" ${user.tier === 3 ? 'selected' : ''}>Admin</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+
+        loading.style.display = 'none';
+        table.style.display = 'table';
+      } catch (error) {
+        console.error('Failed to load users:', error);
+        loading.innerHTML = '<p class="text-error">Failed to load users. ' + (error.message || '') + '</p>';
+      }
+    }
+
+    async function changeTier(userId, newTier) {
+      const tierNames = ['anonymous', 'limited', 'promoted', 'admin'];
+      const tierDisplayNames = ['Anonymous', 'Limited', 'Promoted', 'Admin'];
+      const tierValue = parseInt(newTier);
+      const tierName = tierNames[tierValue];
+
+      if (!confirm(`Change this user to ${tierDisplayNames[tierValue]}?`)) {
+        // Reset select to original value
+        const user = allUsers.find(u => u.id === userId);
+        if (user) {
+          document.getElementById(`tier-select-${userId}`).value = user.tier;
+        }
+        return;
+      }
+
+      try {
+        await API.post(`/admin/users/${userId}/promote`, { tier: tierName });
+
+        // Update local data
+        const user = allUsers.find(u => u.id === userId);
+        if (user) user.tier = tierValue;
+
+        // Update display
+        const tierStyles = [
+          'background:rgba(160, 160, 176, 0.1);color:var(--text-muted);',
+          '',
+          'background:rgba(139, 92, 246, 0.15);color:var(--accent);',
+          'background:rgba(239, 68, 68, 0.15);color:#ef4444;'
+        ];
+        const display = document.getElementById(`tier-display-${userId}`);
+        if (display) {
+          display.textContent = tierDisplayNames[tierValue];
+          display.style.cssText = tierStyles[tierValue] || '';
+        }
+
+        alert('User tier updated successfully!');
+      } catch (error) {
+        alert('Failed to update tier: ' + (error.message || 'Unknown error'));
+        // Reset select
+        const user = allUsers.find(u => u.id === userId);
+        if (user) {
+          document.getElementById(`tier-select-${userId}`).value = user.tier;
+        }
+      }
+    }
+
+    // Allow search on Enter key
+    document.getElementById('users-search')?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') loadUsers();
+    });
+
     // Helper functions
     function escapeHtml(text) {
       if (!text) return '';
@@ -863,6 +915,16 @@
           document.body.innerHTML = '<div style="padding:var(--space-2xl);text-align:center;"><h1>Access Denied</h1><p>You need Promoted or Admin access to view this page.</p><a href="/" class="btn btn-primary">Go Home</a></div>';
           return;
         }
+
+        // Hide admin-only sections for non-admin users
+        if (data.user.tier < 3) {
+          // Hide Users section for non-admins
+          document.querySelector('[data-section="users"]')?.remove();
+          document.getElementById('section-users')?.remove();
+        }
+
+        // Load initial data for the visible section (overview)
+        loadPendingRequests();
       } catch (error) {
         window.location.href = '/login';
       }
