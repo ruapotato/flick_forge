@@ -118,15 +118,40 @@
               </div>
             </div>
 
-            <!-- Admin Panel Link - shown for promoted/admin users -->
+            <!-- Admin/Promoted Tools - shown based on user tier -->
             <div class="card" id="admin-panel-card" style="padding:var(--space-lg);display:none;">
-              <h3 style="font-size:var(--text-base);margin-bottom:var(--space-md);">Admin Tools</h3>
-              <a href="/admin" class="btn btn-primary" style="width:100%;">
-                Open Admin Panel
-              </a>
-              <p class="text-sm text-muted" style="margin-top:var(--space-sm);">
-                Manage requests, users, and apps
-              </p>
+              <h3 style="font-size:var(--text-base);margin-bottom:var(--space-md);">Tools</h3>
+              <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+                <a href="/admin" class="btn btn-secondary" style="justify-content:flex-start;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/>
+                    <rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>
+                  </svg>
+                  Admin Dashboard
+                </a>
+                <a href="/admin#bots" class="btn btn-secondary" style="justify-content:flex-start;" onclick="localStorage.setItem('adminSection','bots');">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="10" rx="2"/>
+                    <circle cx="12" cy="5" r="4"/>
+                    <circle cx="9" cy="16" r="1"/><circle cx="15" cy="16" r="1"/>
+                  </svg>
+                  Active Bots
+                </a>
+                <a href="/admin/feedback" class="btn btn-secondary" style="justify-content:flex-start;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                  Review Feedback
+                </a>
+                <a href="/admin#users" class="btn btn-secondary admin-only-link" style="justify-content:flex-start;display:none;" onclick="localStorage.setItem('adminSection','users');">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                  Manage Users
+                </a>
+              </div>
             </div>
           </section>
 
@@ -410,6 +435,8 @@
           if (user.tier >= 3) {
             // Admin can manage users
             document.getElementById('tab-btn-users').style.display = '';
+            // Show admin-only links
+            document.querySelectorAll('.admin-only-link').forEach(el => el.style.display = 'flex');
           }
 
           // Store tier for later use

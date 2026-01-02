@@ -511,7 +511,7 @@ def force_complete_request(request_id):
 
 
 @admin_bp.route("/stats", methods=["GET"])
-@admin_required
+@promoted_required
 def get_admin_stats():
     """Get admin dashboard statistics."""
     stats = {
@@ -800,3 +800,205 @@ def _get_next_version(current_version):
         return ".".join(parts)
     except:
         return "1.0.1"
+
+
+# ============================================================================
+# Bot Management (AI Build System)
+# ============================================================================
+
+# Track active build processes
+_active_builds = {}  # request_id -> subprocess.Popen
+
+
+@admin_bp.route("/bots/status", methods=["GET"])
+@promoted_required
+def get_bot_status():
+    """Get status of AI build system."""
+    from datetime import timedelta
+
+    # Get currently building requests
+    building = AppRequest.query.filter(
+        AppRequest.status == RequestStatus.BUILDING.value
+    ).order_by(AppRequest.build_started_at.asc()).all()
+
+    # Get queue (approved, waiting to build)
+    queue = AppRequest.query.filter(
+        AppRequest.status == RequestStatus.APPROVED.value
+    ).order_by(AppRequest.created_at.asc()).all()
+
+    # Get recent completed/failed (last 24 hours)
+    yesterday = datetime.utcnow() - timedelta(hours=24)
+    recent = AppRequest.query.filter(
+        AppRequest.status.in_([RequestStatus.COMPLETED.value, RequestStatus.FAILED.value]),
+        AppRequest.build_completed_at >= yesterday
+    ).order_by(AppRequest.build_completed_at.desc()).limit(20).all()
+
+    # Stats for today
+    today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    completed_today = AppRequest.query.filter(
+        AppRequest.status == RequestStatus.COMPLETED.value,
+        AppRequest.build_completed_at >= today_start
+    ).count()
+    failed_today = AppRequest.query.filter(
+        AppRequest.status == RequestStatus.FAILED.value,
+        AppRequest.build_completed_at >= today_start
+    ).count()
+
+    def req_to_dict(r):
+        return {
+            "id": r.id,
+            "title": r.title,
+            "status": r.status,
+            "requester": r.requester.username if r.requester else "unknown",
+            "category": r.category,
+            "created_at": r.created_at.isoformat() if r.created_at else None,
+            "build_started_at": r.build_started_at.isoformat() if r.build_started_at else None,
+            "build_completed_at": r.build_completed_at.isoformat() if r.build_completed_at else None,
+            "build_log": bool(r.build_log),  # Just indicate if log exists
+        }
+
+    return jsonify({
+        "building": [req_to_dict(r) for r in building],
+        "queue": [req_to_dict(r) for r in queue],
+        "recent": [req_to_dict(r) for r in recent],
+        "completed_today": completed_today,
+        "failed_today": failed_today,
+    })
+
+
+@admin_bp.route("/bots/build-next", methods=["POST"])
+@promoted_required
+def trigger_build_next():
+    """Trigger building the next approved request."""
+    # Check if a build is already in progress
+    building = AppRequest.query.filter(
+        AppRequest.status == RequestStatus.BUILDING.value
+    ).first()
+    if building:
+        return jsonify({"error": "A build is already in progress"}), 400
+
+    # Get next approved request
+    next_request = AppRequest.query.filter(
+        AppRequest.status == RequestStatus.APPROVED.value
+    ).order_by(AppRequest.created_at.asc()).first()
+
+    if not next_request:
+        return jsonify({"error": "No approved requests in queue"}), 404
+
+    return _start_build(next_request.id)
+
+
+@admin_bp.route("/bots/build/<int:request_id>", methods=["POST"])
+@promoted_required
+def trigger_build(request_id):
+    """Trigger building a specific request."""
+    # Check if a build is already in progress
+    building = AppRequest.query.filter(
+        AppRequest.status == RequestStatus.BUILDING.value
+    ).first()
+    if building and building.id != request_id:
+        return jsonify({"error": "A different build is already in progress"}), 400
+
+    app_request = AppRequest.query.get(request_id)
+    if not app_request:
+        return jsonify({"error": "Request not found"}), 404
+
+    # Allow building approved requests or retrying failed ones
+    if app_request.status not in [RequestStatus.APPROVED.value, RequestStatus.FAILED.value]:
+        return jsonify({"error": "Request must be approved or failed to retry"}), 400
+
+    # Reset status for retry
+    if app_request.status == RequestStatus.FAILED.value:
+        app_request.status = RequestStatus.APPROVED.value
+        db.session.commit()
+
+    return _start_build(request_id)
+
+
+def _start_build(request_id):
+    """Start a build process for a request."""
+    import subprocess
+    import os
+
+    app_request = AppRequest.query.get(request_id)
+    if not app_request:
+        return jsonify({"error": "Request not found"}), 404
+
+    # Get the path to build_app.py
+    build_script = os.path.join(os.path.dirname(os.path.dirname(__file__)), "build_app.py")
+
+    if not os.path.exists(build_script):
+        return jsonify({"error": "Build script not found"}), 500
+
+    try:
+        # Run build_app.py in background
+        process = subprocess.Popen(
+            ["python3", build_script, str(request_id)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            cwd=os.path.dirname(build_script),
+        )
+
+        # Track the process
+        _active_builds[request_id] = process
+
+        return jsonify({
+            "message": f"Build started for request #{request_id}: {app_request.title}",
+            "request_id": request_id,
+            "pid": process.pid,
+        })
+    except Exception as e:
+        return jsonify({"error": f"Failed to start build: {str(e)}"}), 500
+
+
+@admin_bp.route("/bots/cancel/<int:request_id>", methods=["POST"])
+@promoted_required
+def cancel_build(request_id):
+    """Cancel an active build."""
+    import signal
+
+    app_request = AppRequest.query.get(request_id)
+    if not app_request:
+        return jsonify({"error": "Request not found"}), 404
+
+    if app_request.status != RequestStatus.BUILDING.value:
+        return jsonify({"error": "Request is not currently building"}), 400
+
+    # Try to kill the process if we have it tracked
+    if request_id in _active_builds:
+        try:
+            process = _active_builds[request_id]
+            process.terminate()
+            process.wait(timeout=5)
+        except:
+            try:
+                process.kill()
+            except:
+                pass
+        del _active_builds[request_id]
+
+    # Update status
+    app_request.status = RequestStatus.FAILED.value
+    app_request.build_completed_at = datetime.utcnow()
+    app_request.build_log = (app_request.build_log or "") + "\n[Build cancelled by admin]"
+    db.session.commit()
+
+    return jsonify({
+        "message": "Build cancelled",
+        "request": app_request.to_dict(),
+    })
+
+
+@admin_bp.route("/bots/log/<int:request_id>", methods=["GET"])
+@promoted_required
+def get_build_log(request_id):
+    """Get the build log for a request."""
+    app_request = AppRequest.query.get(request_id)
+    if not app_request:
+        return jsonify({"error": "Request not found"}), 404
+
+    return jsonify({
+        "log": app_request.build_log or "No build log available",
+        "status": app_request.status,
+        "title": app_request.title,
+    })

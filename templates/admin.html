@@ -93,6 +93,17 @@
           Reports
           <span class="admin-nav-badge">5</span>
         </a>
+        <a href="#bots" class="admin-nav-item" data-section="bots">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="10" rx="2"/>
+            <circle cx="12" cy="5" r="4"/>
+            <circle cx="9" cy="16" r="1"/>
+            <circle cx="15" cy="16" r="1"/>
+            <path d="M9 19h6"/>
+          </svg>
+          Active Bots
+          <span class="admin-nav-badge bot-badge">0</span>
+        </a>
         <a href="#apps" class="admin-nav-item" data-section="apps">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="7" height="7"/>
@@ -111,56 +122,37 @@
       <section id="section-overview">
         <div class="admin-header">
           <h1 class="admin-title">Dashboard Overview</h1>
-          <p class="admin-subtitle">Welcome back, Admin. Here's what's happening today.</p>
+          <p class="admin-subtitle" id="overview-greeting">Loading...</p>
         </div>
 
         <div class="admin-stats">
           <div class="admin-stat-card">
             <div class="admin-stat-label">Total Apps</div>
-            <div class="admin-stat-value">972</div>
-            <div class="admin-stat-change positive">+12 this week</div>
+            <div class="admin-stat-value" id="stat-total-apps">-</div>
+            <div class="admin-stat-change" id="stat-apps-detail">Loading...</div>
           </div>
           <div class="admin-stat-card">
-            <div class="admin-stat-label">Active Users</div>
-            <div class="admin-stat-value">8,456</div>
-            <div class="admin-stat-change positive">+5.2% vs last week</div>
+            <div class="admin-stat-label">Users</div>
+            <div class="admin-stat-value" id="stat-total-users">-</div>
+            <div class="admin-stat-change" id="stat-users-detail">Loading...</div>
           </div>
           <div class="admin-stat-card">
             <div class="admin-stat-label">Pending Requests</div>
-            <div class="admin-stat-value">12</div>
-            <div class="admin-stat-change negative">+4 today</div>
+            <div class="admin-stat-value" id="stat-pending-requests">-</div>
+            <div class="admin-stat-change" id="stat-requests-detail">Loading...</div>
           </div>
           <div class="admin-stat-card">
             <div class="admin-stat-label">Wild West Apps</div>
-            <div class="admin-stat-value">24</div>
-            <div class="admin-stat-change positive">3 ready for promotion</div>
+            <div class="admin-stat-value" id="stat-wild-west">-</div>
+            <div class="admin-stat-change" id="stat-wildwest-detail">Loading...</div>
           </div>
         </div>
 
         <div class="grid grid-2 mt-xl">
           <div class="card" style="padding:var(--space-lg);">
             <h3 style="margin-bottom:var(--space-lg);">Recent Activity</h3>
-            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
-              <div style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-sm) 0;">
-                <span style="color:var(--success);">&#10003;</span>
-                <span class="text-secondary">CodeSnippets promoted to stable</span>
-                <span class="text-muted text-sm" style="margin-left:auto;">2h ago</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-sm) 0;">
-                <span style="color:var(--info);">&#9733;</span>
-                <span class="text-secondary">New request: Local AI Chat Interface</span>
-                <span class="text-muted text-sm" style="margin-left:auto;">4h ago</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-sm) 0;">
-                <span style="color:var(--warning);">&#9888;</span>
-                <span class="text-secondary">Report filed for PassVault</span>
-                <span class="text-muted text-sm" style="margin-left:auto;">6h ago</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-sm) 0;">
-                <span style="color:var(--accent);">&#128100;</span>
-                <span class="text-secondary">@linuxfan42 promoted to Limited</span>
-                <span class="text-muted text-sm" style="margin-left:auto;">1d ago</span>
-              </div>
+            <div id="recent-activity" style="display:flex;flex-direction:column;gap:var(--space-md);">
+              <p class="text-muted text-center">Loading...</p>
             </div>
           </div>
 
@@ -172,21 +164,23 @@
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                   <polyline points="14 2 14 8 20 8"/>
                 </svg>
-                Review Pending Requests (12)
+                <span id="action-requests-text">Review Pending Requests</span>
               </button>
               <button class="btn btn-secondary" style="justify-content:flex-start;" data-section-link="wildwest">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="10"/>
                   <polyline points="12 6 12 12 16 14"/>
                 </svg>
-                Review Wild West Apps (24)
+                <span id="action-wildwest-text">Review Wild West Apps</span>
               </button>
-              <button class="btn btn-secondary" style="justify-content:flex-start;" data-section-link="reports">
+              <button class="btn btn-secondary" style="justify-content:flex-start;" data-section-link="bots">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
-                  <line x1="4" y1="22" x2="4" y2="15"/>
+                  <rect x="3" y="11" width="18" height="10" rx="2"/>
+                  <circle cx="12" cy="5" r="4"/>
+                  <circle cx="9" cy="16" r="1"/>
+                  <circle cx="15" cy="16" r="1"/>
                 </svg>
-                Handle Reports (5)
+                <span id="action-bots-text">Active Bots</span>
               </button>
             </div>
           </div>
@@ -396,72 +390,124 @@
       <!-- Reports Section -->
       <section id="section-reports" style="display:none;">
         <div class="admin-header">
-          <h1 class="admin-title">Reports</h1>
-          <p class="admin-subtitle">Review and handle user-submitted reports.</p>
+          <h1 class="admin-title">Feedback & Reports</h1>
+          <div style="display:flex;gap:var(--space-md);align-items:center;">
+            <p class="admin-subtitle">User-submitted bugs, suggestions, and feedback.</p>
+            <a href="/admin/feedback" class="btn btn-primary">Full Review Page</a>
+          </div>
         </div>
 
-        <table class="admin-table">
+        <div id="reports-loading" class="text-center" style="padding:var(--space-2xl);">
+          <p class="text-secondary">Loading feedback...</p>
+        </div>
+
+        <div id="reports-empty" style="display:none;padding:var(--space-2xl);text-align:center;">
+          <p class="text-secondary">No feedback reports yet.</p>
+        </div>
+
+        <table class="admin-table" id="reports-table" style="display:none;">
           <thead>
             <tr>
               <th>Type</th>
-              <th>Target</th>
-              <th>Reporter</th>
-              <th>Reason</th>
+              <th>App</th>
+              <th>Title</th>
+              <th>Submitted By</th>
               <th>Date</th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td><span class="request-status status-testing">Security</span></td>
-              <td>
-                <strong>PassVault</strong>
-                <p class="text-muted text-sm">Wild West App</p>
-              </td>
-              <td>@security_expert</td>
-              <td>Stores passwords in plaintext</td>
-              <td>6h ago</td>
-              <td>
-                <div class="admin-actions">
-                  <button class="btn btn-sm btn-primary">Take Action</button>
-                  <button class="btn btn-sm btn-ghost">Dismiss</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="request-status status-pending">Bug</span></td>
-              <td>
-                <strong>BeatMaker Lite</strong>
-                <p class="text-muted text-sm">Wild West App</p>
-              </td>
-              <td>@audio_pro</td>
-              <td>App crashes when loading samples</td>
-              <td>1d ago</td>
-              <td>
-                <div class="admin-actions">
-                  <button class="btn btn-sm btn-primary">Take Action</button>
-                  <button class="btn btn-sm btn-ghost">Dismiss</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="request-status status-approved">Content</span></td>
-              <td>
-                <strong>Review by @troll123</strong>
-                <p class="text-muted text-sm">On: Visual Studio Code</p>
-              </td>
-              <td>@linuxfan42</td>
-              <td>Spam/inappropriate content</td>
-              <td>2d ago</td>
-              <td>
-                <div class="admin-actions">
-                  <button class="btn btn-sm btn-primary">Take Action</button>
-                  <button class="btn btn-sm btn-ghost">Dismiss</button>
-                </div>
-              </td>
-            </tr>
+          <tbody id="reports-tbody">
           </tbody>
         </table>
+      </section>
+
+      <!-- Bots Section -->
+      <section id="section-bots" style="display:none;">
+        <div class="admin-header">
+          <h1 class="admin-title">Active Bots</h1>
+          <p class="admin-subtitle">Monitor and control AI app builders.</p>
+        </div>
+
+        <!-- Status Cards -->
+        <div class="admin-stats" style="margin-bottom:var(--space-xl);">
+          <div class="admin-stat-card">
+            <div class="admin-stat-label">Currently Building</div>
+            <div class="admin-stat-value" id="bots-building-count">0</div>
+            <div class="admin-stat-change" id="bots-building-status">All idle</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-label">In Queue</div>
+            <div class="admin-stat-value" id="bots-queue-count">0</div>
+            <div class="admin-stat-change">Approved, waiting to build</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-label">Completed Today</div>
+            <div class="admin-stat-value" id="bots-completed-count">0</div>
+            <div class="admin-stat-change positive">Successful builds</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-label">Failed Today</div>
+            <div class="admin-stat-value" id="bots-failed-count">0</div>
+            <div class="admin-stat-change negative">Needs attention</div>
+          </div>
+        </div>
+
+        <!-- Currently Building -->
+        <div class="card" style="padding:var(--space-lg);margin-bottom:var(--space-lg);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md);">
+            <h3>Currently Building</h3>
+            <button class="btn btn-secondary btn-sm" onclick="loadBotStatus()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+          <div id="bots-building-list">
+            <p class="text-muted text-center" style="padding:var(--space-lg);">No active builds</p>
+          </div>
+        </div>
+
+        <!-- Build Queue -->
+        <div class="card" style="padding:var(--space-lg);margin-bottom:var(--space-lg);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md);">
+            <h3>Build Queue</h3>
+            <button class="btn btn-primary btn-sm" onclick="triggerNextBuild()" id="trigger-build-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              Build Next
+            </button>
+          </div>
+          <div id="bots-queue-list">
+            <p class="text-muted text-center" style="padding:var(--space-lg);">No requests in queue</p>
+          </div>
+        </div>
+
+        <!-- Recent Builds -->
+        <div class="card" style="padding:var(--space-lg);">
+          <h3 style="margin-bottom:var(--space-md);">Recent Builds</h3>
+          <div id="bots-recent-list">
+            <p class="text-muted text-center" style="padding:var(--space-lg);">No recent builds</p>
+          </div>
+        </div>
+
+        <!-- Build Log Modal -->
+        <div id="build-log-modal" class="modal-overlay">
+          <div class="modal" style="max-width:800px;max-height:80vh;">
+            <div class="modal-header">
+              <h3 class="modal-title" id="build-log-title">Build Log</h3>
+              <button class="modal-close" onclick="closeBuildLogModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height:60vh;overflow:auto;">
+              <pre id="build-log-content" style="background:var(--bg-tertiary);padding:var(--space-md);border-radius:var(--radius-md);font-size:0.8rem;white-space:pre-wrap;word-break:break-all;margin:0;"></pre>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-ghost" onclick="closeBuildLogModal()">Close</button>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- Apps Section -->
@@ -592,6 +638,8 @@
         // Load data for section
         if (section === 'requests') loadPendingRequests();
         if (section === 'users') loadUsers();
+        if (section === 'bots') loadBotStatus();
+        if (section === 'reports') loadReports();
       });
     });
 
@@ -875,6 +923,77 @@
       }
     }
 
+    // ==================
+    // Reports/Feedback
+    // ==================
+
+    async function loadReports() {
+      const loading = document.getElementById('reports-loading');
+      const empty = document.getElementById('reports-empty');
+      const table = document.getElementById('reports-table');
+      const tbody = document.getElementById('reports-tbody');
+
+      loading.style.display = 'block';
+      empty.style.display = 'none';
+      table.style.display = 'none';
+
+      try {
+        const data = await API.get('/admin/feedback', { per_page: 20 });
+        const feedback = data.feedback || [];
+
+        // Update sidebar badge
+        const reportsBadge = document.querySelector('[data-section="reports"] .admin-nav-badge');
+        if (reportsBadge) {
+          reportsBadge.textContent = data.total || feedback.length;
+          reportsBadge.style.display = (data.total || feedback.length) > 0 ? '' : 'none';
+        }
+
+        if (feedback.length === 0) {
+          loading.style.display = 'none';
+          empty.style.display = 'block';
+          return;
+        }
+
+        const typeStyles = {
+          'bug': 'background:rgba(239, 68, 68, 0.15);color:#ef4444;',
+          'suggestion': 'background:rgba(59, 130, 246, 0.15);color:#3b82f6;',
+          'rebuild_request': 'background:rgba(139, 92, 246, 0.15);color:var(--accent);',
+        };
+
+        tbody.innerHTML = feedback.map(fb => `
+          <tr>
+            <td>
+              <span class="request-status" style="${typeStyles[fb.type] || ''}">
+                ${fb.type === 'rebuild_request' ? 'Rebuild' : fb.type.charAt(0).toUpperCase() + fb.type.slice(1)}
+              </span>
+            </td>
+            <td>
+              ${fb.app_name ? `<a href="/app/${fb.app_slug}" style="color:var(--accent);">${escapeHtml(fb.app_name)}</a>` : '<span class="text-muted">N/A</span>'}
+            </td>
+            <td>
+              <strong>${escapeHtml(fb.title || 'No title')}</strong>
+              <p class="text-muted text-sm" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                ${escapeHtml((fb.content || '').substring(0, 80))}
+              </p>
+            </td>
+            <td>@${escapeHtml(fb.user?.username || 'anonymous')}</td>
+            <td>${formatDate(fb.created_at)}</td>
+            <td>
+              <div class="admin-actions">
+                <a href="/admin/feedback" class="btn btn-sm btn-primary">Review</a>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+
+        loading.style.display = 'none';
+        table.style.display = 'table';
+      } catch (error) {
+        console.error('Failed to load reports:', error);
+        loading.innerHTML = '<p class="text-error">Failed to load feedback. ' + (error.message || '') + '</p>';
+      }
+    }
+
     // Allow search on Enter key
     document.getElementById('users-search')?.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') loadUsers();
@@ -902,6 +1021,327 @@
       return date.toLocaleDateString();
     }
 
+    // ==================
+    // Bot Management
+    // ==================
+
+    let botStatusInterval = null;
+
+    async function loadBotStatus() {
+      try {
+        const data = await API.get('/admin/bots/status');
+
+        // Update stats
+        document.getElementById('bots-building-count').textContent = data.building?.length || 0;
+        document.getElementById('bots-queue-count').textContent = data.queue?.length || 0;
+        document.getElementById('bots-completed-count').textContent = data.completed_today || 0;
+        document.getElementById('bots-failed-count').textContent = data.failed_today || 0;
+
+        // Update badge
+        const badge = document.querySelector('.bot-badge');
+        const activeCount = (data.building?.length || 0) + (data.queue?.length || 0);
+        if (badge) {
+          badge.textContent = activeCount;
+          badge.style.display = activeCount > 0 ? '' : 'none';
+        }
+
+        // Building status
+        const buildingStatus = document.getElementById('bots-building-status');
+        if (data.building?.length > 0) {
+          buildingStatus.textContent = 'Active';
+          buildingStatus.className = 'admin-stat-change positive';
+        } else {
+          buildingStatus.textContent = 'All idle';
+          buildingStatus.className = 'admin-stat-change';
+        }
+
+        // Render building list
+        const buildingList = document.getElementById('bots-building-list');
+        if (data.building && data.building.length > 0) {
+          buildingList.innerHTML = data.building.map(req => `
+            <div class="bot-item" style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-md);background:var(--bg-secondary);border-radius:var(--radius-md);margin-bottom:var(--space-sm);">
+              <div class="bot-spinner" style="width:24px;height:24px;border:2px solid var(--accent);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;"></div>
+              <div style="flex:1;">
+                <strong>${escapeHtml(req.title)}</strong>
+                <p class="text-muted text-sm">Started ${formatDate(req.build_started_at)} by @${escapeHtml(req.requester || 'unknown')}</p>
+              </div>
+              <button class="btn btn-sm btn-ghost text-error" onclick="cancelBuild(${req.id})">Cancel</button>
+            </div>
+          `).join('');
+        } else {
+          buildingList.innerHTML = '<p class="text-muted text-center" style="padding:var(--space-lg);">No active builds</p>';
+        }
+
+        // Render queue list
+        const queueList = document.getElementById('bots-queue-list');
+        if (data.queue && data.queue.length > 0) {
+          queueList.innerHTML = data.queue.map((req, index) => `
+            <div class="bot-item" style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-md);background:var(--bg-secondary);border-radius:var(--radius-md);margin-bottom:var(--space-sm);">
+              <div style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:var(--accent);border-radius:50%;font-size:0.75rem;font-weight:bold;">${index + 1}</div>
+              <div style="flex:1;">
+                <strong>${escapeHtml(req.title)}</strong>
+                <p class="text-muted text-sm">Approved ${formatDate(req.created_at)} by @${escapeHtml(req.requester || 'unknown')}</p>
+              </div>
+              <button class="btn btn-sm btn-primary" onclick="triggerBuild(${req.id})">Build Now</button>
+              <button class="btn btn-sm btn-ghost" onclick="viewRequestPrompt(${req.id}, '${escapeHtml(req.title)}')">View</button>
+            </div>
+          `).join('');
+        } else {
+          queueList.innerHTML = '<p class="text-muted text-center" style="padding:var(--space-lg);">No requests in queue</p>';
+        }
+
+        // Update trigger button state
+        const triggerBtn = document.getElementById('trigger-build-btn');
+        if (data.building?.length > 0) {
+          triggerBtn.disabled = true;
+          triggerBtn.textContent = 'Build in Progress';
+        } else if (data.queue?.length === 0) {
+          triggerBtn.disabled = true;
+          triggerBtn.textContent = 'Queue Empty';
+        } else {
+          triggerBtn.disabled = false;
+          triggerBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Build Next`;
+        }
+
+        // Render recent builds
+        const recentList = document.getElementById('bots-recent-list');
+        if (data.recent && data.recent.length > 0) {
+          recentList.innerHTML = data.recent.map(req => {
+            const isSuccess = req.status === 'completed';
+            const isFailed = req.status === 'failed';
+            const statusIcon = isSuccess ? '&#10003;' : (isFailed ? '&#10007;' : '&#8987;');
+            const statusColor = isSuccess ? 'var(--success)' : (isFailed ? 'var(--error)' : 'var(--text-muted)');
+            const statusText = isSuccess ? 'Completed' : (isFailed ? 'Failed' : req.status);
+
+            return `
+              <div class="bot-item" style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-md);background:var(--bg-secondary);border-radius:var(--radius-md);margin-bottom:var(--space-sm);">
+                <div style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:${statusColor};font-size:1rem;">${statusIcon}</div>
+                <div style="flex:1;">
+                  <strong>${escapeHtml(req.title)}</strong>
+                  <p class="text-muted text-sm">${statusText} ${formatDate(req.build_completed_at || req.build_started_at)}</p>
+                </div>
+                ${req.build_log ? `<button class="btn btn-sm btn-ghost" onclick="viewBuildLog(${req.id}, '${escapeHtml(req.title)}')">View Log</button>` : ''}
+                ${isFailed ? `<button class="btn btn-sm btn-secondary" onclick="retryBuild(${req.id})">Retry</button>` : ''}
+              </div>
+            `;
+          }).join('');
+        } else {
+          recentList.innerHTML = '<p class="text-muted text-center" style="padding:var(--space-lg);">No recent builds</p>';
+        }
+
+        // Start auto-refresh if builds are active
+        if (data.building?.length > 0 && !botStatusInterval) {
+          botStatusInterval = setInterval(loadBotStatus, 5000);
+        } else if (data.building?.length === 0 && botStatusInterval) {
+          clearInterval(botStatusInterval);
+          botStatusInterval = null;
+        }
+
+      } catch (error) {
+        console.error('Failed to load bot status:', error);
+      }
+    }
+
+    async function triggerNextBuild() {
+      if (!confirm('Start building the next request in queue?')) return;
+      await triggerBuild(null);
+    }
+
+    async function triggerBuild(requestId) {
+      try {
+        const endpoint = requestId ? `/admin/bots/build/${requestId}` : '/admin/bots/build-next';
+        const data = await API.post(endpoint);
+
+        alert(data.message || 'Build triggered successfully!');
+        loadBotStatus();
+      } catch (error) {
+        alert('Failed to trigger build: ' + (error.message || 'Unknown error'));
+      }
+    }
+
+    async function cancelBuild(requestId) {
+      if (!confirm('Are you sure you want to cancel this build? The process may leave incomplete files.')) return;
+
+      try {
+        await API.post(`/admin/bots/cancel/${requestId}`);
+        alert('Build cancelled');
+        loadBotStatus();
+      } catch (error) {
+        alert('Failed to cancel: ' + (error.message || 'Unknown error'));
+      }
+    }
+
+    async function retryBuild(requestId) {
+      if (!confirm('Retry this failed build?')) return;
+      await triggerBuild(requestId);
+    }
+
+    async function viewBuildLog(requestId, title) {
+      try {
+        const data = await API.get(`/admin/bots/log/${requestId}`);
+        document.getElementById('build-log-title').textContent = `Build Log: ${title}`;
+        document.getElementById('build-log-content').textContent = data.log || 'No log available';
+        document.getElementById('build-log-modal').classList.add('active');
+      } catch (error) {
+        alert('Failed to load build log: ' + (error.message || 'Unknown error'));
+      }
+    }
+
+    function closeBuildLogModal() {
+      document.getElementById('build-log-modal').classList.remove('active');
+    }
+
+    async function viewRequestPrompt(requestId, title) {
+      try {
+        const data = await API.get(`/requests/${requestId}`);
+        alert(`Request: ${title}\n\nPrompt:\n${data.request?.prompt || 'No prompt available'}`);
+      } catch (error) {
+        alert('Failed to load request details');
+      }
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('build-log-modal')?.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-overlay')) closeBuildLogModal();
+    });
+
+    // Add spinner animation
+    const style = document.createElement('style');
+    style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+    document.head.appendChild(style);
+
+    // ==================
+    // Dashboard Overview
+    // ==================
+
+    async function loadDashboardStats(username) {
+      // Update greeting
+      document.getElementById('overview-greeting').textContent =
+        `Welcome back, ${username}. Here's what's happening.`;
+
+      try {
+        // Load stats
+        const statsData = await API.get('/admin/stats');
+        const stats = statsData.stats || {};
+
+        // Update stat cards
+        const apps = stats.apps || {};
+        document.getElementById('stat-total-apps').textContent = apps.total || 0;
+        const stableCount = apps.stable || 0;
+        const aiCount = apps.ai_generated || 0;
+        document.getElementById('stat-apps-detail').textContent = `${stableCount} stable, ${aiCount} AI-generated`;
+
+        const users = stats.users || {};
+        document.getElementById('stat-total-users').textContent = users.total || 0;
+        document.getElementById('stat-users-detail').textContent =
+          `${users.promoted || 0} promoted, ${users.admin || 0} admin`;
+
+        const requests = stats.requests || {};
+        const pendingReqs = requests.pending || 0;
+        document.getElementById('stat-pending-requests').textContent = pendingReqs;
+        const approvedReqs = requests.approved || 0;
+        const buildingReqs = requests.building || 0;
+        document.getElementById('stat-requests-detail').textContent =
+          `${approvedReqs} approved, ${buildingReqs} building`;
+
+        const wildWest = apps.wild_west || 0;
+        document.getElementById('stat-wild-west').textContent = wildWest;
+        document.getElementById('stat-wildwest-detail').textContent = 'In testing';
+
+        // Update action buttons with counts
+        document.getElementById('action-requests-text').textContent =
+          `Review Pending Requests (${pendingReqs})`;
+        document.getElementById('action-wildwest-text').textContent =
+          `Review Wild West Apps (${wildWest})`;
+        document.getElementById('action-bots-text').textContent =
+          `Active Bots (${approvedReqs + buildingReqs})`;
+
+        // Update sidebar badges
+        const reqBadge = document.querySelector('[data-section="requests"] .admin-nav-badge');
+        if (reqBadge) {
+          reqBadge.textContent = pendingReqs;
+          reqBadge.style.display = pendingReqs > 0 ? '' : 'none';
+        }
+        const wwBadge = document.querySelector('[data-section="wildwest"] .admin-nav-badge');
+        if (wwBadge) {
+          wwBadge.textContent = wildWest;
+          wwBadge.style.display = wildWest > 0 ? '' : 'none';
+        }
+
+      } catch (error) {
+        console.error('Failed to load stats:', error);
+        document.getElementById('stat-apps-detail').textContent = 'Failed to load';
+      }
+
+      // Load recent activity
+      loadRecentActivity();
+    }
+
+    async function loadRecentActivity() {
+      const container = document.getElementById('recent-activity');
+
+      try {
+        // Get recent requests and apps
+        const [requestsData, appsData] = await Promise.all([
+          API.get('/requests', { per_page: 5 }),
+          API.get('/apps/browse', { per_page: 5, sort: 'newest' })
+        ]);
+
+        const activities = [];
+
+        // Add recent requests
+        (requestsData.requests || []).forEach(req => {
+          activities.push({
+            type: req.status === 'completed' ? 'success' :
+                  req.status === 'approved' ? 'info' :
+                  req.status === 'failed' ? 'error' : 'warning',
+            icon: req.status === 'completed' ? '&#10003;' :
+                  req.status === 'approved' ? '&#9733;' :
+                  req.status === 'failed' ? '&#10007;' : '&#9998;',
+            text: `Request: ${req.title} (${req.status})`,
+            date: new Date(req.created_at)
+          });
+        });
+
+        // Add recent apps
+        (appsData.apps || []).forEach(app => {
+          activities.push({
+            type: app.status === 'stable' ? 'success' : 'accent',
+            icon: app.ai_generated ? '&#129302;' : '&#128230;',
+            text: `App: ${app.name} (${app.status})`,
+            date: new Date(app.created_at)
+          });
+        });
+
+        // Sort by date and take top 6
+        activities.sort((a, b) => b.date - a.date);
+        const recent = activities.slice(0, 6);
+
+        if (recent.length === 0) {
+          container.innerHTML = '<p class="text-muted text-center">No recent activity</p>';
+          return;
+        }
+
+        container.innerHTML = recent.map(act => {
+          const colorVar = act.type === 'success' ? 'var(--success)' :
+                          act.type === 'error' ? 'var(--error)' :
+                          act.type === 'info' ? 'var(--info)' :
+                          act.type === 'warning' ? 'var(--warning)' : 'var(--accent)';
+          return `
+            <div style="display:flex;align-items:center;gap:var(--space-md);padding:var(--space-sm) 0;">
+              <span style="color:${colorVar};">${act.icon}</span>
+              <span class="text-secondary">${escapeHtml(act.text)}</span>
+              <span class="text-muted text-sm" style="margin-left:auto;">${formatDate(act.date.toISOString())}</span>
+            </div>
+          `;
+        }).join('');
+
+      } catch (error) {
+        console.error('Failed to load activity:', error);
+        container.innerHTML = '<p class="text-muted text-center">Failed to load activity</p>';
+      }
+    }
+
     // Check auth and load initial data
     async function initAdmin() {
       try {
@@ -923,7 +1363,29 @@
           document.getElementById('section-users')?.remove();
         }
 
+        // Check for section preference from profile links
+        const savedSection = localStorage.getItem('adminSection');
+        if (savedSection) {
+          localStorage.removeItem('adminSection');
+          const sectionLink = document.querySelector(`[data-section="${savedSection}"]`);
+          if (sectionLink) {
+            sectionLink.click();
+            return;
+          }
+        }
+
+        // Check URL hash for section
+        if (window.location.hash) {
+          const section = window.location.hash.substring(1);
+          const sectionLink = document.querySelector(`[data-section="${section}"]`);
+          if (sectionLink) {
+            sectionLink.click();
+            return;
+          }
+        }
+
         // Load initial data for the visible section (overview)
+        loadDashboardStats(data.user.username);
         loadPendingRequests();
       } catch (error) {
         window.location.href = '/login';
