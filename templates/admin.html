@@ -200,7 +200,15 @@
           <p class="admin-subtitle">Review and approve app requests from users.</p>
         </div>
 
-        <table class="admin-table">
+        <div id="requests-loading" class="text-center" style="padding:var(--space-2xl);">
+          <p class="text-secondary">Loading requests...</p>
+        </div>
+
+        <div id="requests-empty" style="display:none;padding:var(--space-2xl);text-align:center;">
+          <p class="text-secondary">No pending requests to review.</p>
+        </div>
+
+        <table class="admin-table" id="requests-table" style="display:none;">
           <thead>
             <tr>
               <th>Title</th>
@@ -211,74 +219,31 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>
-                <strong>Local-first AI Chat Interface</strong>
-                <p class="text-muted text-sm">GTK4 app for chatting with local LLMs</p>
-              </td>
-              <td>@opensource_dev</td>
-              <td><span class="app-card-category">Development</span></td>
-              <td>156</td>
-              <td>2 days ago</td>
-              <td>
-                <div class="admin-actions">
-                  <button class="btn btn-sm btn-primary">Approve</button>
-                  <button class="btn btn-sm btn-ghost">Reject</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Simple Time Tracker</strong>
-                <p class="text-muted text-sm">Track time spent on different projects</p>
-              </td>
-              <td>@freelance_linux</td>
-              <td><span class="app-card-category">Productivity</span></td>
-              <td>134</td>
-              <td>3 days ago</td>
-              <td>
-                <div class="admin-actions">
-                  <button class="btn btn-sm btn-primary">Approve</button>
-                  <button class="btn btn-sm btn-ghost">Reject</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strong>2D Pixel Art Editor</strong>
-                <p class="text-muted text-sm">Simple pixel art editor for game sprites</p>
-              </td>
-              <td>@gamedev_guy</td>
-              <td><span class="app-card-category">Graphics</span></td>
-              <td>87</td>
-              <td>5 days ago</td>
-              <td>
-                <div class="admin-actions">
-                  <button class="btn btn-sm btn-primary">Approve</button>
-                  <button class="btn btn-sm btn-ghost">Reject</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Markdown Blog Generator</strong>
-                <p class="text-muted text-sm">CLI tool to generate static blog from markdown</p>
-              </td>
-              <td>@static_site_dev</td>
-              <td><span class="app-card-category">Development</span></td>
-              <td>65</td>
-              <td>1 week ago</td>
-              <td>
-                <div class="admin-actions">
-                  <button class="btn btn-sm btn-primary">Approve</button>
-                  <button class="btn btn-sm btn-ghost">Reject</button>
-                </div>
-              </td>
-            </tr>
+          <tbody id="requests-tbody">
           </tbody>
         </table>
       </section>
+
+      <!-- Reject Modal -->
+      <div id="reject-modal" class="modal-overlay">
+        <div class="modal">
+          <div class="modal-header">
+            <h3 class="modal-title">Reject Request</h3>
+            <button class="modal-close" onclick="closeRejectModal()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p class="text-secondary" style="margin-bottom:var(--space-md);">
+              Please provide a reason for rejecting this request:
+            </p>
+            <textarea id="reject-reason" class="form-input" rows="4"
+              placeholder="Enter rejection reason..." style="width:100%;"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeRejectModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="confirmReject()">Reject Request</button>
+          </div>
+        </div>
+      </div>
 
       <!-- Wild West Section -->
       <section id="section-wildwest" style="display:none;">
@@ -687,6 +652,9 @@
   <script src="/static/js/api.js"></script>
   <script src="/static/js/main.js"></script>
   <script>
+    let pendingRequests = [];
+    let currentRejectId = null;
+
     // Admin section navigation
     document.querySelectorAll('.admin-nav-item').forEach(item => {
       item.addEventListener('click', (e) => {
@@ -700,6 +668,9 @@
         // Show section
         document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
         document.getElementById(`section-${section}`).style.display = 'block';
+
+        // Load data for section
+        if (section === 'requests') loadPendingRequests();
       });
     });
 
@@ -710,6 +681,194 @@
         document.querySelector(`[data-section="${section}"]`).click();
       });
     });
+
+    // Load pending requests
+    async function loadPendingRequests() {
+      const loading = document.getElementById('requests-loading');
+      const empty = document.getElementById('requests-empty');
+      const table = document.getElementById('requests-table');
+      const tbody = document.getElementById('requests-tbody');
+
+      loading.style.display = 'block';
+      empty.style.display = 'none';
+      table.style.display = 'none';
+
+      try {
+        const data = await API.get('/requests', { status: 'pending' });
+        pendingRequests = data.requests || [];
+
+        if (pendingRequests.length === 0) {
+          loading.style.display = 'none';
+          empty.style.display = 'block';
+          updateRequestBadge(0);
+          return;
+        }
+
+        tbody.innerHTML = pendingRequests.map(req => `
+          <tr id="request-row-${req.id}">
+            <td>
+              <strong>${escapeHtml(req.title)}</strong>
+              <p class="text-muted text-sm" style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                ${escapeHtml(req.prompt.substring(0, 100))}${req.prompt.length > 100 ? '...' : ''}
+              </p>
+              <button class="btn btn-sm btn-ghost" onclick="showFullPrompt(${req.id})" style="margin-top:var(--space-xs);">
+                View Full Prompt
+              </button>
+            </td>
+            <td>@${escapeHtml(req.requester)}</td>
+            <td><span class="app-card-category">${escapeHtml(req.category || 'Other')}</span></td>
+            <td>${req.upvotes || 0}</td>
+            <td>${formatDate(req.created_at)}</td>
+            <td>
+              <div class="admin-actions">
+                <button class="btn btn-sm btn-primary" onclick="approveRequest(${req.id})">Approve</button>
+                <button class="btn btn-sm btn-ghost" onclick="openRejectModal(${req.id})">Reject</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+
+        loading.style.display = 'none';
+        table.style.display = 'table';
+        updateRequestBadge(pendingRequests.length);
+      } catch (error) {
+        console.error('Failed to load requests:', error);
+        loading.innerHTML = '<p class="text-error">Failed to load requests. Please try again.</p>';
+      }
+    }
+
+    // Update the badge count in sidebar
+    function updateRequestBadge(count) {
+      const badge = document.querySelector('[data-section="requests"] .admin-nav-badge');
+      if (badge) {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? '' : 'none';
+      }
+    }
+
+    // Show full prompt in modal
+    function showFullPrompt(requestId) {
+      const req = pendingRequests.find(r => r.id === requestId);
+      if (!req) return;
+
+      alert(`Request: ${req.title}\n\nPrompt:\n${req.prompt}`);
+    }
+
+    // Approve request
+    async function approveRequest(requestId) {
+      if (!confirm('Approve this request? It will be queued for building.')) return;
+
+      try {
+        await API.post(`/requests/${requestId}/approve`);
+
+        // Remove from list
+        const row = document.getElementById(`request-row-${requestId}`);
+        if (row) row.remove();
+
+        pendingRequests = pendingRequests.filter(r => r.id !== requestId);
+        updateRequestBadge(pendingRequests.length);
+
+        if (pendingRequests.length === 0) {
+          document.getElementById('requests-table').style.display = 'none';
+          document.getElementById('requests-empty').style.display = 'block';
+        }
+
+        alert('Request approved successfully!');
+      } catch (error) {
+        alert('Failed to approve: ' + (error.message || 'Unknown error'));
+      }
+    }
+
+    // Open reject modal
+    function openRejectModal(requestId) {
+      currentRejectId = requestId;
+      document.getElementById('reject-reason').value = '';
+      document.getElementById('reject-modal').classList.add('active');
+    }
+
+    // Close reject modal
+    function closeRejectModal() {
+      currentRejectId = null;
+      document.getElementById('reject-modal').classList.remove('active');
+    }
+
+    // Confirm rejection
+    async function confirmReject() {
+      const reason = document.getElementById('reject-reason').value.trim();
+      if (!reason) {
+        alert('Please provide a rejection reason.');
+        return;
+      }
+
+      try {
+        await API.post(`/requests/${currentRejectId}/reject`, { reason });
+
+        closeRejectModal();
+
+        // Remove from list
+        const row = document.getElementById(`request-row-${currentRejectId}`);
+        if (row) row.remove();
+
+        pendingRequests = pendingRequests.filter(r => r.id !== currentRejectId);
+        updateRequestBadge(pendingRequests.length);
+
+        if (pendingRequests.length === 0) {
+          document.getElementById('requests-table').style.display = 'none';
+          document.getElementById('requests-empty').style.display = 'block';
+        }
+
+        alert('Request rejected.');
+      } catch (error) {
+        alert('Failed to reject: ' + (error.message || 'Unknown error'));
+      }
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('reject-modal')?.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-overlay')) closeRejectModal();
+    });
+
+    // Helper functions
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatDate(isoDate) {
+      if (!isoDate) return 'Unknown';
+      const date = new Date(isoDate);
+      const now = new Date();
+      const diff = now - date;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      if (days === 0) return 'Today';
+      if (days === 1) return 'Yesterday';
+      if (days < 7) return `${days} days ago`;
+      if (days < 30) return `${Math.floor(days / 7)} week${Math.floor(days / 7) > 1 ? 's' : ''} ago`;
+      return date.toLocaleDateString();
+    }
+
+    // Check auth and load initial data
+    async function initAdmin() {
+      try {
+        const data = await API.auth.getCurrentUser();
+        if (!data.authenticated || !data.user) {
+          window.location.href = '/login';
+          return;
+        }
+        // Check if promoted or admin
+        if (data.user.tier < 2) {
+          document.body.innerHTML = '<div style="padding:var(--space-2xl);text-align:center;"><h1>Access Denied</h1><p>You need Promoted or Admin access to view this page.</p><a href="/" class="btn btn-primary">Go Home</a></div>';
+          return;
+        }
+      } catch (error) {
+        window.location.href = '/login';
+      }
+    }
+
+    initAdmin();
   </script>
 </body>
 </html>
