@@ -345,10 +345,7 @@
           }
 
           try {
-            await API.put('/auth/password', {
-              current_password: currentPassword,
-              new_password: newPassword
-            });
+            await API.auth.changePassword(currentPassword, newPassword);
             showToast('Password updated successfully', 'success');
             passwordForm.reset();
           } catch (error) {
