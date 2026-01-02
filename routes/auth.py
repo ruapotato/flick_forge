@@ -169,8 +169,8 @@ def register():
     if User.query.filter_by(email=email).first():
         return jsonify({"error": "Email already registered"}), 409
 
-    # Create user
-    user = User(username=username, email=email, tier=UserTier.TRUSTED.value)
+    # Create user as anonymous - admin must promote to trusted
+    user = User(username=username, email=email, tier=UserTier.ANONYMOUS.value)
     user.set_password(password)
 
     db.session.add(user)
