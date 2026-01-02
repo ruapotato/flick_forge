@@ -591,34 +591,38 @@ function initLazyLoading() {
 // Authentication State
 // ==================
 
-function checkAuth() {
-  const token = API.getToken();
+async function checkAuth() {
   const authLinks = document.querySelectorAll('[data-auth]');
   const guestLinks = document.querySelectorAll('[data-guest]');
 
-  authLinks.forEach(el => {
-    el.style.display = token ? '' : 'none';
-  });
-
-  guestLinks.forEach(el => {
-    el.style.display = token ? 'none' : '';
-  });
-
-  // Load user info if logged in
-  if (token) {
-    loadCurrentUser();
+  try {
+    // Check session by calling /auth/me
+    const data = await API.auth.getCurrentUser();
+    if (data && data.user) {
+      // User is logged in
+      authLinks.forEach(el => {
+        el.style.display = '';
+      });
+      guestLinks.forEach(el => {
+        el.style.display = 'none';
+      });
+      updateUserUI(data.user);
+    } else {
+      showGuestUI(authLinks, guestLinks);
+    }
+  } catch (error) {
+    // Not logged in or session expired
+    showGuestUI(authLinks, guestLinks);
   }
 }
 
-async function loadCurrentUser() {
-  try {
-    const user = await API.auth.getCurrentUser();
-    updateUserUI(user);
-  } catch (error) {
-    // Token might be invalid
-    API.removeToken();
-    checkAuth();
-  }
+function showGuestUI(authLinks, guestLinks) {
+  authLinks.forEach(el => {
+    el.style.display = 'none';
+  });
+  guestLinks.forEach(el => {
+    el.style.display = '';
+  });
 }
 
 function updateUserUI(user) {

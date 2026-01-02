@@ -32,12 +32,6 @@ const API = {
       },
     };
 
-    // Add auth token if available
-    const token = this.getToken();
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-
     try {
       const response = await fetch(url, config);
 
@@ -100,45 +94,22 @@ const API = {
   },
 
   // ==================
-  // Token Management
-  // ==================
-
-  getToken() {
-    return localStorage.getItem('flick_token');
-  },
-
-  setToken(token) {
-    localStorage.setItem('flick_token', token);
-  },
-
-  removeToken() {
-    localStorage.removeItem('flick_token');
-  },
-
-  // ==================
-  // Auth Endpoints
+  // Auth Endpoints (session-based)
   // ==================
 
   auth: {
     async login(username, password) {
-      const data = await API.post('/auth/login', { username, password });
-      if (data.token) {
-        API.setToken(data.token);
-      }
-      return data;
+      // Session-based auth - cookie is set automatically
+      return API.post('/auth/login', { username, password });
     },
 
     async register(username, email, password) {
-      const data = await API.post('/auth/register', { username, email, password });
-      if (data.token) {
-        API.setToken(data.token);
-      }
-      return data;
+      // Session-based auth - cookie is set automatically
+      return API.post('/auth/register', { username, email, password });
     },
 
     async logout() {
-      await API.post('/auth/logout');
-      API.removeToken();
+      return API.post('/auth/logout');
     },
 
     async getCurrentUser() {
