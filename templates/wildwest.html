@@ -79,21 +79,36 @@
       <section class="section">
         <div class="grid grid-4">
           <div class="card" style="text-align:center;padding:var(--space-lg);">
-            <div style="font-size:var(--text-3xl);font-weight:700;color:var(--warning);">24</div>
+            <div style="font-size:var(--text-3xl);font-weight:700;color:var(--warning);" id="stat-testing">-</div>
             <div class="text-muted">Apps in Testing</div>
           </div>
           <div class="card" style="text-align:center;padding:var(--space-lg);">
-            <div style="font-size:var(--text-3xl);font-weight:700;color:var(--success);">8</div>
-            <div class="text-muted">Promoted This Week</div>
+            <div style="font-size:var(--text-3xl);font-weight:700;color:var(--success);" id="stat-stable">-</div>
+            <div class="text-muted">Stable Apps</div>
           </div>
           <div class="card" style="text-align:center;padding:var(--space-lg);">
-            <div style="font-size:var(--text-3xl);font-weight:700;color:var(--accent);">156</div>
-            <div class="text-muted">Testers Active</div>
+            <div style="font-size:var(--text-3xl);font-weight:700;color:var(--accent);" id="stat-pending">-</div>
+            <div class="text-muted">Requests Pending</div>
           </div>
           <div class="card" style="text-align:center;padding:var(--space-lg);">
-            <div style="font-size:var(--text-3xl);font-weight:700;color:var(--info);">342</div>
-            <div class="text-muted">Feedback Submitted</div>
+            <div style="font-size:var(--text-3xl);font-weight:700;color:var(--info);" id="stat-building">-</div>
+            <div class="text-muted">Currently Building</div>
           </div>
+        </div>
+      </section>
+
+      <!-- Recent Builds Section -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Recent Builds</h2>
+          <a href="/builds" class="btn btn-secondary">View All Builds</a>
+        </div>
+
+        <div id="recent-builds-loading" class="text-center" style="padding:var(--space-xl);">
+          <div class="loading-spinner"></div>
+        </div>
+
+        <div id="recent-builds" style="display:none;">
         </div>
       </section>
 
@@ -103,207 +118,21 @@
           <h2 class="section-title">Apps Awaiting Testing</h2>
           <select class="sort-select" id="sort-select" aria-label="Sort by">
             <option value="newest">Newest First</option>
-            <option value="votes">Most Votes</option>
-            <option value="feedback">Most Feedback</option>
+            <option value="downloads">Most Downloads</option>
           </select>
         </div>
 
-        <div class="grid grid-apps" id="wildwest-apps">
-          <!-- Wild West App Card 1 -->
-          <div class="card app-card wild-west-card">
-            <span class="wild-west-badge">&#9888; Testing</span>
-            <div class="app-card-image">
-              <div class="app-card-icon">&#128218;</div>
-            </div>
-            <div class="app-card-content">
-              <h3 class="app-card-title">QuickNotes AI</h3>
-              <p class="app-card-desc">AI-powered note-taking app with smart organization and search.</p>
-              <div class="app-card-meta">
-                <span class="text-muted">Added 2 days ago</span>
-              </div>
-              <div class="vote-buttons">
-                <button class="vote-btn upvote" data-vote="up" data-app-id="ww1">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
-                  </svg>
-                  <span class="vote-count">24</span>
-                </button>
-                <button class="vote-btn downvote" data-vote="down" data-app-id="ww1">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
-                  </svg>
-                  <span class="vote-count">3</span>
-                </button>
-                <button class="btn btn-sm btn-ghost" data-modal-open="feedback-modal" data-app-id="ww1">
-                  Feedback
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Wild West App Card 2 -->
-          <div class="card app-card wild-west-card">
-            <span class="wild-west-badge">&#9888; Testing</span>
-            <div class="app-card-image">
-              <div class="app-card-icon">&#127912;</div>
-            </div>
-            <div class="app-card-content">
-              <h3 class="app-card-title">PixelMorph</h3>
-              <p class="app-card-desc">Batch image processing with AI-powered filters and effects.</p>
-              <div class="app-card-meta">
-                <span class="text-muted">Added 3 days ago</span>
-              </div>
-              <div class="vote-buttons">
-                <button class="vote-btn upvote" data-vote="up" data-app-id="ww2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
-                  </svg>
-                  <span class="vote-count">42</span>
-                </button>
-                <button class="vote-btn downvote" data-vote="down" data-app-id="ww2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
-                  </svg>
-                  <span class="vote-count">5</span>
-                </button>
-                <button class="btn btn-sm btn-ghost" data-modal-open="feedback-modal" data-app-id="ww2">
-                  Feedback
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Wild West App Card 3 -->
-          <div class="card app-card wild-west-card">
-            <span class="wild-west-badge">&#9888; Testing</span>
-            <div class="app-card-image">
-              <div class="app-card-icon">&#128202;</div>
-            </div>
-            <div class="app-card-content">
-              <h3 class="app-card-title">DataViz Pro</h3>
-              <p class="app-card-desc">Create beautiful data visualizations from CSV and JSON files.</p>
-              <div class="app-card-meta">
-                <span class="text-muted">Added 4 days ago</span>
-              </div>
-              <div class="vote-buttons">
-                <button class="vote-btn upvote" data-vote="up" data-app-id="ww3">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
-                  </svg>
-                  <span class="vote-count">31</span>
-                </button>
-                <button class="vote-btn downvote" data-vote="down" data-app-id="ww3">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
-                  </svg>
-                  <span class="vote-count">2</span>
-                </button>
-                <button class="btn btn-sm btn-ghost" data-modal-open="feedback-modal" data-app-id="ww3">
-                  Feedback
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Wild West App Card 4 -->
-          <div class="card app-card wild-west-card">
-            <span class="wild-west-badge">&#9888; Testing</span>
-            <div class="app-card-image">
-              <div class="app-card-icon">&#127925;</div>
-            </div>
-            <div class="app-card-content">
-              <h3 class="app-card-title">BeatMaker Lite</h3>
-              <p class="app-card-desc">Simple beat creation tool with drum machine and synth pads.</p>
-              <div class="app-card-meta">
-                <span class="text-muted">Added 5 days ago</span>
-              </div>
-              <div class="vote-buttons">
-                <button class="vote-btn upvote" data-vote="up" data-app-id="ww4">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
-                  </svg>
-                  <span class="vote-count">18</span>
-                </button>
-                <button class="vote-btn downvote" data-vote="down" data-app-id="ww4">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
-                  </svg>
-                  <span class="vote-count">8</span>
-                </button>
-                <button class="btn btn-sm btn-ghost" data-modal-open="feedback-modal" data-app-id="ww4">
-                  Feedback
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Wild West App Card 5 -->
-          <div class="card app-card wild-west-card">
-            <span class="wild-west-badge">&#9888; Testing</span>
-            <div class="app-card-image">
-              <div class="app-card-icon">&#128187;</div>
-            </div>
-            <div class="app-card-content">
-              <h3 class="app-card-title">CodeSnippets</h3>
-              <p class="app-card-desc">Manage and organize your code snippets with syntax highlighting.</p>
-              <div class="app-card-meta">
-                <span class="text-muted">Added 1 week ago</span>
-              </div>
-              <div class="vote-buttons">
-                <button class="vote-btn upvote" data-vote="up" data-app-id="ww5">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
-                  </svg>
-                  <span class="vote-count">56</span>
-                </button>
-                <button class="vote-btn downvote" data-vote="down" data-app-id="ww5">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
-                  </svg>
-                  <span class="vote-count">4</span>
-                </button>
-                <button class="btn btn-sm btn-ghost" data-modal-open="feedback-modal" data-app-id="ww5">
-                  Feedback
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Wild West App Card 6 -->
-          <div class="card app-card wild-west-card">
-            <span class="wild-west-badge">&#9888; Testing</span>
-            <div class="app-card-image">
-              <div class="app-card-icon">&#128274;</div>
-            </div>
-            <div class="app-card-content">
-              <h3 class="app-card-title">PassVault</h3>
-              <p class="app-card-desc">Local password manager with encryption and auto-fill.</p>
-              <div class="app-card-meta">
-                <span class="text-muted">Added 1 week ago</span>
-              </div>
-              <div class="vote-buttons">
-                <button class="vote-btn upvote" data-vote="up" data-app-id="ww6">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
-                  </svg>
-                  <span class="vote-count">12</span>
-                </button>
-                <button class="vote-btn downvote" data-vote="down" data-app-id="ww6">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
-                  </svg>
-                  <span class="vote-count">15</span>
-                </button>
-                <button class="btn btn-sm btn-ghost" data-modal-open="feedback-modal" data-app-id="ww6">
-                  Feedback
-                </button>
-              </div>
-            </div>
-          </div>
+        <div id="apps-loading" class="text-center" style="padding:var(--space-xl);">
+          <div class="loading-spinner"></div>
         </div>
 
-        <div class="text-center mt-xl">
-          <button class="btn btn-secondary" id="load-more">Load More Apps</button>
+        <div id="apps-empty" style="display:none;text-align:center;padding:var(--space-2xl);">
+          <p class="text-secondary" style="font-size:var(--text-lg);">No apps in testing yet.</p>
+          <p class="text-muted">Apps will appear here when they're built from approved requests.</p>
+          <a href="/request" class="btn btn-primary mt-lg">Request an App</a>
+        </div>
+
+        <div class="grid grid-apps" id="wildwest-apps" style="display:none;">
         </div>
       </section>
 
@@ -333,45 +162,6 @@
     </div>
   </main>
 
-  <!-- Feedback Modal -->
-  <div class="modal-overlay" id="feedback-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Submit Feedback</h3>
-        <button class="modal-close" data-modal-close aria-label="Close modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="feedback-form" data-feedback-form data-app-id="">
-          <div class="form-group">
-            <label class="form-label" for="feedback-type">Feedback Type</label>
-            <select class="form-select" id="feedback-type" name="type" required>
-              <option value="">Select type</option>
-              <option value="bug">Bug Report</option>
-              <option value="crash">App Crashes</option>
-              <option value="security">Security Concern</option>
-              <option value="feature">Feature Request</option>
-              <option value="works">Works Great!</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="feedback-message">Details</label>
-            <textarea class="form-textarea" id="feedback-message" name="message"
-                      placeholder="Describe your experience, any issues found, or suggestions..."
-                      required></textarea>
-            <p class="form-hint">Be as detailed as possible. Include steps to reproduce bugs.</p>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="feedback-env">System Info (optional)</label>
-            <input type="text" class="form-input" id="feedback-env" name="environment"
-                   placeholder="e.g., Ubuntu 24.04, GNOME 45">
-          </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;">Submit Feedback</button>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -392,8 +182,8 @@
           <h4 class="footer-title">Explore</h4>
           <nav class="footer-links">
             <a href="/browse" class="footer-link">Browse Apps</a>
-            <a href="/browse?category=games" class="footer-link">Games</a>
             <a href="/wildwest" class="footer-link">Wild West</a>
+            <a href="/builds" class="footer-link">Build Status</a>
           </nav>
         </div>
 
@@ -410,7 +200,6 @@
           <nav class="footer-links">
             <a href="/docs" class="footer-link">Documentation</a>
             <a href="/api" class="footer-link">API</a>
-            <a href="/privacy" class="footer-link">Privacy</a>
           </nav>
         </div>
       </div>
@@ -424,13 +213,175 @@
   <script src="/static/js/api.js"></script>
   <script src="/static/js/main.js"></script>
   <script>
-    // Set app ID when opening feedback modal
-    document.querySelectorAll('[data-modal-open="feedback-modal"]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const appId = btn.dataset.appId;
-        document.getElementById('feedback-form').dataset.appId = appId;
-      });
+    document.addEventListener('DOMContentLoaded', () => {
+      loadStats();
+      loadRecentBuilds();
+      loadWildWestApps();
+
+      document.getElementById('sort-select').addEventListener('change', loadWildWestApps);
     });
+
+    async function loadStats() {
+      try {
+        // Get wild west apps count
+        const wwData = await API.get('/apps', { status: 'wild_west' });
+        document.getElementById('stat-testing').textContent = wwData.total || 0;
+
+        // Get stable apps count
+        const stableData = await API.get('/apps', { status: 'stable' });
+        document.getElementById('stat-stable').textContent = stableData.total || 0;
+
+        // Get pending requests
+        const reqData = await API.get('/requests', { status: 'pending' });
+        document.getElementById('stat-pending').textContent = reqData.total || 0;
+
+        // Get building requests
+        const buildData = await API.get('/requests', { status: 'building' });
+        document.getElementById('stat-building').textContent = buildData.total || 0;
+      } catch (error) {
+        console.error('Failed to load stats:', error);
+      }
+    }
+
+    async function loadRecentBuilds() {
+      const loadingEl = document.getElementById('recent-builds-loading');
+      const containerEl = document.getElementById('recent-builds');
+
+      try {
+        const data = await API.get('/requests', { per_page: 5 });
+        loadingEl.style.display = 'none';
+
+        // Filter to builds (approved, building, completed, failed)
+        const builds = (data.requests || []).filter(r =>
+          ['approved', 'building', 'completed', 'failed'].includes(r.status)
+        );
+
+        if (builds.length === 0) {
+          containerEl.innerHTML = '<p class="text-muted text-center">No recent builds.</p>';
+          containerEl.style.display = 'block';
+          return;
+        }
+
+        containerEl.innerHTML = builds.map(build => `
+          <a href="/builds?id=${build.id}" class="card" style="display:block;padding:var(--space-md);margin-bottom:var(--space-sm);text-decoration:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <strong style="color:var(--text-primary);">${escapeHtml(build.title)}</strong>
+                <span class="text-muted" style="margin-left:var(--space-sm);">${build.category || 'utility'}</span>
+              </div>
+              <span class="status-badge status-${build.status}" style="
+                padding:var(--space-xs) var(--space-sm);
+                border-radius:var(--radius-full);
+                font-size:var(--text-sm);
+                text-transform:uppercase;
+                background:${getStatusColor(build.status)};
+                color:white;
+              ">${build.status}</span>
+            </div>
+          </a>
+        `).join('');
+
+        containerEl.style.display = 'block';
+      } catch (error) {
+        loadingEl.style.display = 'none';
+        containerEl.innerHTML = '<p class="text-error">Failed to load recent builds.</p>';
+        containerEl.style.display = 'block';
+      }
+    }
+
+    async function loadWildWestApps() {
+      const loadingEl = document.getElementById('apps-loading');
+      const emptyEl = document.getElementById('apps-empty');
+      const containerEl = document.getElementById('wildwest-apps');
+      const sortBy = document.getElementById('sort-select').value;
+
+      loadingEl.style.display = 'block';
+      emptyEl.style.display = 'none';
+      containerEl.style.display = 'none';
+
+      try {
+        const params = {
+          status: 'wild_west',
+          sort: sortBy === 'downloads' ? 'downloads' : 'created_at',
+          order: 'desc'
+        };
+
+        const data = await API.get('/apps', params);
+        loadingEl.style.display = 'none';
+
+        if (!data.apps || data.apps.length === 0) {
+          emptyEl.style.display = 'block';
+          return;
+        }
+
+        containerEl.innerHTML = data.apps.map(app => `
+          <a href="/app/${app.slug}" class="card app-card wild-west-card" style="text-decoration:none;">
+            <span class="wild-west-badge">&#9888; Testing</span>
+            <div class="app-card-image">
+              <div class="app-card-icon">${getAppIcon(app.category)}</div>
+            </div>
+            <div class="app-card-content">
+              <h3 class="app-card-title">${escapeHtml(app.name)}</h3>
+              <p class="app-card-desc">${escapeHtml(app.description || '').substring(0, 100)}${app.description && app.description.length > 100 ? '...' : ''}</p>
+              <div class="app-card-meta">
+                <span class="text-muted">${app.category || 'utility'}</span>
+                <span class="text-muted">${app.download_count || 0} downloads</span>
+              </div>
+              ${app.ai_generated ? '<div class="text-sm" style="color:var(--accent);margin-top:var(--space-xs);">AI Generated</div>' : ''}
+            </div>
+          </a>
+        `).join('');
+
+        containerEl.style.display = 'grid';
+      } catch (error) {
+        loadingEl.style.display = 'none';
+        emptyEl.innerHTML = '<p class="text-error">Failed to load apps.</p>';
+        emptyEl.style.display = 'block';
+      }
+    }
+
+    function getStatusColor(status) {
+      const colors = {
+        pending: 'rgba(251, 191, 36, 0.8)',
+        approved: 'rgba(99, 102, 241, 0.8)',
+        building: 'rgba(34, 211, 238, 0.8)',
+        completed: 'rgba(74, 222, 128, 0.8)',
+        failed: 'rgba(248, 113, 113, 0.8)',
+        rejected: 'rgba(156, 163, 175, 0.8)'
+      };
+      return colors[status] || colors.pending;
+    }
+
+    function getAppIcon(category) {
+      const icons = {
+        'utilities': '&#128295;',
+        'games': '&#127918;',
+        'media': '&#127912;',
+        'productivity': '&#128202;',
+        'communication': '&#128172;',
+        'development': '&#128187;',
+        'education': '&#128218;',
+        'finance': '&#128176;',
+        'health': '&#128153;',
+        'lifestyle': '&#127968;',
+        'music': '&#127925;',
+        'navigation': '&#128506;',
+        'news': '&#128240;',
+        'photo': '&#128247;',
+        'social': '&#128101;',
+        'sports': '&#9917;',
+        'travel': '&#9992;',
+        'weather': '&#127780;'
+      };
+      return icons[category] || '&#128187;';
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
   </script>
 </body>
 </html>
