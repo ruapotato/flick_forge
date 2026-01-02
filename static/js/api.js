@@ -117,11 +117,20 @@ const API = {
     },
 
     async updateProfile(data) {
-      return API.put('/auth/profile', data);
+      return API.request('/auth/me', {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      });
     },
 
     async changePassword(currentPassword, newPassword) {
-      return API.post('/auth/change-password', { currentPassword, newPassword });
+      return API.request('/auth/me', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          current_password: currentPassword,
+          new_password: newPassword,
+        }),
+      });
     },
   },
 
